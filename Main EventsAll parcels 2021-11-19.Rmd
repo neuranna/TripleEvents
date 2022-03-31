@@ -44,6 +44,68 @@ dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', '
 dat$ROI = factor(dat$ROI)
 ```
 
+## Split ROIs
+
+```{r}
+dat.cortex = dat %>% filter(!(ROI %in% c(6, 8, 10)))
+dat.frontal = dat %>% filter(ROI %in% c(1,3,5,12,13,15))
+dat.occtemp = dat %>% filter(ROI %in% c(2,4,7,9,11,14))
+dat.cereb = dat %>% filter(ROI %in% c(6, 8, 10))
+```
+
+# Plot
+
+## Frontal cortex
+
+```{r}
+ggplot(data=dat.frontal)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+```
+
+## Occipito-temporal cortex
+
+```{r}
+ggplot(data=dat.occtemp)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+```
+
+## Cerebellum
+
+```{r}
+ggplot(data=dat.cereb)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+```
+
 ## Plot All
 
 ```{r plot , echo=FALSE}
