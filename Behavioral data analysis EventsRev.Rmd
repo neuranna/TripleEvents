@@ -1,0 +1,150 @@
+---
+title: "EventsRev behavioral - Experiment 1"
+author: "Anna Ivanova"
+date: "6/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls()) 
+
+library(lmerTest)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+```
+
+## Load behavioral data
+
+```{r load data, echo=FALSE}
+files = list.files(path='../data/behavioral/EventsRev/', pattern="*.csv")
+dat = do.call(rbind, lapply(files, function(x) read.csv(paste('../data/behavioral/EventsRev/', x, sep=''))))
+
+# clean
+dat = dat %>% filter(Condition!='FIX')
+dat = dat %>%
+  mutate(SubjID=str_trim(SubjID, side="both"))
+
+# remove participants with low accuracies (<60%) or right-lateralized language
+subs_to_filter = c('FED_20160519c_3T1',     # low accuracy
+                   'FED_20190320a_3T2',     # low accuracy
+                   'FED_20190605c_3T2')     # right-lateralized language
+dat = dat %>%
+  filter(!(SubjID %in% subs_to_filter))
+
+# RT should be ok for all
+dat_RT = dat
+
+# remove some accuracy data because of a bug
+old_IDs = c('FED_20160519a_3T1',
+            'FED_20160519b_3T1',  
+            'FED_20160519c_3T1',  
+            'FED_20160519d_3T1',
+            'FED_20160520a_3T1',
+            'FED_20160520d_3T1',
+            'FED_20160803c_3T1',
+            'FED_20160805a_3T1',
+            'FED_20160805b_3T1',
+            'FED_20160907b_3T2',
+            'FED_20160908b_3T1',
+            'FED_20160908c_3T1',
+            'FED_20160908d_3T1',
+            'FED_20190320a_3T2',
+            'FED_20190418b_3T2',
+            'FED_20190426a_3T2')
+dat_acc = dat %>%
+  filter(!(SubjID %in% old_IDs & TrialNumber>42))
+```
+
+## Reaction Times
+
+```{r RT analysis, echo=FALSE}
+dat_sentsem = dat_RT %>% filter(Condition=='Sent_Sem' & RT > 0)
+dat_sentsem0 = dat_RT %>% filter(Condition=='Sent_Sem' & RT == 0)
+cat('Sent Sem RT =', round(mean(dat_sentsem$RT),3), '(SD = ', round(sd(dat_sentsem$RT),3), ')\n')
+cat('Response rate=', round(100*nrow(dat_sentsem) / (nrow(dat_sentsem) + nrow(dat_sentsem0)),2), '%\n')
+dat_sentperc = dat_RT %>% filter(Condition=='Sent_Perc' & RT > 0)
+dat_sentperc0 = dat_RT %>% filter(Condition=='Sent_Perc' & RT == 0)
+cat('Sent Perc RT =', round(mean(dat_sentperc$RT),3), '(SD = ', round(sd(dat_sentperc$RT),3), ')\n')
+cat('Response rate=', round(100*nrow(dat_sentperc) / (nrow(dat_sentperc) + nrow(dat_sentperc0)),2), '%\n')
+dat_picsem = dat_RT %>% filter(Condition=='Pic_Sem' & RT > 0)
+dat_picsem0 = dat_RT %>% filter(Condition=='Pic_Sem' & RT == 0)
+cat('Pic Sem RT =', round(mean(dat_picsem$RT),3), '(SD = ', round(sd(dat_picsem$RT),3), ')\n')
+cat('Response rate=', round(100*nrow(dat_picsem) / (nrow(dat_picsem) + nrow(dat_picsem0)),2), '%\n')
+dat_picperc = dat_RT %>% filter(Condition=='Pic_Perc' & RT > 0)
+dat_picperc0 = dat_RT %>% filter(Condition=='Pic_Perc' & RT == 0)
+cat('Pic Perc RT =', round(mean(dat_picperc$RT),3), '(SD = ', round(sd(dat_picperc$RT),3), ')\n')
+cat('Response rate=', round(100*nrow(dat_picperc) / (nrow(dat_picperc) + nrow(dat_picperc0)),2), '%\n')
+dat_mean = dat_RT %>% filter(RT > 0)
+dat_mean0 = dat_RT %>% filter(RT == 0)
+cat('Overall=', round(mean(dat_mean$RT),3), '(SD = ', round(sd(dat_mean$RT),3), ')\n')
+cat('Response rate=', round(100*nrow(dat_mean) / (nrow(dat_mean) + nrow(dat_mean0)),2), '%\n')
+
+```
+
+```{r RT plot, echo=FALSE}
+ggplot(data=dat_RT %>% filter(RT>0))+
+    stat_summary(mapping = aes(x = Condition, y = RT), 
+               geom = 'col', fun.y = 'mean', color = 'gray',
+               show.legend=FALSE)+
+    stat_summary(mapping = aes(x = Condition, y = RT), 
+               geom = 'errorbar', fun.data = 'mean_se', color = 'black', 
+               size = 1, width=0.3) + theme_minimal()
+```
+```{r lmer model RT, echo=FALSE}
+dat_RT = dat_RT %>%
+  mutate(StimType = factor(ifelse(Condition %in% c('Sent_Sem', 'Sent_Perc'), 'Sent', 'Pic'),
+         levels=c('Pic', 'Sent'))) %>%
+  mutate(Task = factor(ifelse(Condition %in% c('Sent_Sem', 'Pic_Sem'), 'Sem', 'Perc'),
+         levels=c('Perc', 'Sem')))
+
+contrasts(dat_RT$StimType) = c(-0.5, 0.5)
+contrasts(dat_RT$Task) = c(-0.5, 0.5)
+colnames(attr(dat_RT$StimType, "contrasts")) = "Sent>Pic"
+colnames(attr(dat_RT$Task, "contrasts")) = "Sem>Perc"
+
+m = lmer(RT ~ StimType*Task + (1|SubjID) + (1|ItemNum), data=dat_RT, REML=FALSE)
+summary(m)
+```
+
+There was a small effect of task on reaction time (Semantic>Perceptual, beta=0.05, p = 0.047), no significant effect of task (Pictures vs. Sentences) and no interaction between stimulus type and task.
+
+## Accuracies
+
+```{r accuracy analysis, echo=FALSE}
+dat_sentsem = dat_acc %>% filter(Condition=='Sent_Sem' & RT>0)
+cat('SentSem Accuracy=', mean(dat_sentsem$Accuracy), '\n')
+dat_sentperc = dat_acc %>% filter(Condition=='Sent_Perc' & RT>0)
+cat('SentPerc Accuracy=', mean(dat_sentperc$Accuracy), '\n')
+dat_picsem = dat_acc %>% filter(Condition=='Pic_Sem' & RT>0)
+cat('PicSem Accuracy=', mean(dat_picsem$Accuracy), '\n')
+dat_picperc = dat_acc %>% filter(Condition=='Pic_Perc' & RT>0)
+cat('PicPerc Accuracy=', mean(dat_picperc$Accuracy), '\n')
+dat_mean = dat_acc %>% filter(RT>0)
+cat('Overall Accuracy=', mean(dat_mean$Accuracy), '\n')
+```
+
+```{r acc by person, echo=FALSE}
+acc_by_person = dat_mean %>% group_by(SubjID) %>%
+  summarize(Accuracy=mean(Accuracy))
+```
+
+```{r lmer model accuracy, echo=FALSE}
+dat_acc = dat_acc %>%
+  mutate(StimType = factor(ifelse(Condition %in% c('Sent_Sem', 'Sent_Perc'), 'Sent', 'Pic'),
+         levels=c('Pic', 'Sent'))) %>%
+  mutate(Task = factor(ifelse(Condition %in% c('Sent_Sem', 'Pic_Sem'), 'Sem', 'Perc'),
+         levels=c('Perc', 'Sem')))
+colnames(attr(dat_acc$StimType, "contrasts")) = "Sent>Pic"
+colnames(attr(dat_acc$Task, "contrasts")) = "Sem>Perc"
+
+contrasts(dat_acc$StimType) = c(-0.5, 0.5)
+contrasts(dat_acc$Task) = c(-0.5, 0.5)
+
+m = glmer(Accuracy ~ StimType*Task + (1|SubjID) + (1|ItemNum), data=dat_RT, family='binomial')
+summary(m)
+```
+
+No significant differences 

@@ -1,0 +1,88 @@
+---
+title: "tripleEvents plots"
+author: "Anna Ivanova"
+date: "10/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls()) 
+library(ggplot2)
+library(dplyr)
+```
+
+## Read data
+
+```{r ead data, echo=FALSE}
+dat1.lang = read.csv('../data/EventsOrig/langloc_lang.csv')
+dat1.events = read.csv('../data/EventsOrig/langloc_events.csv')
+
+dat1 = rbind(dat1.lang, dat1.events)
+
+dat1$Effect = factor(dat1$Effect, levels = c('S', 'N', 'Sem_sent', 'Perc_sent', 'Sem_photo', 'Perc_photo'))
+dat1 = dat1 %>%
+  mutate(ROI = recode(dat1$ROI,
+        '1'='PostTemp', '2'='AntTemp', '3'='AngG',
+        '4'='IFG', '5'='MFG', '6'='IFGorb')) %>%
+  filter(!is.na(Effect))
+dat1$ROI = factor(dat1$ROI, levels = c('IFGorb', 'IFG', 'MFG', 'AntTemp', 'PostTemp', 'AngG'))
+```
+
+```{r ead data, echo=FALSE}
+dat2.lang = read.csv('../data/Events2move/langloc_lang.csv')
+dat2.events = read.csv('../data/Events2move/langloc_events.csv')
+
+dat2 = rbind(dat2.lang, dat2.events)
+
+dat2$Effect = factor(dat2$Effect, levels = c('S', 'N', 'Sem-sent', 'Perc-sent', 'Sem-photo', 'Perc-photo'))
+dat2 = dat2 %>%
+  mutate(ROI = recode(dat2$ROI,
+        '5'='PostTemp', '4'='AntTemp', '6'='AngG',
+        '2'='IFG', '3'='MFG', '1'='IFGorb', .default='X')) %>%
+  filter(!is.na(Effect)) %>%
+  filter(ROI!='X')
+dat2$ROI = factor(dat2$ROI, levels = c('IFGorb', 'IFG', 'MFG', 'AntTemp', 'PostTemp', 'AngG'))
+```
+
+## Plot
+
+```{r plot , echo=FALSE}
+ggplot(data=dat1)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85)+
+  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
+             shape=21, size=0.75, alpha=0.4, color='black',
+             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.9),
+             show.legend = FALSE)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.9), size=1, width=0)+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  labs(x=NULL, y=NULL, fill=NULL, title='EventsOrig')+
+  coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=18), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
+ggsave('langparcels_EventsOrig_draft.png', width=16, height=16, units='cm')
+```
+
+
+```{r plot , echo=FALSE}
+ggplot(data=dat2)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85)+
+  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
+             shape=21, size=0.75, alpha=0.4, color='black',
+             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.9),
+             show.legend = FALSE)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.9), size=1, width=0)+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  labs(x=NULL, y=NULL, fill=NULL, title='Events2move')+
+    coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=18), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
+ggsave('langparcels_Events2move_draft.png', width=16, height=16, units='cm')
+```
+
+

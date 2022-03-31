@@ -1,0 +1,387 @@
+---
+title: "tripleEvents plots"
+author: "Anna Ivanova"
+date: "11/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls()) 
+library(ggplot2)
+library(dplyr)
+```
+
+# EVENTSALL PARCELS
+
+## Read data
+
+```{r read data, echo=FALSE}
+dat1.e = read.csv('../data/neuro/EventsOrig/EventsAllparcels_events.csv')
+dat1.l = read.csv('../data/neuro/EventsOrig/EventsAllparcels_lang.csv')
+dat1 = rbind(dat1.e, dat1.l)
+
+dat2.e = read.csv('../data/neuro/Events2move/EventsAllparcels_events.csv')
+dat2.l = read.csv('../data/neuro/Events2move/EventsAllparcels_lang.csv')
+dat2.s = read.csv('../data/neuro/Events2move/EventsAllparcels_spatialFIN.csv')
+dat2 = rbind(dat2.e, dat2.l, dat2.s)
+
+dat3.e = read.csv('../data/neuro/EventsRev/EventsAllparcels_events.csv')
+dat3.l = read.csv('../data/neuro/EventsRev/EventsAllparcels_lang.csv')
+dat3.s = read.csv('../data/neuro/EventsRev/EventsAllparcels_spatialFIN.csv')
+dat3 = rbind(dat3.e, dat3.l, dat3.s)
+
+dat1$Experiment = 'EventsOrig'
+dat2$Experiment = 'Events2move'
+dat3$Experiment = 'EventsRev'
+
+# combine
+dat = rbind(dat1, dat2, dat3)
+
+dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
+                                           'S', 'W', 'N', 'H', 'E'))
+dat$ROI = factor(dat$ROI)
+```
+
+## Plot All
+
+```{r plot , echo=FALSE}
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.65)+
+  facet_grid(Experiment ~ .)+
+  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
+             shape=21, size=0.3, alpha=0.4, color='black',
+             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.65),
+             show.legend = FALSE)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.65), size=1, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
+ggsave('plots/EventsAllparcels_all.png', width=30, height=15, units='cm')
+```
+
+Without single subject data:
+
+```{r plot , echo=FALSE}
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+ggsave('plots/EventsAllparcels_all_nodots.png', width=30, height=15, units='cm')
+```
+
+
+## Plot Events only
+
+```{r plot , echo=FALSE}
+ggplot(data=dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem')))+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.65)+
+  facet_grid(Experiment ~ .)+
+  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
+             shape=21, size=0.3, alpha=0.4, color='black',
+             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.65),
+             show.legend = FALSE)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.65), size=1, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
+ggsave('plots/EventsAllparcels_events.png', width=25, height=15, units='cm')
+```
+
+Without single subject data:
+
+```{r plot , echo=FALSE}
+ggplot(data=dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem')))+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.5)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.5), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+ # coord_cartesian(ylim=c(-2.5,5))+
+  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
+ggsave('plots/EventsAllparcels_events_nodots.png', width=25, height=15, units='cm')
+```
+
+
+# LANG PARCELS
+
+## Read data
+
+```{r read data, echo=FALSE}
+dat1.e = read.csv('../data/neuro/EventsOrig/langloc_events.csv')
+dat1.l = read.csv('../data/neuro/EventsOrig/langloc_lang.csv')
+dat1 = rbind(dat1.e, dat1.l)
+
+dat2.e = read.csv('../data/neuro/Events2move/langloc_events.csv')
+dat2.l = read.csv('../data/neuro/Events2move/langloc_lang.csv')
+dat2.s = read.csv('../data/neuro/Events2move/langloc_spatialFIN.csv')
+dat2 = rbind(dat2.e, dat2.l, dat2.s)
+
+dat3.e = read.csv('../data/neuro/EventsRev/langloc_events.csv')
+dat3.l = read.csv('../data/neuro/EventsRev/langloc_lang.csv')
+dat3.s = read.csv('../data/neuro/EventsRev/langloc_spatialFIN.csv')
+dat3 = rbind(dat3.e, dat3.l, dat3.s)
+
+dat1$Experiment = 'EventsOrig'
+dat2$Experiment = 'Events2move'
+dat3$Experiment = 'EventsRev'
+
+# combine
+dat = rbind(dat1, dat2, dat3) 
+dat = dat %>%
+  mutate(ROI = recode(dat$ROI,
+        '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
+        '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
+        '7'='RIFG_orb', '8'='RIFG', '9'='RMFG',
+        '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG'))
+dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
+                                   'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
+                                           'S', 'W', 'N', 'H', 'E'))
+dat$ROI = factor(dat$ROI)
+```
+
+## Plot All
+
+Without single subject data:
+
+```{r plot , echo=FALSE}
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle('Language System')+
+  theme(axis.text.x = element_text(size=10, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+ggsave('plots/langloc_all_nodots.png', width=30, height=15, units='cm')
+```
+
+
+## Plot pres (avg across fROIs)
+
+### EventsOrig
+```{r}
+dat1.weighted <- dat1 %>% 
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  group_by(Effect, Subject) %>% 
+  summarize(EffectSize = weighted.mean(EffectSize, LocalizerSize))
+dat1.weighted$Effect = factor(dat1.weighted$Effect, 
+                              levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc'))
+
+e1_avg = ggplot(dat1.weighted)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize, fill=Effect), 
+               geom = 'col', fun.y = 'mean', color = 'black', alpha=.85,
+               show.legend=FALSE)+
+  geom_point(mapping = aes(x = Effect, y = EffectSize, fill=Effect),
+             shape=21, size=1, alpha=0.5, stroke=1.5,
+             position=position_jitter(width=0.1, height=0),
+             show.legend = FALSE)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize), 
+               geom = 'errorbar', fun.data = 'mean_se', 
+               color = 'black', size = 1.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'),
+                    labels=c('Sentences, Semantic Task', 'Sentences, Perceptual Task', 
+                             'Pictures, Semantic Task', 'Pictures, Perceptual Task'))+
+  labs(x = NULL, y = "BOLD response")+ 
+  coord_cartesian(ylim=c(-1.1,2.6))+
+  theme_classic()+ 
+  geom_hline(yintercept=0, size=0.5)+
+  theme(axis.text.x = element_blank(), axis.text.y = element_text(size=14), 
+        axis.title.y = element_text(size=18, face='bold'), 
+        axis.title.x = element_text(size=14, face='bold'), axis.ticks.x = element_blank())
+e1_avg
+
+ggsave('plots/EventsOrig_lang_mean.png', height=15, width=10, units="cm")
+```
+
+### Events2move
+
+```{r}
+dat2.weighted <- dat2 %>% 
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  group_by(Effect, Subject) %>% 
+  summarize(EffectSize = weighted.mean(EffectSize, LocalizerSize))
+dat2.weighted$Effect = factor(dat2.weighted$Effect, 
+                              levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc'))
+
+e2_avg = ggplot(dat2.weighted)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize, fill=Effect), 
+               geom = 'col', fun.y = 'mean', color = 'black', alpha=.85,
+               show.legend=FALSE)+
+  geom_point(mapping = aes(x = Effect, y = EffectSize, fill=Effect),
+             shape=21, size=1, alpha=0.5, stroke=1.5,
+             position=position_jitter(width=0.1, height=0),
+             show.legend = FALSE)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize), 
+               geom = 'errorbar', fun.data = 'mean_se', 
+               color = 'black', size = 1.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'),
+                    labels=c('Sentences, Semantic Task', 'Sentences, Perceptual Task', 
+                             'Pictures, Semantic Task', 'Pictures, Perceptual Task'))+
+  labs(x = NULL, y = "BOLD response")+ 
+  coord_cartesian(ylim=c(-1.1,2.6))+
+  theme_classic()+ 
+  geom_hline(yintercept=0, size=0.5)+
+  theme(axis.text.x = element_blank(), axis.text.y = element_text(size=14), 
+        axis.title.y = element_text(size=18, face='bold'), 
+        axis.title.x = element_text(size=14, face='bold'), axis.ticks.x = element_blank())
+e2_avg
+
+ggsave('plots/Events2move_lang_mean.png', height=15, width=10, units="cm")
+```
+
+
+### EventsRev
+
+
+### Events2move
+
+```{r}
+dat3.weighted <- dat3 %>% 
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  group_by(Effect, Subject) %>% 
+  summarize(EffectSize = weighted.mean(EffectSize, LocalizerSize))
+dat3.weighted$Effect = factor(dat3.weighted$Effect, 
+                              levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc'))
+
+e3_avg = ggplot(dat3.weighted)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize, fill=Effect), 
+               geom = 'col', fun.y = 'mean', color = 'black', alpha=.85,
+               show.legend=FALSE)+
+  geom_point(mapping = aes(x = Effect, y = EffectSize, fill=Effect),
+             shape=21, size=1, alpha=0.5, stroke=1.5,
+             position=position_jitter(width=0.1, height=0),
+             show.legend = FALSE)+
+  stat_summary(mapping = aes(x = Effect, y = EffectSize), 
+               geom = 'errorbar', fun.data = 'mean_se', 
+               color = 'black', size = 1.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'),
+                    labels=c('Sentences, Semantic Task', 'Sentences, Perceptual Task', 
+                             'Pictures, Semantic Task', 'Pictures, Perceptual Task'))+
+  labs(x = NULL, y = "BOLD response")+ 
+  coord_cartesian(ylim=c(-1.1,2.6))+
+  theme_classic()+ 
+  geom_hline(yintercept=0, size=0.5)+
+  theme(axis.text.x = element_blank(), axis.text.y = element_text(size=14), 
+        axis.title.y = element_text(size=18, face='bold'), 
+        axis.title.x = element_text(size=14, face='bold'), axis.ticks.x = element_blank())
+e3_avg
+
+ggsave('plots/EventsRev_lang_mean.png', height=15, width=10, units="cm")
+```
+
+# MD PARCELS
+
+## Read data
+
+```{r read data, echo=FALSE}
+dat2.e = read.csv('../data/neuro/Events2move/MDloc_events.csv')
+dat2.l = read.csv('../data/neuro/Events2move/MDloc_lang.csv')
+dat2.s = read.csv('../data/neuro/Events2move/MDloc_spatialFIN.csv')
+dat2 = rbind(dat2.e, dat2.l, dat2.s)
+
+dat3.e = read.csv('../data/neuro/EventsRev/MDloc_events.csv')
+dat3.l = read.csv('../data/neuro/EventsRev/MDloc_lang.csv')
+dat3.s = read.csv('../data/neuro/EventsRev/MDloc_spatialFIN.csv')
+dat3 = rbind(dat3.e, dat3.l, dat3.s)
+
+dat2$Experiment = 'Events2move'
+dat3$Experiment = 'EventsRev'
+
+# combine
+dat = rbind(dat2, dat3)
+dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
+                                           'S', 'W', 'N', 'H', 'E'))
+dat$ROI = factor(dat$ROI)
+```
+
+## Plot All
+
+Without single subject data:
+
+```{r plot , echo=FALSE}
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle('MD System')+
+  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+ggsave('plots/MDloc_all_nodots.png', width=30, height=15, units='cm')
+```
+
+# DMN PARCELS
+
+## Read data
+
+```{r read data, echo=FALSE}
+dat2.e = read.csv('../data/neuro/Events2move/DMNloc_events.csv')
+dat2.l = read.csv('../data/neuro/Events2move/DMNloc_lang.csv')
+dat2.s = read.csv('../data/neuro/Events2move/DMNloc_spatialFIN.csv')
+dat2 = rbind(dat2.e, dat2.l, dat2.s)
+
+dat3.e = read.csv('../data/neuro/EventsRev/DMNloc_events.csv')
+dat3.l = read.csv('../data/neuro/EventsRev/DMNloc_lang.csv')
+dat3.s = read.csv('../data/neuro/EventsRev/DMNloc_spatialFIN.csv')
+dat3 = rbind(dat3.e, dat3.l, dat3.s)
+
+dat2$Experiment = 'Events2move'
+dat3$Experiment = 'EventsRev'
+
+# combine
+dat = rbind(dat2, dat3)
+dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
+                                           'S', 'W', 'N', 'H', 'E'))
+dat$ROI = factor(dat$ROI)
+```
+
+## Plot All
+
+Without single subject data:
+
+```{r plot , echo=FALSE}
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle('DMN System')+
+  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+ggsave('plots/DMNloc_all_nodots.png', width=30, height=15, units='cm')
+```
