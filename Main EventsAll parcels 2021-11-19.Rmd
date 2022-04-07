@@ -5,15 +5,36 @@ date: "11/19/2021"
 output: html_document
 ---
 
+# SETUP
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 rm(list=ls()) 
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 ```
 
-# EVENTSALL PARCELS
+## Plotting settings
+
+```{r plot settings, include=FALSE}
+ROI_plot_width = 24
+ROI_plot_height_2expt = 12
+ROI_plot_height_3expt = 16
+
+hemi_plot_width = 16
+hemi_plot_height_2expt = 12
+hemi_plot_height_3expt = 16
+
+legend_size = 12
+axis_title_size = 12
+title_size = 14
+axis_text_size = 12
+facet_label_size = 12
+```
+
+# EVENTSALL 
 
 ## Read data
 
@@ -53,11 +74,12 @@ dat.occtemp = dat %>% filter(ROI %in% c(2,4,7,9,11,14))
 dat.cereb = dat %>% filter(ROI %in% c(6, 8, 10))
 ```
 
-# Plot
+## Plot
 
-## Frontal cortex
+### Frontal cortex
 
 ```{r}
+plot_name = 'Events Parcels - Frontal'
 ggplot(data=dat.frontal)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
@@ -68,13 +90,21 @@ ggplot(data=dat.frontal)+
                              'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 
-## Occipito-temporal cortex
+### Occipito-temporal cortex
 
 ```{r}
+plot_name = 'Events Parcels - Occipito-Temporal'
 ggplot(data=dat.occtemp)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
@@ -85,13 +115,21 @@ ggplot(data=dat.occtemp)+
                              'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 
-## Cerebellum
+### Cerebellum
 
 ```{r}
+plot_name = 'Events Parcels - Cerebellum'
 ggplot(data=dat.cereb)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
@@ -102,91 +140,19 @@ ggplot(data=dat.cereb)+
                              'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-```
-
-## Plot All
-
-```{r plot , echo=FALSE}
-ggplot(data=dat)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.65)+
-  facet_grid(Experiment ~ .)+
-  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
-             shape=21, size=0.3, alpha=0.4, color='black',
-             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.65),
-             show.legend = FALSE)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.65), size=1, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
-ggsave('plots/EventsAllparcels_all.png', width=30, height=15, units='cm')
-```
-
-Without single subject data:
-
-```{r plot , echo=FALSE}
-ggplot(data=dat)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/EventsAllparcels_all_nodots.png', width=30, height=15, units='cm')
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 
 
-## Plot Events only
-
-```{r plot , echo=FALSE}
-ggplot(data=dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem')))+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.65)+
-  facet_grid(Experiment ~ .)+
-  geom_point(mapping = aes(x = ROI, y = EffectSize, fill = Effect),
-             shape=21, size=0.3, alpha=0.4, color='black',
-             position=position_jitterdodge(jitter.width=0.15, jitter.height=0, dodge.width=.65),
-             show.legend = FALSE)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.65), size=1, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
-ggsave('plots/EventsAllparcels_events.png', width=25, height=15, units='cm')
-```
-
-Without single subject data:
-
-```{r plot , echo=FALSE}
-ggplot(data=dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem')))+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.5)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.5), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
- # coord_cartesian(ylim=c(-2.5,5))+
-  theme(axis.text.x = element_text(size=12, color='black'), axis.title.y = element_text(size=12), axis.text.y = element_text(size=12), legend.text = element_text(size=12))
-ggsave('plots/EventsAllparcels_events_nodots.png', width=25, height=15, units='cm')
-```
-
-
-# LANG PARCELS
+# LANG 
 
 ## Read data
 
@@ -211,7 +177,10 @@ dat3$Experiment = 'EventsRev'
 
 # combine
 dat = rbind(dat1, dat2, dat3) 
+
+# clean
 dat = dat %>%
+  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH')) %>%
   mutate(ROI = recode(dat$ROI,
         '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
         '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
@@ -222,14 +191,47 @@ dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPos
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
                                            'S', 'W', 'N', 'H', 'E'))
 dat$ROI = factor(dat$ROI)
+
+# split by hemi
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
 ```
 
-## Plot All
+## Plot 
 
-Without single subject data:
+### Mean hemisphere
+```{r calc hemi means, echo=FALSE}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize))
+
+plot_name = 'Language Network'
+ggplot(data=dat.mean)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
+       width=hemi_plot_width, height=hemi_plot_height_3expt, units='cm')
+```
+
+### ROIs by hemisphere
 
 ```{r plot , echo=FALSE}
-ggplot(data=dat)+
+plot_name = 'Language Network - LH'
+ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
@@ -239,15 +241,44 @@ ggplot(data=dat)+
                              'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  ggtitle('Language System')+
-  theme(axis.text.x = element_text(size=10, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/langloc_all_nodots.png', width=30, height=15, units='cm')
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+```
+
+```{r plot , echo=FALSE}
+plot_name = 'Language Network - RH'
+ggplot(data=dat.rh)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 
 
-## Plot pres (avg across fROIs)
+### Plot pres (hemi, split by expt)
 
-### EventsOrig
+#### EventsOrig
 ```{r}
 dat1.weighted <- dat1 %>% 
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
@@ -282,7 +313,7 @@ e1_avg
 ggsave('plots/EventsOrig_lang_mean.png', height=15, width=10, units="cm")
 ```
 
-### Events2move
+#### Events2move
 
 ```{r}
 dat2.weighted <- dat2 %>% 
@@ -319,10 +350,7 @@ ggsave('plots/Events2move_lang_mean.png', height=15, width=10, units="cm")
 ```
 
 
-### EventsRev
-
-
-### Events2move
+#### EventsRev
 
 ```{r}
 dat3.weighted <- dat3 %>% 
@@ -358,7 +386,7 @@ e3_avg
 ggsave('plots/EventsRev_lang_mean.png', height=15, width=10, units="cm")
 ```
 
-# MD PARCELS
+# MD 
 
 ## Read data
 
@@ -381,14 +409,48 @@ dat = rbind(dat2, dat3)
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
                                            'S', 'W', 'N', 'H', 'E'))
 dat$ROI = factor(dat$ROI)
+
+# separate by hemisphere
+dat = dat %>% separate(ROI, c("Hemisphere", NA), remove=FALSE)
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
 ```
 
-## Plot All
+## Plot 
 
-Without single subject data:
+### Mean hemisphere
+```{r calc hemi means, echo=FALSE}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize))
+
+plot_name = 'MD Network'
+ggplot(data=dat.mean)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
+       width=hemi_plot_width, height=hemi_plot_height_2expt, units='cm')
+```
+
+### ROIs by hemisphere
 
 ```{r plot , echo=FALSE}
-ggplot(data=dat)+
+plot_name = 'MD Network - LH'
+ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
@@ -398,12 +460,41 @@ ggplot(data=dat)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  ggtitle('MD System')+
-  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/MDloc_all_nodots.png', width=30, height=15, units='cm')
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 
-# DMN PARCELS
+```{r plot , echo=FALSE}
+plot_name = 'MD Network - RH'
+ggplot(data=dat.rh)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+```
+
+# DMN 
 
 ## Read data
 
@@ -425,15 +516,19 @@ dat3$Experiment = 'EventsRev'
 dat = rbind(dat2, dat3)
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
                                            'S', 'W', 'N', 'H', 'E'))
+
+# split by hemi
+dat.lh = dat %>% filter(ROI<7)
+dat.rh = dat %>% filter(ROI>=7)
 dat$ROI = factor(dat$ROI)
+dat.lh$ROI = factor(dat.lh$ROI)
+dat.rh$ROI = factor(dat.rh$ROI)
 ```
 
-## Plot All
-
-Without single subject data:
+## Plot by hemisphere
 
 ```{r plot , echo=FALSE}
-ggplot(data=dat)+
+ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
@@ -443,7 +538,22 @@ ggplot(data=dat)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  ggtitle('DMN System')+
+  ggtitle('DMN System - LH')+
   theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/DMNloc_all_nodots.png', width=30, height=15, units='cm')
+ggsave('plots/DMNloc_all_LH_nodots.png', width=30, height=15, units='cm')
+```
+```{r plot , echo=FALSE}
+ggplot(data=dat.rh)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle('DMN System - RH')+
+  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
+ggsave('plots/DMNloc_all_RH_nodots.png', width=30, height=15, units='cm')
 ```
