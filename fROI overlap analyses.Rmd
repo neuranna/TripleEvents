@@ -1,0 +1,108 @@
+---
+title: "R overlap"
+output: html_notebook
+---
+
+# Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls()) 
+library(ggplot2)
+library(dplyr)
+```
+
+## Plotting settings 
+
+```{r plot settings, include=FALSE}
+plot_width = 16
+plot_height_2expt = 8
+plot_height_3expt = 12
+```
+
+# Get data
+
+Quick and dirty first pass 
+- subject IDs not recorded
+- NAs removed manually
+
+```{r}
+# decide which network to test
+network = "lang"
+system_pattern = paste("*",network,"*",sep="")
+
+# read
+files1 = list.files(path='../data/overlap/overlap_EventsOrig/', pattern=system_pattern)
+dat1 = do.call(rbind, lapply(files1, function(x) read.csv(paste('../data/overlap/overlap_EventsOrig/', x, sep=''))))
+
+files2 = list.files(path='../data/overlap/overlap_Events2move/', pattern=system_pattern)
+dat2 = do.call(rbind, lapply(files2, function(x) read.csv(paste('../data/overlap/overlap_Events2move/', x, sep=''))))
+
+files3 = list.files(path='../data/overlap/overlap_EventsRev/', pattern=system_pattern)
+dat3 = do.call(rbind, lapply(files3, function(x) read.csv(paste('../data/overlap/overlap_EventsRev/', x, sep=''))))
+
+# combine
+dat1$Experiment = 'EventsOrig'
+dat2$Experiment = 'Events2move'
+dat3$Experiment = 'EventsRev'
+
+if (network %in% c("MD", "DMN")) {
+  dat = rbind(dat2, dat3)
+} else {
+  dat = rbind(dat1, dat2, dat3)
+}
+
+# manual NA removal
+dat = dat %>% filter(!is.na(ROI1))
+
+# clean ROI names
+if (network=="lang") {
+  dat = dat %>%
+      mutate(ROI1 = recode(dat$ROI1,
+          '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
+          '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
+          '7'='RIFG_orb', '8'='RIFG', '9'='RMFG',
+          '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG'))
+  dat$ROI1 = factor(dat$ROI1, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
+                                     'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+} else {
+  dat$ROI1 = as.factor(dat$ROI1)
+}
+dat$ROI2 = as.factor(dat$ROI2)
+```
+
+## Remove fROIs with no overlap
+```{r}
+dat.summ.ROI = dat %>%
+  group_by(ROI1, ROI2) %>% 
+  summarize(meanOverlap = mean(Overlap)) %>%
+  filter(meanOverlap>0)
+
+dat = dat.summ.ROI %>% left_join(dat)
+```
+
+# Plot
+
+```{r}
+if (network=="lang") {
+  plot_height = plot_height_3expt
+} else {
+  plot_height = plot_height_2expt
+}
+
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x=ROI1, y=Overlap, fill=ROI2),
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve = "single"), alpha=0.85)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=ROI1, y=Overlap, group=ROI2),
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.9, preserve="single"), width=0)+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(paste("Overlap:", network, "vs. Events"))+
+  labs(x=paste(network, "fROIs"), fill="Event fROIs")+
+  theme_classic()
+ggsave(paste("plots/overlap_", network, ".png", sep=""),
+      width=plot_width, height=plot_height, units='cm')
+```

@@ -60,8 +60,10 @@ dat3$Experiment = 'EventsRev'
 # combine
 dat = rbind(dat1, dat2, dat3)
 
+# ignore the word condition (from EventsOrig langloc)
+dat = dat %>% filter(Effect!='W')
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'W', 'N', 'H', 'E'))
+                                           'S', 'N', 'H', 'E'))
 dat$ROI = factor(dat$ROI)
 ```
 
@@ -76,6 +78,31 @@ dat.cereb = dat %>% filter(ROI %in% c(6, 8, 10))
 
 ## Plot
 
+### Mean
+
+```{r}
+plot_name = 'Events Parcels'
+ggplot(data=dat)+
+  stat_summary(mapping=aes(x='', y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x='', y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width/3, height=ROI_plot_height_3expt, units='cm')
+```
+
 ### Frontal cortex
 
 ```{r}
@@ -87,7 +114,7 @@ ggplot(data=dat.frontal)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -112,7 +139,7 @@ ggplot(data=dat.occtemp)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -137,7 +164,7 @@ ggplot(data=dat.cereb)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -188,8 +215,11 @@ dat = dat %>%
         '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG'))
 dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
                                    'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+
+# ignore the word condition (from EventsOrig langloc)
+dat = dat %>% filter(Effect!='W')
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'W', 'N', 'H', 'E'))
+                                           'S', 'N', 'H', 'E'))
 dat$ROI = factor(dat$ROI)
 
 # split by hemi
@@ -213,7 +243,7 @@ ggplot(data=dat.mean)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -238,7 +268,7 @@ ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -261,7 +291,7 @@ ggplot(data=dat.rh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray50', 'gray20', '#0000B2', '#B2B2FF'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
@@ -407,7 +437,7 @@ dat3$Experiment = 'EventsRev'
 # combine
 dat = rbind(dat2, dat3)
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'W', 'N', 'H', 'E'))
+                                           'S', 'N', 'H', 'E'))
 dat$ROI = factor(dat$ROI)
 
 # separate by hemisphere
@@ -515,19 +545,52 @@ dat3$Experiment = 'EventsRev'
 # combine
 dat = rbind(dat2, dat3)
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'W', 'N', 'H', 'E'))
+                                           'S', 'N', 'H', 'E'))
+dat = dat %>%
+  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH'))
 
 # split by hemi
-dat.lh = dat %>% filter(ROI<7)
-dat.rh = dat %>% filter(ROI>=7)
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
 dat$ROI = factor(dat$ROI)
 dat.lh$ROI = factor(dat.lh$ROI)
 dat.rh$ROI = factor(dat.rh$ROI)
 ```
 
-## Plot by hemisphere
+## Plot 
+
+### Mean hemisphere
+```{r calc hemi means, echo=FALSE}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize))
+
+plot_name = 'Default Network'
+ggplot(data=dat.mean)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
+               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+  facet_grid(Experiment ~ .)+
+  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
+               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
+  theme_classic()+
+  geom_hline(yintercept=0, size=0.5)+
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
+       width=hemi_plot_width, height=hemi_plot_height_2expt, units='cm')
+```
+
+### ROIs by hemisphere
 
 ```{r plot , echo=FALSE}
+plot_name = 'Default Network - LH'
 ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
@@ -538,11 +601,18 @@ ggplot(data=dat.lh)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  ggtitle('DMN System - LH')+
-  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/DMNloc_all_LH_nodots.png', width=30, height=15, units='cm')
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_2expt, units='cm')
 ```
 ```{r plot , echo=FALSE}
+plot_name = 'Default Network - RH'
 ggplot(data=dat.rh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
@@ -553,7 +623,12 @@ ggplot(data=dat.rh)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  ggtitle('DMN System - RH')+
-  theme(axis.text.x = element_text(size=10, angle=90, color='black'), axis.title.y = element_text(size=10), axis.text.y = element_text(size=10), legend.text = element_text(size=8))
-ggsave('plots/DMNloc_all_RH_nodots.png', width=30, height=15, units='cm')
+  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=ROI_plot_height_2expt, units='cm')
 ```
