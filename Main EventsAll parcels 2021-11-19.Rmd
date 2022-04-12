@@ -238,10 +238,12 @@ dat.mean <- dat %>%
 plot_name = 'Language Network'
 ggplot(data=dat.mean)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
@@ -263,10 +265,12 @@ ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
 plot_name = 'Language Network - LH'
 ggplot(data=dat.lh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
@@ -286,10 +290,12 @@ ggsave(paste('plots/',plot_name,'_ROI.png',sep=''),
 plot_name = 'Language Network - RH'
 ggplot(data=dat.rh)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
@@ -457,10 +463,12 @@ dat.mean <- dat %>%
 plot_name = 'MD Network'
 ggplot(data=dat.mean)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
@@ -568,10 +576,12 @@ dat.mean <- dat %>%
 plot_name = 'Default Network'
 ggplot(data=dat.mean)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
+               geom='col', fun.y='mean', color='black', 
+               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
   facet_grid(Experiment ~ .)+
   stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
+               geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
