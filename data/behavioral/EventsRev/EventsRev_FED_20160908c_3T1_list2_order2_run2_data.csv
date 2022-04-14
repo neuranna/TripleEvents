@@ -1,0 +1,84 @@
+SubjID,List,Order,Run,TrialNumber,TrialOnset,Condition,ItemNum,Item,Motion,CorrectAnswer,Response,Accuracy,RT
+FED_20160908c_3T1,2,2,2,1,0,FIX,0,+,-,0,0,0,0
+FED_20160908c_3T1,2,2,2,2,24,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,1,1,1.27835739900183
+FED_20160908c_3T1,2,2,2,3,26,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,left,1,1,1,1.39383163199818
+FED_20160908c_3T1,2,2,2,4,28,Pic_Perc,40,40_plaus_chauffeur_opens_door_for_lady.jpg,right,2,1,0,0.844657096997253
+FED_20160908c_3T1,2,2,2,5,30,Pic_Perc,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,1,1,1,1.22665625800437
+FED_20160908c_3T1,2,2,2,6,32,Pic_Perc,13,13_implaus_princess_kidnaping_pirate.jpg,right,2,2,1,1.60273639101069
+FED_20160908c_3T1,2,2,2,7,34,Pic_Perc,28,28_plaus_father_laces_shoes_of_child.jpg,right,2,2,1,1.39461092599959
+FED_20160908c_3T1,2,2,2,8,36,Pic_Perc,21,21_implaus_grandpa_dances_for_ballerina.jpg,right,2,2,1,1.42488385499746
+FED_20160908c_3T1,2,2,2,9,38,Pic_Perc,14,14_plaus_priest_blesses_bride.jpg,left,1,1,1,1.66186763900623
+FED_20160908c_3T1,2,2,2,10,40,Pic_Perc,8,08_plaus_artist_painting_business_man.jpg,right,2,2,1,1.62699244300893
+FED_20160908c_3T1,2,2,2,11,42,Pic_Perc,17,17_implaus_woman_bites_vampir.jpg,left,1,1,1,1.28983990300912
+FED_20160908c_3T1,2,2,2,12,46,Sent_Sem,29,The thief is stealing the purse from the grandma.,right,1,1,1,1.3889279540017
+FED_20160908c_3T1,2,2,2,13,48,Sent_Sem,10,The king is entertaining the jester.,left,2,2,1,1.17170550800802
+FED_20160908c_3T1,2,2,2,14,50,Sent_Sem,28,The son is tying the father's shoes.,right,2,2,1,1.18817251600558
+FED_20160908c_3T1,2,2,2,15,52,Sent_Sem,35,The bouncer is preventing the woman from entering.,right,1,1,1,1.20427750299859
+FED_20160908c_3T1,2,2,2,16,54,Sent_Sem,36,The girl is licking the dog on the face.,right,2,2,1,1.25260122100008
+FED_20160908c_3T1,2,2,2,17,56,Sent_Sem,3,The doctor is using a stethoscope on the patient.,left,1,1,1,1.11955670001043
+FED_20160908c_3T1,2,2,2,18,58,Sent_Sem,37,The man is proposing to the woman.,right,1,1,1,1.26813956499973
+FED_20160908c_3T1,2,2,2,19,60,Sent_Sem,32,The patient is bringing flowers to the relative.,right,2,1,0,1.58867442500195
+FED_20160908c_3T1,2,2,2,20,62,Sent_Sem,27,The lady is applauding the athlete.,left,1,2,0,1.53714169100567
+FED_20160908c_3T1,2,2,2,21,64,Sent_Sem,11,The lion is pouncing on the Safari guide.,left,1,1,1,1.06066617900797
+FED_20160908c_3T1,2,2,2,22,68,Sent_Perc,4,The grandmother is rescuing the fireman.,left,1,1,1,1.74155357500422
+FED_20160908c_3T1,2,2,2,23,70,Sent_Perc,21,The ballerina is dancing for the grandpa.,left,1,1,1,1.44750769301027
+FED_20160908c_3T1,2,2,2,24,72,Sent_Perc,20,The lady is cooking for the chef.,right,2,2,1,1.52968490299827
+FED_20160908c_3T1,2,2,2,25,74,Sent_Perc,5,The dentist is treating the patient.,left,1,1,1,1.49583807699673
+FED_20160908c_3T1,2,2,2,26,76,Sent_Perc,19,The lawyer is giving money to the beggar.,left,1,1,1,1.42954605200794
+FED_20160908c_3T1,2,2,2,27,78,Sent_Perc,6,The girl is frightening the ghost.,left,1,1,1,1.07873670000117
+FED_20160908c_3T1,2,2,2,28,80,Sent_Perc,23,The judge is sentencing the criminal.,left,1,1,1,1.29399930700311
+FED_20160908c_3T1,2,2,2,29,82,Sent_Perc,16,The student is lecturing to the professor.,left,1,1,1,1.41132376300811
+FED_20160908c_3T1,2,2,2,30,84,Sent_Perc,25,Santa is giving the girl a present.,left,1,1,1,1.52732091100188
+FED_20160908c_3T1,2,2,2,31,86,Sent_Perc,9,The groom is carrying the bride.,right,2,2,1,1.17584335600259
+FED_20160908c_3T1,2,2,2,32,90,Pic_Sem,26,26_plaus_peasant_bows_to_queen.jpg,right,1,1,1,1.392152608998
+FED_20160908c_3T1,2,2,2,33,92,Pic_Sem,34,34_plaus_dog_leading_blind_person.jpg,right,1,1,1,1.14164430499659
+FED_20160908c_3T1,2,2,2,34,94,Pic_Sem,30,30_plaus_cat_chases_mouse.jpg,right,1,1,1,0.856740527000511
+FED_20160908c_3T1,2,2,2,35,96,Pic_Sem,15,15_implaus_snorkler_bites_shark.jpg,right,2,2,1,1.0561477040028
+FED_20160908c_3T1,2,2,2,36,98,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,left,2,2,1,1.27341098400939
+FED_20160908c_3T1,2,2,2,37,100,Pic_Sem,16,16_plaus_professor_lectures_to_a_student.jpg,left,1,1,1,1.16749926400371
+FED_20160908c_3T1,2,2,2,38,102,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,right,1,1,1,1.23751682401053
+FED_20160908c_3T1,2,2,2,39,104,Pic_Sem,1,01_implaus_criminal_arrests_cop.jpg,left,2,2,1,0.935721897010808
+FED_20160908c_3T1,2,2,2,40,106,Pic_Sem,12,12_plaus_photographer_photographes_model.jpg,right,1,1,1,1.06823361699935
+FED_20160908c_3T1,2,2,2,41,108,Pic_Sem,25,25_implaus_girl_gives_present_to_santa.jpg,left,2,2,1,1.05143644900818
+FED_20160908c_3T1,2,2,2,42,110,FIX,0,+,-,0,0,0,0
+FED_20160908c_3T1,2,2,2,43,134,Pic_Sem,26,26_plaus_peasant_bows_to_queen.jpg,right,1,2,0,1.2109936880006
+FED_20160908c_3T1,2,2,2,44,136,Pic_Sem,34,34_plaus_dog_leading_blind_person.jpg,right,1,2,0,1.17508823300886
+FED_20160908c_3T1,2,2,2,45,138,Pic_Sem,30,30_plaus_cat_chases_mouse.jpg,right,1,1,1,1.58229489299993
+FED_20160908c_3T1,2,2,2,46,140,Pic_Sem,15,15_implaus_snorkler_bites_shark.jpg,right,2,1,0,1.21064114800538
+FED_20160908c_3T1,2,2,2,47,142,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,left,2,2,1,1.37309469901084
+FED_20160908c_3T1,2,2,2,48,144,Pic_Sem,16,16_plaus_professor_lectures_to_a_student.jpg,left,1,2,0,1.52316773899656
+FED_20160908c_3T1,2,2,2,49,146,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,right,1,2,0,1.25591931400413
+FED_20160908c_3T1,2,2,2,50,148,Pic_Sem,1,01_implaus_criminal_arrests_cop.jpg,left,2,1,0,1.12471734501014
+FED_20160908c_3T1,2,2,2,51,150,Pic_Sem,12,12_plaus_photographer_photographes_model.jpg,right,1,2,0,1.40497705900634
+FED_20160908c_3T1,2,2,2,52,152,Pic_Sem,25,25_implaus_girl_gives_present_to_santa.jpg,left,2,1,0,1.38687575599761
+FED_20160908c_3T1,2,2,2,53,156,Sent_Perc,4,The grandmother is rescuing the fireman.,left,1,2,0,1.73544899700209
+FED_20160908c_3T1,2,2,2,54,158,Sent_Perc,21,The ballerina is dancing for the grandpa.,left,1,2,0,1.36881651599833
+FED_20160908c_3T1,2,2,2,55,160,Sent_Perc,20,The lady is cooking for the chef.,right,2,2,1,1.56316568600596
+FED_20160908c_3T1,2,2,2,56,162,Sent_Perc,5,The dentist is treating the patient.,left,1,2,0,1.46591177000664
+FED_20160908c_3T1,2,2,2,57,164,Sent_Perc,19,The lawyer is giving money to the beggar.,left,1,2,0,1.58467192499666
+FED_20160908c_3T1,2,2,2,58,166,Sent_Perc,6,The girl is frightening the ghost.,left,1,2,0,1.49457714799792
+FED_20160908c_3T1,2,2,2,59,168,Sent_Perc,23,The judge is sentencing the criminal.,left,1,1,1,1.13207975000842
+FED_20160908c_3T1,2,2,2,60,170,Sent_Perc,16,The student is lecturing to the professor.,left,1,2,0,1.2638525479997
+FED_20160908c_3T1,2,2,2,61,172,Sent_Perc,25,Santa is giving the girl a present.,left,1,2,0,1.24616276200686
+FED_20160908c_3T1,2,2,2,62,174,Sent_Perc,9,The groom is carrying the bride.,right,2,1,0,0.91299148600956
+FED_20160908c_3T1,2,2,2,63,178,Sent_Sem,29,The thief is stealing the purse from the grandma.,right,1,2,0,1.59967153600883
+FED_20160908c_3T1,2,2,2,64,180,Sent_Sem,10,The king is entertaining the jester.,left,2,1,0,1.53072149799846
+FED_20160908c_3T1,2,2,2,65,182,Sent_Sem,28,The son is tying the father's shoes.,right,2,2,1,1.31140561000211
+FED_20160908c_3T1,2,2,2,66,184,Sent_Sem,35,The bouncer is preventing the woman from entering.,right,1,1,1,1.29193022901018
+FED_20160908c_3T1,2,2,2,67,186,Sent_Sem,36,The girl is licking the dog on the face.,right,2,2,1,1.24277251400054
+FED_20160908c_3T1,2,2,2,68,188,Sent_Sem,3,The doctor is using a stethoscope on the patient.,left,1,2,0,1.1774745240109
+FED_20160908c_3T1,2,2,2,69,190,Sent_Sem,37,The man is proposing to the woman.,right,1,1,1,1.02358616000856
+FED_20160908c_3T1,2,2,2,70,192,Sent_Sem,32,The patient is bringing flowers to the relative.,right,2,2,1,1.17383731200243
+FED_20160908c_3T1,2,2,2,71,194,Sent_Sem,27,The lady is applauding the athlete.,left,1,2,0,1.12547913900926
+FED_20160908c_3T1,2,2,2,72,196,Sent_Sem,11,The lion is pouncing on the Safari guide.,left,1,1,1,0.865899502008688
+FED_20160908c_3T1,2,2,2,73,200,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,1,1,1.43869529900257
+FED_20160908c_3T1,2,2,2,74,202,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,left,1,2,0,1.26715747200069
+FED_20160908c_3T1,2,2,2,75,204,Pic_Perc,40,40_plaus_chauffeur_opens_door_for_lady.jpg,right,2,0,0,0
+FED_20160908c_3T1,2,2,2,76,206,Pic_Perc,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,1,2,0,1.31812800600892
+FED_20160908c_3T1,2,2,2,77,208,Pic_Perc,13,13_implaus_princess_kidnaping_pirate.jpg,right,2,1,0,1.16826765000587
+FED_20160908c_3T1,2,2,2,78,210,Pic_Perc,28,28_plaus_father_laces_shoes_of_child.jpg,right,2,2,1,1.22065334500803
+FED_20160908c_3T1,2,2,2,79,212,Pic_Perc,21,21_implaus_grandpa_dances_for_ballerina.jpg,right,2,1,0,1.18475674300862
+FED_20160908c_3T1,2,2,2,80,214,Pic_Perc,14,14_plaus_priest_blesses_bride.jpg,left,1,2,0,1.2172007580084
+FED_20160908c_3T1,2,2,2,81,216,Pic_Perc,8,08_plaus_artist_painting_business_man.jpg,right,2,1,0,1.44939008900838
+FED_20160908c_3T1,2,2,2,82,218,Pic_Perc,17,17_implaus_woman_bites_vampir.jpg,left,1,2,0,1.18193523200171
+FED_20160908c_3T1,2,2,2,83,220,FIX,0,+,-,0,0,0,0
