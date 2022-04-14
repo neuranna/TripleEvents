@@ -555,7 +555,12 @@ dat = rbind(dat2, dat3)
 dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
                                            'S', 'N', 'H', 'E'))
 dat = dat %>%
-  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH'))
+  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH')) %>%
+  mutate(ROI = recode(dat$ROI,
+        '1'='LH_FrontalMed', '2'='LH_PostCing', '3'='LH_TPJ',
+        '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTemp',
+        '7'='RH_FrontalMed', '8'='RH_PostCing', '9'='RH_TPJ',
+        '10'='RH_MidCing', '11'='RH_STGorInsula', '12'='RH_AntTemp'))
 
 # split by hemi
 dat.lh = dat %>% filter(Hemisphere=='LH')
@@ -612,14 +617,14 @@ ggplot(data=dat.lh)+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
         axis.title.y = element_text(size=axis_title_size), 
         axis.text.y = element_text(size=axis_text_size), 
         legend.text = element_text(size=legend_size), 
         strip.text.x = element_text(size=facet_label_size),
         title = element_text(size=title_size, face='bold'))
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_2expt, units='cm')
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```
 ```{r plot , echo=FALSE}
 plot_name = 'Default Network - RH'
@@ -633,12 +638,13 @@ ggplot(data=dat.rh)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
+  ggtitle(plot_name)+
+  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
         axis.title.y = element_text(size=axis_title_size), 
         axis.text.y = element_text(size=axis_text_size), 
         legend.text = element_text(size=legend_size), 
         strip.text.x = element_text(size=facet_label_size),
         title = element_text(size=title_size, face='bold'))
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_2expt, units='cm')
+       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
 ```

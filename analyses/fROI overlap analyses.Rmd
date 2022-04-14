@@ -19,6 +19,12 @@ library(dplyr)
 plot_width = 16
 plot_height_2expt = 8
 plot_height_3expt = 12
+
+legend_size = 12
+axis_title_size = 12
+title_size = 14
+axis_text_size = 10
+facet_label_size = 12
 ```
 
 # Get data
@@ -29,7 +35,7 @@ Quick and dirty first pass
 
 ```{r}
 # decide which network to test
-network = "lang"
+network = "DMN"
 system_pattern = paste("*",network,"*",sep="")
 
 # read
@@ -66,8 +72,36 @@ if (network=="lang") {
           '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG'))
   dat$ROI1 = factor(dat$ROI1, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
                                      'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+} else if (network=="MD") {
+  dat = dat %>% 
+      mutate(ROI1 = recode(ROI1, 
+                       '1'='postParietal',
+                        '2'='midParietal',
+                        '3'='antParietal',
+                        '4'='supFrontal',
+                        '5'='precentral_A',
+                        '6'='precentral_B',
+                        '7'='midFrontal',
+                        '8'='midFrontalOrb',
+                        '9'='insula',
+                        '10'='medialFrontal',
+                        '11'='postParietal',
+                        '12'='midParietal',
+                        '13'='antParietal',
+                        '14'='supFrontal',
+                        '15'='precentral_A',
+                        '16'='precentral_B',
+                        '17'='midFrontal',
+                        '18'='midFrontalOrb',
+                        '19'='insula',
+                        '20'='medialFrontal'))
 } else {
-  dat$ROI1 = as.factor(dat$ROI1)
+  dat = dat %>%
+    mutate(ROI1 = recode(dat$ROI1,
+        '1'='LH_FrontalMed', '2'='LH_PostCing', '3'='LH_TPJ',
+        '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTemp',
+        '7'='RH_FrontalMed', '8'='RH_PostCing', '9'='RH_TPJ',
+        '10'='RH_MidCing', '11'='RH_STGorInsula', '12'='RH_AntTemp'))
 }
 dat$ROI2 = as.factor(dat$ROI2)
 ```
@@ -85,10 +119,14 @@ dat = dat.summ.ROI %>% left_join(dat)
 # Plot
 
 ```{r}
+plot_height = plot_height_3expt
 if (network=="lang") {
-  plot_height = plot_height_3expt
+  angle_size = 0
 } else {
-  plot_height = plot_height_2expt
+  angle_size = 90
+}
+if (network=="DMN") {
+  plot_width = 12
 }
 
 ggplot(data=dat)+
@@ -102,7 +140,14 @@ ggplot(data=dat)+
   geom_hline(yintercept=0, size=0.5)+
   ggtitle(paste("Overlap:", network, "vs. Events"))+
   labs(x=paste(network, "fROIs"), fill="Event fROIs")+
-  theme_classic()
+  coord_cartesian(ylim=c(0,0.15))+
+  theme_classic()+
+  theme(axis.text.x = element_text(size=axis_text_size, angle=angle_size, color='black'), 
+        axis.title.y = element_text(size=axis_title_size), 
+        axis.text.y = element_text(size=axis_text_size), 
+        legend.text = element_text(size=legend_size), 
+        strip.text.x = element_text(size=facet_label_size),
+        title = element_text(size=title_size, face='bold'))
 ggsave(paste("plots/overlap_", network, ".png", sep=""),
       width=plot_width, height=plot_height, units='cm')
 ```
