@@ -8,7 +8,7 @@ addpath(genpath('/om/group/evlab/software/spm_ss'))
 addpath /om/group/evlab/software/conn
 conn_module el init
 
-date = '20220415';
+date = '20220530';
 
 my_contrast1 = 'Sent_Sem-Perc';
 my_contrast2 = 'Pic_Sem-Perc';
@@ -37,7 +37,7 @@ for i=1:length(experiments)
         subject_info, "OutputVariableNames", "SPMpath");
     spmfiles = [spmfiles; cellstr(subjects.SPMpath)];
 end
-
+spmfiles = spmfiles';
 
 %% run GSS
 
