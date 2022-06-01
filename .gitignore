@@ -3,6 +3,8 @@
 ,img
 .hdr
 
+# Matlab intermediate files
+.asv
 
 # History files
 .Rhistory
