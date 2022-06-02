@@ -17,14 +17,14 @@ conn_module el init
 date = '20220601';
 [parcel_file, loc_tasks, loc_contrasts] = define_network_params(network);
 
-main_tasks = {'spatialFIN', 'SWNloc_IPS168_3runs', 'langlocSN', ...
+main_tasks = {'spatialFIN', 'SWNlocIPS168_3runs', 'langlocSN', ...
     'EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep',...
-    'Categorization'};
+    'Categorization', 'Categorization_v2'};
 main_contrasts_all = {{'H', 'E'}, {'S', 'W', 'N'}, {'S', 'N'}, ...
     {'Sem_photo' 'Perc_photo' 'Sem_sent' 'Perc_sent'},...
+    {'Sem-photo','Perc-photo','Sem-sent','Perc-sent'},...
     {'Pic_Sem','Pic_Perc','Sent_Sem','Sent_Perc'},...
-    {'Pic_Sem','Pic_Perc','Sent_Sem','Sent_Perc'},...
-    {'LD', 'HD'}};
+    {'LD', 'HD'}, {'LD', 'HD'}};
 main_task = main_tasks{main_task_index}
 main_contrasts = main_contrasts_all{main_task_index};
 
@@ -40,26 +40,29 @@ for i=1:length(loc_tasks)
 
     % define SPM paths
     session_info_thisanalysis = get_sessions(session_info, loc_task, main_task);
+    if height(session_info_thisanalysis)==0
+        continue
+    end
 
     subject_info_loc = [rowfun(@(x) sprintf("%03d", x), session_info_thisanalysis(:,"UID")),...
         session_info_thisanalysis(:,loc_task)];
     subjects_loc = rowfun(@(uid, session) make_spm_paths(data_dir, loc_task, uid, session),... 
         subject_info_loc, "OutputVariableNames", "SPMpath");
-    spmfiles_loc = cellstr(subjects_loc.SPMpath);
+    spmfiles_loc = cellstr(subjects_loc.SPMpath');
 
     subject_info_main = [rowfun(@(x) sprintf("%03d", x), session_info_thisanalysis(:,"UID")),...
         session_info_thisanalysis(:,main_task)];
     subjects_main = rowfun(@(uid, session) make_spm_paths(data_dir, main_task, uid, session),... 
         subject_info_main, "OutputVariableNames", "SPMpath");
-    spmfiles_main = cellstr(subjects_main.SPMpath);
+    spmfiles_main = cellstr(subjects_main.SPMpath');
     
     % run the analysis
     ss=struct(...
-            'swd', ['/home/annaiv/annaiv/TripleEvents/mROI_' network '/' loc_task '_' main_task '_' date],...   % output directory
+            'swd', ['/om2/user/annaiv/TripleEvents/mROI_' network '/' loc_task '_' main_task '_' date],...   % output directory
             'EffectOfInterest_spm',{spmfiles_main},...                      % first-level SPM.mat files
             'Localizer_spm', {spmfiles_loc},...
             'EffectOfInterest_contrasts',{main_contrasts},...    % contrasts of interest
-            'Localizer_contrasts',{{loc_contrasts}},...         % localizer contrast (note: if these contrasts are not orthogonal the toolbox will automatically partition theses contrasts by sessions and perform cross-validation) 
+            'Localizer_contrasts',{loc_contrasts},...         % localizer contrast (note: if these contrasts are not orthogonal the toolbox will automatically partition theses contrasts by sessions and perform cross-validation) 
             'Localizer_thr_type',{{'percentile-ROI-level'}},...
             'Localizer_thr_p',[.1],... 
             'type','mROI',...                                       % can be 'GcSS' (for automatically defined ROIs), 'mROI' (for manually defined ROIs), or 'voxel' (for voxe$
@@ -85,14 +88,14 @@ end
 function [parcel_file, loc_tasks, loc_contrasts] = define_network_params(network)
 
 if strcmp(network, 'events')
-    parcel_filepath ='/home/annaiv/annaiv/TripleEvents/GSS_EventsAll/Sent_Sem-Perc_Pic_Sem-Perc_n30_20220415/';
+    parcel_filepath ='/home/annaiv/annaiv/TripleEvents/GSS_EventsAll/Sent_Sem-Perc_Pic_Sem-Perc_n30_20220530/';
     parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200.nii');   
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
 elseif strcmp(network, 'language')
     parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_Lang_LHRH_SN220';
     parcel_file = fullfile(parcel_filepath, 'allParcels_language.nii');  
-    loc_tasks = {'SWNloc_IPS168_3runs', 'langlocSN'};
+    loc_tasks = {'SWNlocIPS168_3runs', 'langlocSN'};
     loc_contrasts = {'S-N'};
 elseif strcmp(network, 'MD') || strcmp(network, 'DMN')
     parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_MD_LHRH_HE197';
@@ -120,4 +123,11 @@ function [output_table] = get_sessions(input_table, loc_task, main_task)
 
 output_table = input_table(~strcmp(input_table{:,loc_task}, 'NA'),:);
 output_table = output_table(~strcmp(output_table{:,main_task}, 'NA'),:);
+
+% 199 only did one spatialFIN run
+if (strcmp(loc_task, 'spatialFIN') && strcmp(main_task, 'spatialFIN'))
+    output_table = output_table(output_table.UID~=199,:);
+end
+
+
 end
