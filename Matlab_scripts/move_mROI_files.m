@@ -4,6 +4,9 @@ date = '20220601';
 rootpath = '/om2/user/annaiv/TripleEvents';
 basename = 'mROI_';
 output_dir = fullfile(rootpath, 'results_mROI');
+if ~exist(output_dir, 'dir')
+    mkdir(output_dir)
+end
 
 networks = {'events', 'language', 'MD', 'DMN'};
 network_loc_tasks = {{'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'},...
@@ -20,10 +23,11 @@ for i=1:length(networks)
         loc_task = loc_tasks{j};
         for k=1:length(main_tasks)
             main_task = main_tasks{k};
-            output_dir = fullfile(output_dir, expt);
-            mkdir(output_dir);
-            copyfile(fullfile(rootpath, [basename network], [loc_task '_' main_task '_' date],  filename),...
-             fullfile(output_dir, [network '_' loc_task '_' main_task '.csv']));
+            target_dir = fullfile(rootpath, [basename network], [loc_task '_' main_task '_' date]);
+            if exist(target_dir, 'dir')
+                copyfile(fullfile(target_dir,  filename),...
+                 fullfile(output_dir, [network '_' loc_task '_' main_task '.csv']));
+            end
         end
     end
 end
