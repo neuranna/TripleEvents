@@ -7,8 +7,9 @@
 function [] = fROI_overlap_mega(network1_index, network2_index)
 
 %% setup
-addpath('/om5/group/evlab/u/annaiv/scripts');
+addpath('/om2/user/annaiv/scripts');
 addpath(genpath('/om/group/evlab/software/spm12'))
+rmpath(genpath('/om/group/evlab/software/spm12/external/fieldtrip/compat'))   % wrong istable function
 
 %% specify params
 date = '20220602';
@@ -17,8 +18,12 @@ networks = {'language', 'MD', 'DMN', 'events'};
 network1 = networks{network1_index};
 network2 = networks{network2_index};
 [parcel_hashname1, tasks1, contrast_nums_all1] = define_network_params(network1);
-[parcel_hashname2, tasks2, contrast_nums_all2] = define_network_params(network1);
+[parcel_hashname2, tasks2, contrast_nums_all2] = define_network_params(network2);
 
+output_dir = '/om2/user/annaiv/TripleEvents/data/results_fROI_overlap';
+if ~exist(output_dir, 'dir')
+    mkdir(output_dir);
+end
 
 
 %% get SPM files for all relevant participants
@@ -33,27 +38,30 @@ for i=1:length(tasks1)
     for j=1:length(tasks2)
         task2 = tasks2{j}
         contrast_nums2 = contrast_nums_all2{j};
+        if strcmp(task1, task2) && strcmp(network1, network2)
+            continue
+        end
         % select participants
         session_info_thisanalysis = get_sessions(session_info, task1, task2);
         if height(session_info_thisanalysis)==0
             continue
         end
         % define fROI paths
-        subject_info1 = [rowfun(@(x) sprintf("%03d", x), session_info_thisanalysis(:,"UID")),...
-            session_info_thisanalysis(:,loc_task)];
-        subjects1 = rowfun(@(uid, session) make_fROI_path(data_dir, loc_task, uid, session, contrast_nums1, parcel_hashname1),... 
+        subject_info1 = [rowfun(@(x) sprintf('%03d', x), session_info_thisanalysis(:,"UID")),...
+            session_info_thisanalysis(:,task1)];
+        subjects1 = rowfun(@(uid, session) make_fROI_path(data_dir, task1, uid, session, contrast_nums1, parcel_hashname1),... 
             subject_info1, "OutputVariableNames", "fROIpath");
         fROIfiles1 = cellstr(subjects1.fROIpath');
     
         subject_info2 = [rowfun(@(x) sprintf("%03d", x), session_info_thisanalysis(:,"UID")),...
-            session_info_thisanalysis(:,main_task)];
-        subjects2 = rowfun(@(uid, session) make_fROI_path(data_dir, main_task, uid, session, contrast_nums2, parcel_hashname2),... 
+            session_info_thisanalysis(:,task2)];
+        subjects2 = rowfun(@(uid, session) make_fROI_path(data_dir, task2, uid, session, contrast_nums2, parcel_hashname2),... 
             subject_info2, "OutputVariableNames", "fROIpath");
         fROIfiles2 = cellstr(subjects2.fROIpath');
         % compare
         for nsub=1:length(fROIfiles1)
-            output_file = fullfile('/om2/user/annaiv/TripleEvents/results_fROI_overlap',...
-                [sprintf("%03d", session_info_thisanalysis(nsub,"UID") '_' loc_task '_' main_task '.csv']);
+            output_file = fullfile(output_dir,...
+                [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' task1 '_' task2 '.csv']);
             calculate_parcel_overlap(fROIfiles1{nsub}, fROIfiles2{nsub}, output_file);
         end
     end
@@ -113,14 +121,14 @@ if (strcmp(loc_task, 'spatialFIN') && strcmp(main_task, 'spatialFIN'))
 end
 end
 
-function [fROIname] = get_fROIname(contrast_nums, parcel_hashname)
+function [fROIname] = get_fROI_name(contrast_nums, parcel_hashname)
 
 if length(contrast_nums)==1
-    fROIname = ['locT_' sprintf("%04d", contrast_nums{1}) ...
+    fROIname = ['locT_' sprintf('%04d', contrast_nums{1}) ...
         '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
 elseif length(contrast_nums)==2
-    fROIname = ['locT_' sprintf("%04d", contrast_nums{1}) ...
-        '_percentile-ROI-level0.1_max_' sprintf("%04d", contrast_nums{2}) ...
+    fROIname = ['locT_' sprintf('%04d', contrast_nums{1}) ...
+        '_percentile-ROI-level0.1_max_' sprintf('%04d', contrast_nums{2}) ...
         '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
 else
     error('unexpected number of contrasts: should be 1 or 2');
