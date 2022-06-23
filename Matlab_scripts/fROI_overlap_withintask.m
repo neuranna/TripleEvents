@@ -30,7 +30,7 @@ data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
 session_file = '../Participant_info/TripleEvents_sessions_clean.csv';
 session_info = readtable(session_file);
 
-for i=1:length(tasks)
+for i=1:length(tasks)   
     task = tasks{i}
     % select participants
     session_info_thisanalysis = get_sessions(session_info, task);
@@ -38,16 +38,16 @@ for i=1:length(tasks)
         continue
     end
     % define fROI paths
-    subject_info1 = [rowfun(@(x) sprintf('%03d', x), session_info_thisanalysis(:,"UID")),...
+    subject_info = [rowfun(@(x) sprintf('%03d', x), session_info_thisanalysis(:,"UID")),...
         session_info_thisanalysis(:,task)];
-    subjects1 = rowfun(@(uid, session) make_fROI_path(data_dir, task, uid, session, contrast_names, parcel_hashname),... 
-        subject_info1, 'OutputVariableNames', {'fROIpath1', 'fROIpath2'});
-    fROIfiles1 = cellstr(subjects1.fROIpath1');
-    fROIfiles2 = cellstr(subjects2.fROIpath2');
+    subjects = rowfun(@(uid, session) make_fROI_path(data_dir, task, uid, session, contrast_names, parcel_hashname),... 
+        subject_info, 'OutputVariableNames', {'fROIpath1', 'fROIpath2'});
+    fROIfiles1 = cellstr(subjects.fROIpath1');
+    fROIfiles2 = cellstr(subjects.fROIpath2');
     % compare
     for nsub=1:length(fROIfiles1)
         output_file = fullfile(output_dir,...
-            [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' task '_' task '.csv']);
+            [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' network '_' task '_' task '.csv']);
         calculate_parcel_overlap(fROIfiles1{nsub}, fROIfiles2{nsub}, output_file);
     end
         
@@ -142,7 +142,8 @@ load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
 
 % get con indices corresponding to each problem 
 con_indices = [];
-prefixes = {'ODD_', 'EVEN_'};
+%prefixes = {'ODD_', 'EVEN_'};
+prefixes = {'ORTH_TO_SESSION01_', 'ORTH_TO_SESSION02_'};
 for i=1:length(prefixes)
     condition = [prefixes{i} contrast_name];
     con_indices = [con_indices, find(strcmp({SPM.xCon.name}, condition))];
