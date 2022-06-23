@@ -1,0 +1,84 @@
+SubjID,List,Order,Run,TrialNumber,TrialOnset,Condition,ItemNum,Item,Motion,CorrectAnswer,Response,Accuracy,RT
+FED_20190426a_3T2,2,3,2,1,0,FIX,0,+,-,0,0,0,0
+FED_20190426a_3T2,2,3,2,2,24,Sent_Sem,25,Santa is giving the girl a present.,right,1,1,1,1.81015354799456
+FED_20190426a_3T2,2,3,2,3,26,Sent_Sem,24,The child is pulling the father on the sled.,left,2,2,1,1.84835451199615
+FED_20190426a_3T2,2,3,2,4,28,Sent_Sem,40,The lady is opening the door for the chauffeur.,left,2,2,1,1.69019002799178
+FED_20190426a_3T2,2,3,2,5,30,Sent_Sem,27,The lady is applauding the athlete.,left,1,1,1,1.62755451200064
+FED_20190426a_3T2,2,3,2,6,32,Sent_Sem,15,The shark is biting the snorkeler.,left,1,1,1,1.35491960200306
+FED_20190426a_3T2,2,3,2,7,34,Sent_Sem,1,The cop is arresting the criminal.,right,1,1,1,1.22118459499325
+FED_20190426a_3T2,2,3,2,8,36,Sent_Sem,8,The businessman is painting the artist.,right,2,2,1,1.42021782399388
+FED_20190426a_3T2,2,3,2,9,38,Sent_Sem,33,The boss is yelling at the worker.,left,1,1,1,1.5022508569964
+FED_20190426a_3T2,2,3,2,10,40,Sent_Sem,14,The bride is blessing the priest.,right,2,1,0,1.48569700299413
+FED_20190426a_3T2,2,3,2,11,42,Sent_Sem,28,The son is tying the father's shoes.,left,2,2,1,1.95815967100498
+FED_20190426a_3T2,2,3,2,12,46,Sent_Perc,3,The doctor is using a stethoscope on the patient.,left,1,1,1,1.55348566800239
+FED_20190426a_3T2,2,3,2,13,48,Sent_Perc,16,The student is lecturing to the professor.,right,2,2,1,0.816024259998812
+FED_20190426a_3T2,2,3,2,14,50,Sent_Perc,22,The sportsstar is interviewing the journalist.,right,2,2,1,1.08200856100302
+FED_20190426a_3T2,2,3,2,15,52,Sent_Perc,18,The customer is serving the waiter.,right,2,2,1,0.681158585997764
+FED_20190426a_3T2,2,3,2,16,54,Sent_Perc,7,The mother is feeding the baby.,right,2,1,0,1.42976124100096
+FED_20190426a_3T2,2,3,2,17,56,Sent_Perc,19,The lawyer is giving money to the beggar.,left,1,1,1,1.23090784199303
+FED_20190426a_3T2,2,3,2,18,58,Sent_Perc,30,The mouse is chasing the cat.,left,1,1,1,1.0290427049913
+FED_20190426a_3T2,2,3,2,19,60,Sent_Perc,23,The judge is sentencing the criminal.,right,2,2,1,0.978377598003135
+FED_20190426a_3T2,2,3,2,20,62,Sent_Perc,20,The lady is cooking for the chef.,right,2,2,1,0.860415622999426
+FED_20190426a_3T2,2,3,2,21,64,Sent_Perc,39,The lifeguard is saving the grandmother.,left,1,1,1,0.79439338100201
+FED_20190426a_3T2,2,3,2,22,68,Pic_Sem,37,37_implaus_woman_proposing_to_man.jpg,left,2,1,0,1.58371310199436
+FED_20190426a_3T2,2,3,2,23,70,Pic_Sem,28,28_plaus_father_laces_shoes_of_child.jpg,right,1,1,1,1.64964708600019
+FED_20190426a_3T2,2,3,2,24,72,Pic_Sem,32,32_plaus_relative_visits_patient.jpg,right,1,1,1,1.32586995599559
+FED_20190426a_3T2,2,3,2,25,74,Pic_Sem,23,23_implaus_criminal_sentences_judge.jpg,right,2,2,1,1.17595387699839
+FED_20190426a_3T2,2,3,2,26,76,Pic_Sem,17,17_implaus_woman_bites_vampir.jpg,right,2,2,1,1.19125005199749
+FED_20190426a_3T2,2,3,2,27,78,Pic_Sem,21,21_implaus_grandpa_dances_for_ballerina.jpg,left,2,2,1,1.04023386699555
+FED_20190426a_3T2,2,3,2,28,80,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,left,1,1,1,1.24055437899369
+FED_20190426a_3T2,2,3,2,29,82,Pic_Sem,35,35_implaus_girl_rejects_bouncer.jpg,right,2,2,1,0.922537705991999
+FED_20190426a_3T2,2,3,2,30,84,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,left,2,2,1,1.1666574569972
+FED_20190426a_3T2,2,3,2,31,86,Pic_Sem,36,36_plaus_dog_licking_child.jpg,right,1,1,1,0.905324318999192
+FED_20190426a_3T2,2,3,2,32,90,Pic_Perc,11,11_implaus_guide_chases_lion.jpg,left,1,1,1,1.51797100399563
+FED_20190426a_3T2,2,3,2,33,92,Pic_Perc,15,15_implaus_snorkler_bites_shark.jpg,left,1,1,1,0.801277906997711
+FED_20190426a_3T2,2,3,2,34,94,Pic_Perc,5,05_implaus_patient_treating_dentist.jpg,right,2,2,1,0.868948867995641
+FED_20190426a_3T2,2,3,2,35,96,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,1,1,0.651561106991721
+FED_20190426a_3T2,2,3,2,36,98,Pic_Perc,31,31_implaus_patient_pushes_visitor.jpg,left,1,1,1,0.8335096219962
+FED_20190426a_3T2,2,3,2,37,100,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,left,1,1,1,0.66598652099492
+FED_20190426a_3T2,2,3,2,38,102,Pic_Perc,18,18_plaus_waiter_serving_customer.jpg,left,1,1,1,0.781459246994928
+FED_20190426a_3T2,2,3,2,39,104,Pic_Perc,27,27_implaus_athlete_applauds_the_lady.jpg,right,2,2,1,0.997254489004263
+FED_20190426a_3T2,2,3,2,40,106,Pic_Perc,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,1,1,1,0.730143975000829
+FED_20190426a_3T2,2,3,2,41,108,Pic_Perc,24,24_plaus_father_pulls_child.jpg,right,2,1,0,1.39591045599082
+FED_20190426a_3T2,2,3,2,42,110,FIX,0,+,-,0,0,0,0
+FED_20190426a_3T2,2,3,2,43,134,Pic_Perc,11,11_implaus_guide_chases_lion.jpg,left,1,1,1,0.889168790992699
+FED_20190426a_3T2,2,3,2,44,136,Pic_Perc,15,15_implaus_snorkler_bites_shark.jpg,left,1,1,1,0.538983496997389
+FED_20190426a_3T2,2,3,2,45,138,Pic_Perc,5,05_implaus_patient_treating_dentist.jpg,right,2,2,1,0.852646254992578
+FED_20190426a_3T2,2,3,2,46,140,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,1,1,0.721143129005213
+FED_20190426a_3T2,2,3,2,47,142,Pic_Perc,31,31_implaus_patient_pushes_visitor.jpg,left,1,1,1,0.568576666992158
+FED_20190426a_3T2,2,3,2,48,144,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,left,1,2,0,0.786234864004655
+FED_20190426a_3T2,2,3,2,49,146,Pic_Perc,18,18_plaus_waiter_serving_customer.jpg,left,1,1,1,0.701891217991943
+FED_20190426a_3T2,2,3,2,50,148,Pic_Perc,27,27_implaus_athlete_applauds_the_lady.jpg,right,2,1,0,0.584336978994543
+FED_20190426a_3T2,2,3,2,51,150,Pic_Perc,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,1,2,0,0.96617395899375
+FED_20190426a_3T2,2,3,2,52,152,Pic_Perc,24,24_plaus_father_pulls_child.jpg,right,2,1,0,1.33284856600221
+FED_20190426a_3T2,2,3,2,53,156,Pic_Sem,37,37_implaus_woman_proposing_to_man.jpg,left,2,1,0,1.55579411999497
+FED_20190426a_3T2,2,3,2,54,158,Pic_Sem,28,28_plaus_father_laces_shoes_of_child.jpg,right,1,2,0,0.980183655992732
+FED_20190426a_3T2,2,3,2,55,160,Pic_Sem,32,32_plaus_relative_visits_patient.jpg,right,1,1,1,0.846867935004411
+FED_20190426a_3T2,2,3,2,56,162,Pic_Sem,23,23_implaus_criminal_sentences_judge.jpg,right,2,2,1,1.01399905000289
+FED_20190426a_3T2,2,3,2,57,164,Pic_Sem,17,17_implaus_woman_bites_vampir.jpg,right,2,1,0,0.995273010994424
+FED_20190426a_3T2,2,3,2,58,166,Pic_Sem,21,21_implaus_grandpa_dances_for_ballerina.jpg,left,2,2,1,1.02705717200297
+FED_20190426a_3T2,2,3,2,59,168,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,left,1,1,1,0.910183675994631
+FED_20190426a_3T2,2,3,2,60,170,Pic_Sem,35,35_implaus_girl_rejects_bouncer.jpg,right,2,2,1,1.27736419999565
+FED_20190426a_3T2,2,3,2,61,172,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,left,2,1,0,1.17548071200144
+FED_20190426a_3T2,2,3,2,62,174,Pic_Sem,36,36_plaus_dog_licking_child.jpg,right,1,1,1,0.974363817993435
+FED_20190426a_3T2,2,3,2,63,178,Sent_Perc,3,The doctor is using a stethoscope on the patient.,left,1,1,1,1.750610735995
+FED_20190426a_3T2,2,3,2,64,180,Sent_Perc,16,The student is lecturing to the professor.,right,2,1,0,1.3540447359992
+FED_20190426a_3T2,2,3,2,65,182,Sent_Perc,22,The sportsstar is interviewing the journalist.,right,2,2,1,0.839487595992978
+FED_20190426a_3T2,2,3,2,66,184,Sent_Perc,18,The customer is serving the waiter.,right,2,1,0,0.635118224003236
+FED_20190426a_3T2,2,3,2,67,186,Sent_Perc,7,The mother is feeding the baby.,right,2,2,1,0.970562258997234
+FED_20190426a_3T2,2,3,2,68,188,Sent_Perc,19,The lawyer is giving money to the beggar.,left,1,1,1,0.86752636199526
+FED_20190426a_3T2,2,3,2,69,190,Sent_Perc,30,The mouse is chasing the cat.,left,1,1,1,0.95282403100282
+FED_20190426a_3T2,2,3,2,70,192,Sent_Perc,23,The judge is sentencing the criminal.,right,2,1,0,1.08431165399088
+FED_20190426a_3T2,2,3,2,71,194,Sent_Perc,20,The lady is cooking for the chef.,right,2,2,1,0.903432812003302
+FED_20190426a_3T2,2,3,2,72,196,Sent_Perc,39,The lifeguard is saving the grandmother.,left,1,1,1,0.635162630002014
+FED_20190426a_3T2,2,3,2,73,200,Sent_Sem,25,Santa is giving the girl a present.,right,1,2,0,1.54972208700201
+FED_20190426a_3T2,2,3,2,74,202,Sent_Sem,24,The child is pulling the father on the sled.,left,2,1,0,1.29816469800426
+FED_20190426a_3T2,2,3,2,75,204,Sent_Sem,40,The lady is opening the door for the chauffeur.,left,2,1,0,1.3809975359909
+FED_20190426a_3T2,2,3,2,76,206,Sent_Sem,27,The lady is applauding the athlete.,left,1,1,1,1.18108837799809
+FED_20190426a_3T2,2,3,2,77,208,Sent_Sem,15,The shark is biting the snorkeler.,left,1,2,0,1.52937605199986
+FED_20190426a_3T2,2,3,2,78,210,Sent_Sem,1,The cop is arresting the criminal.,right,1,1,1,1.65951845199743
+FED_20190426a_3T2,2,3,2,79,212,Sent_Sem,8,The businessman is painting the artist.,right,2,2,1,1.61877559999994
+FED_20190426a_3T2,2,3,2,80,214,Sent_Sem,33,The boss is yelling at the worker.,left,1,1,1,1.42824232899875
+FED_20190426a_3T2,2,3,2,81,216,Sent_Sem,14,The bride is blessing the priest.,right,2,0,0,0
+FED_20190426a_3T2,2,3,2,82,218,Sent_Sem,28,The son is tying the father's shoes.,left,2,2,1,0.155244209992816
+FED_20190426a_3T2,2,3,2,83,220,FIX,0,+,-,0,0,0,0

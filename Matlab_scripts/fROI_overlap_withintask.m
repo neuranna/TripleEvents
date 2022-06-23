@@ -25,7 +25,7 @@ end
 
 
 %% get files for all relevant participants
-data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
+data_dir = '/mindhive/evlab/u/Shared/SUBJECTS';
 
 session_file = '../Participant_info/TripleEvents_sessions_clean.csv';
 session_info = readtable(session_file);
@@ -88,17 +88,6 @@ end
 
 
 
-function [output_table] = get_sessions(input_table, task)
-
-output_table = input_table(~strcmp(input_table{:,task}, 'NA'),:);
-% 199 only did one spatialFIN run
-if (strcmp(task, 'spatialFIN'))
-    output_table = output_table(output_table.UID~=199,:);
-end
-end
-
-
-
 function [fROIpath1, fROIpath2] = make_fROI_path(data_dir, task, uid, session, contrast_names, parcel_hashname)
 
 session = strcat(uid, '_', session{:}, '_PL2017');
@@ -106,6 +95,8 @@ fROInames = get_fROI_name(data_dir, session, task, contrast_names, parcel_hashna
 fROIpath1 = fullfile(data_dir, session, ['firstlevel_' task], fROInames{1});
 fROIpath2 = fullfile(data_dir, session, ['firstlevel_' task], fROInames{2});
 end
+
+
 
 
 
