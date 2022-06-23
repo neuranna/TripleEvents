@@ -1,0 +1,38 @@
+Acquisition number: 2
+Conterbalancing number: 1
+Ordering number: 4
+Semantic sentences:
+Response: 42
+No response: 6
+RT mean: 1.18529131867
+RT standard deviation: 0.144628795516
+Accuracy mean: 0.809523809524
+Accuracy standard deviation: 0.397436617932
+Semantic photos:
+Response: 42
+No response: 6
+RT mean: 1.01856836251
+RT standard deviation: 0.146451091044
+Accuracy mean: 0.904761904762
+Accuracy standard deviation: 0.297101757186
+Perceptual sentences:
+Response: 31
+No response: 17
+RT mean: 1.17878180935
+RT standard deviation: 0.144457628149
+Accuracy mean: 0.870967741935
+Accuracy standard deviation: 0.340777100548
+Perceptual photos:
+Response: 28
+No response: 20
+RT mean: 1.21385158811
+RT standard deviation: 0.142797562424
+Accuracy mean: 1.0
+Accuracy standard deviation: 0.0
+Total:
+Response: 143
+No response: 49
+RT mean: 1.14050480536
+RT standard deviation: 0.163981205813
+Accuracy mean: 0.888111888112
+Accuracy standard deviation: 0.316336759071

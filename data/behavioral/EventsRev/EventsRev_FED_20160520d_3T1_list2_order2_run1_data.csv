@@ -1,0 +1,84 @@
+SubjID,List,Order,Run,TrialNumber,TrialOnset,Condition,ItemNum,Item,Motion,CorrectAnswer,Response,Accuracy,RT
+FED_20160520d_3T1,2,2,1,1,0,FIX,0,+,-,0,0,0,0
+FED_20160520d_3T1,2,2,1,2,24,Pic_Perc,8,08_plaus_artist_painting_business_man.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,3,26,Pic_Perc,21,21_implaus_grandpa_dances_for_ballerina.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,4,28,Pic_Perc,40,40_plaus_chauffeur_opens_door_for_lady.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,5,30,Pic_Perc,10,10_plaus_jester_entertains_king.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,6,32,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,7,34,Pic_Perc,39,39_implaus_grandma_saves_lifeguard.jpg,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,8,36,Pic_Perc,29,29_implaus_grandma_steals_from_thief.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,9,38,Pic_Perc,9,09_implaus_bride_carries_groom.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,10,40,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,11,42,Pic_Perc,37,37_implaus_woman_proposing_to_man.jpg,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,12,46,Sent_Sem,4,The grandmother is rescuing the fireman.,left,2,0,0,0
+FED_20160520d_3T1,2,2,1,13,48,Sent_Sem,34,The blind person is leading the dog.,left,2,1,0,0.226370541990036
+FED_20160520d_3T1,2,2,1,14,50,Sent_Sem,11,The lion is pouncing on the Safari guide.,right,1,2,0,1.7543743540009
+FED_20160520d_3T1,2,2,1,15,52,Sent_Sem,8,The businessman is painting the artist.,left,2,2,1,1.65520668998943
+FED_20160520d_3T1,2,2,1,16,54,Sent_Sem,17,The vampire is biting the woman.,right,1,0,0,0
+FED_20160520d_3T1,2,2,1,17,56,Sent_Sem,30,The mouse is chasing the cat.,right,2,1,0,1.2251794859767
+FED_20160520d_3T1,2,2,1,18,58,Sent_Sem,37,The man is proposing to the woman.,right,1,1,1,1.79420314598246
+FED_20160520d_3T1,2,2,1,19,60,Sent_Sem,3,The doctor is using a stethoscope on the patient.,right,1,1,1,1.53958659397904
+FED_20160520d_3T1,2,2,1,20,62,Sent_Sem,39,The lifeguard is saving the grandmother.,left,1,1,1,1.60444534698036
+FED_20160520d_3T1,2,2,1,21,64,Sent_Sem,12,The model is taking a picture of the photographer.,left,2,2,1,1.3726774189854
+FED_20160520d_3T1,2,2,1,22,68,Sent_Perc,18,The customer is serving the waiter.,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,23,70,Sent_Perc,29,The thief is stealing the purse from the grandma.,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,24,72,Sent_Perc,15,The shark is biting the snorkeler.,right,2,1,0,1.79214570298791
+FED_20160520d_3T1,2,2,1,25,74,Sent_Perc,5,The dentist is treating the patient.,left,1,1,1,1.64646444399841
+FED_20160520d_3T1,2,2,1,26,76,Sent_Perc,38,The princess is measuring the tailor.,right,2,2,1,1.40036590798991
+FED_20160520d_3T1,2,2,1,27,78,Sent_Perc,27,The lady is applauding the athlete.,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,28,80,Sent_Perc,21,The ballerina is dancing for the grandpa.,left,1,1,1,0.0340996199811343
+FED_20160520d_3T1,2,2,1,29,82,Sent_Perc,28,The son is tying the father's shoes.,right,2,1,0,1.41497334398446
+FED_20160520d_3T1,2,2,1,30,84,Sent_Perc,9,The groom is carrying the bride.,right,2,1,0,1.36466818398912
+FED_20160520d_3T1,2,2,1,31,86,Sent_Perc,2,The child is scolding the babysitter.,left,1,1,1,1.58518870497937
+FED_20160520d_3T1,2,2,1,32,90,Pic_Sem,27,27_implaus_athlete_applauds_the_lady.jpg,left,2,0,0,0
+FED_20160520d_3T1,2,2,1,33,92,Pic_Sem,28,28_plaus_father_laces_shoes_of_child.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,34,94,Pic_Sem,1,01_implaus_criminal_arrests_cop.jpg,left,2,2,1,1.19487830199068
+FED_20160520d_3T1,2,2,1,35,96,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,right,2,2,1,0.994213812984526
+FED_20160520d_3T1,2,2,1,36,98,Pic_Sem,14,14_plaus_priest_blesses_bride.jpg,left,1,2,0,1.17674006900052
+FED_20160520d_3T1,2,2,1,37,100,Pic_Sem,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,2,1,0,1.20874396798899
+FED_20160520d_3T1,2,2,1,38,102,Pic_Sem,35,35_implaus_girl_rejects_bouncer.jpg,left,2,1,0,1.32539272098802
+FED_20160520d_3T1,2,2,1,39,104,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,40,106,Pic_Sem,26,26_plaus_peasant_bows_to_queen.jpg,right,1,1,1,1.19163309398573
+FED_20160520d_3T1,2,2,1,41,108,Pic_Sem,36,36_plaus_dog_licking_child.jpg,right,1,1,1,1.17373407600098
+FED_20160520d_3T1,2,2,1,42,110,FIX,0,+,-,0,0,0,0
+FED_20160520d_3T1,2,2,1,43,134,Pic_Sem,27,27_implaus_athlete_applauds_the_lady.jpg,left,2,0,0,0
+FED_20160520d_3T1,2,2,1,44,136,Pic_Sem,28,28_plaus_father_laces_shoes_of_child.jpg,left,1,1,1,1.36351593397558
+FED_20160520d_3T1,2,2,1,45,138,Pic_Sem,1,01_implaus_criminal_arrests_cop.jpg,left,2,2,1,1.32991589899757
+FED_20160520d_3T1,2,2,1,46,140,Pic_Sem,7,07_implaus_baby_feeding_mother.jpg,right,2,2,1,1.5313660739921
+FED_20160520d_3T1,2,2,1,47,142,Pic_Sem,14,14_plaus_priest_blesses_bride.jpg,left,1,1,1,1.6170929200016
+FED_20160520d_3T1,2,2,1,48,144,Pic_Sem,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,2,1,0,1.31111443598638
+FED_20160520d_3T1,2,2,1,49,146,Pic_Sem,35,35_implaus_girl_rejects_bouncer.jpg,left,2,2,1,1.21114413498435
+FED_20160520d_3T1,2,2,1,50,148,Pic_Sem,22,22_plaus_journalist_interviews_sports_star.jpg,left,1,1,1,1.77947403298458
+FED_20160520d_3T1,2,2,1,51,150,Pic_Sem,26,26_plaus_peasant_bows_to_queen.jpg,right,1,2,0,1.14279332000297
+FED_20160520d_3T1,2,2,1,52,152,Pic_Sem,36,36_plaus_dog_licking_child.jpg,right,1,1,1,1.25852913298877
+FED_20160520d_3T1,2,2,1,53,156,Sent_Perc,18,The customer is serving the waiter.,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,54,158,Sent_Perc,29,The thief is stealing the purse from the grandma.,right,2,0,0,0
+FED_20160520d_3T1,2,2,1,55,160,Sent_Perc,15,The shark is biting the snorkeler.,right,2,1,0,1.20795925098355
+FED_20160520d_3T1,2,2,1,56,162,Sent_Perc,5,The dentist is treating the patient.,left,1,1,1,1.06912556599127
+FED_20160520d_3T1,2,2,1,57,164,Sent_Perc,38,The princess is measuring the tailor.,right,2,1,0,1.24955827498343
+FED_20160520d_3T1,2,2,1,58,166,Sent_Perc,27,The lady is applauding the athlete.,right,2,1,0,1.36600652898778
+FED_20160520d_3T1,2,2,1,59,168,Sent_Perc,21,The ballerina is dancing for the grandpa.,left,1,2,0,0.8868373829755
+FED_20160520d_3T1,2,2,1,60,170,Sent_Perc,28,The son is tying the father's shoes.,right,2,1,0,0.918167704978259
+FED_20160520d_3T1,2,2,1,61,172,Sent_Perc,9,The groom is carrying the bride.,right,2,1,0,1.48425467900233
+FED_20160520d_3T1,2,2,1,62,174,Sent_Perc,2,The child is scolding the babysitter.,left,1,2,0,0.986745768983383
+FED_20160520d_3T1,2,2,1,63,178,Sent_Sem,4,The grandmother is rescuing the fireman.,left,2,2,1,1.79351580399089
+FED_20160520d_3T1,2,2,1,64,180,Sent_Sem,34,The blind person is leading the dog.,left,2,1,0,0.98472969897557
+FED_20160520d_3T1,2,2,1,65,182,Sent_Sem,11,The lion is pouncing on the Safari guide.,right,1,2,0,1.24942369599012
+FED_20160520d_3T1,2,2,1,66,184,Sent_Sem,8,The businessman is painting the artist.,left,2,0,0,0
+FED_20160520d_3T1,2,2,1,67,186,Sent_Sem,17,The vampire is biting the woman.,right,1,0,0,0
+FED_20160520d_3T1,2,2,1,68,188,Sent_Sem,30,The mouse is chasing the cat.,right,2,1,0,1.24608316700323
+FED_20160520d_3T1,2,2,1,69,190,Sent_Sem,37,The man is proposing to the woman.,right,1,0,0,0
+FED_20160520d_3T1,2,2,1,70,192,Sent_Sem,3,The doctor is using a stethoscope on the patient.,right,1,1,1,0.0793733949831221
+FED_20160520d_3T1,2,2,1,71,194,Sent_Sem,39,The lifeguard is saving the grandmother.,left,1,1,1,0.0124047179997433
+FED_20160520d_3T1,2,2,1,72,196,Sent_Sem,12,The model is taking a picture of the photographer.,left,2,2,1,1.34450320299948
+FED_20160520d_3T1,2,2,1,73,200,Pic_Perc,8,08_plaus_artist_painting_business_man.jpg,left,1,0,0,0
+FED_20160520d_3T1,2,2,1,74,202,Pic_Perc,21,21_implaus_grandpa_dances_for_ballerina.jpg,left,1,2,0,1.22763641999336
+FED_20160520d_3T1,2,2,1,75,204,Pic_Perc,40,40_plaus_chauffeur_opens_door_for_lady.jpg,left,1,1,1,1.20862309398944
+FED_20160520d_3T1,2,2,1,76,206,Pic_Perc,10,10_plaus_jester_entertains_king.jpg,left,1,2,0,1.49086271997658
+FED_20160520d_3T1,2,2,1,77,208,Pic_Perc,6,06_plaus_ghost_frightens_girl.jpg,left,1,2,0,1.67043889398337
+FED_20160520d_3T1,2,2,1,78,210,Pic_Perc,39,39_implaus_grandma_saves_lifeguard.jpg,right,2,1,0,1.24003705699579
+FED_20160520d_3T1,2,2,1,79,212,Pic_Perc,29,29_implaus_grandma_steals_from_thief.jpg,left,1,2,0,1.35661250600242
+FED_20160520d_3T1,2,2,1,80,214,Pic_Perc,9,09_implaus_bride_carries_groom.jpg,left,1,1,1,1.48864666000009
+FED_20160520d_3T1,2,2,1,81,216,Pic_Perc,4,04_plaus_fireman_rescuse_grandmother.jpg,right,2,2,1,1.83087665899075
+FED_20160520d_3T1,2,2,1,82,218,Pic_Perc,37,37_implaus_woman_proposing_to_man.jpg,right,2,1,0,1.68616897898028
+FED_20160520d_3T1,2,2,1,83,220,FIX,0,+,-,0,0,0,0

@@ -1,0 +1,84 @@
+SubjID,List,Order,Run,TrialNumber,TrialOnset,Condition,ItemNum,Item,Motion,CorrectAnswer,Response,Accuracy,RT
+FED_20190418b_3T2,2,3,1,1,0,FIX,0,+,-,0,0,0,0
+FED_20190418b_3T2,2,3,1,2,24,Sent_Sem,30,The mouse is chasing the cat.,left,2,0,0,0
+FED_20190418b_3T2,2,3,1,3,26,Sent_Sem,17,The vampire is biting the woman.,right,1,0,0,0
+FED_20190418b_3T2,2,3,1,4,28,Sent_Sem,39,The lifeguard is saving the grandmother.,right,1,0,0,0
+FED_20190418b_3T2,2,3,1,5,30,Sent_Sem,10,The king is entertaining the jester.,left,2,0,0,0
+FED_20190418b_3T2,2,3,1,6,32,Sent_Sem,37,The man is proposing to the woman.,left,1,1,1,1.69797597400611
+FED_20190418b_3T2,2,3,1,7,34,Sent_Sem,18,The customer is serving the waiter.,left,2,2,1,1.62567434000084
+FED_20190418b_3T2,2,3,1,8,36,Sent_Sem,7,The mother is feeding the baby.,right,1,1,1,1.53737752600864
+FED_20190418b_3T2,2,3,1,9,38,Sent_Sem,40,The lady is opening the door for the chauffeur.,right,2,1,0,1.84326456500276
+FED_20190418b_3T2,2,3,1,10,40,Sent_Sem,3,The doctor is using a stethoscope on the patient.,left,1,1,1,1.70105574700574
+FED_20190418b_3T2,2,3,1,11,42,Sent_Sem,11,The lion is pouncing on the Safari guide.,right,1,1,1,1.71298323900555
+FED_20190418b_3T2,2,3,1,12,46,Sent_Perc,28,The son is tying the father's shoes.,left,1,0,0,0
+FED_20190418b_3T2,2,3,1,13,48,Sent_Perc,12,The model is taking a picture of the photographer.,right,2,0,0,0
+FED_20190418b_3T2,2,3,1,14,50,Sent_Perc,27,The lady is applauding the athlete.,left,1,0,0,0
+FED_20190418b_3T2,2,3,1,15,52,Sent_Perc,5,The dentist is treating the patient.,left,1,1,1,1.37954735700623
+FED_20190418b_3T2,2,3,1,16,54,Sent_Perc,32,The patient is bringing flowers to the relative.,left,1,1,1,1.18110329500632
+FED_20190418b_3T2,2,3,1,17,56,Sent_Perc,19,The lawyer is giving money to the beggar.,right,2,2,1,0.746648763000849
+FED_20190418b_3T2,2,3,1,18,58,Sent_Perc,31,The visitor is pushing the patient.,left,1,1,1,0.74562486600189
+FED_20190418b_3T2,2,3,1,19,60,Sent_Perc,34,The blind person is leading the dog.,left,1,1,1,1.16202279900608
+FED_20190418b_3T2,2,3,1,20,62,Sent_Perc,35,The bouncer is preventing the woman from entering.,left,1,1,1,1.17930671200156
+FED_20190418b_3T2,2,3,1,21,64,Sent_Perc,25,Santa is giving the girl a present.,right,2,1,0,1.70259247699869
+FED_20190418b_3T2,2,3,1,22,68,Pic_Sem,25,25_implaus_girl_gives_present_to_santa.jpg,left,2,1,0,1.66167573000712
+FED_20190418b_3T2,2,3,1,23,70,Pic_Sem,13,13_implaus_princess_kidnaping_pirate.jpg,left,2,1,0,1.34058478599763
+FED_20190418b_3T2,2,3,1,24,72,Pic_Sem,9,09_implaus_bride_carries_groom.jpg,left,2,1,0,1.02637569700892
+FED_20190418b_3T2,2,3,1,25,74,Pic_Sem,38,38_plaus_tailor_measuring_princess.jpg,left,1,1,1,1.15894637700694
+FED_20190418b_3T2,2,3,1,26,76,Pic_Sem,32,32_plaus_relative_visits_patient.jpg,left,1,1,1,0.992434961008257
+FED_20190418b_3T2,2,3,1,27,78,Pic_Sem,40,40_plaus_chauffeur_opens_door_for_lady.jpg,left,1,1,1,0.938223018005374
+FED_20190418b_3T2,2,3,1,28,80,Pic_Sem,27,27_implaus_athlete_applauds_the_lady.jpg,right,2,1,0,1.10358117500436
+FED_20190418b_3T2,2,3,1,29,82,Pic_Sem,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,2,1,0,1.0377649130096
+FED_20190418b_3T2,2,3,1,30,84,Pic_Sem,6,06_plaus_ghost_frightens_girl.jpg,right,1,2,0,1.4526116370107
+FED_20190418b_3T2,2,3,1,31,86,Pic_Sem,12,12_plaus_photographer_photographes_model.jpg,right,1,1,1,1.23480637400644
+FED_20190418b_3T2,2,3,1,32,90,Pic_Perc,15,15_implaus_snorkler_bites_shark.jpg,right,2,0,0,0
+FED_20190418b_3T2,2,3,1,33,92,Pic_Perc,16,16_plaus_professor_lectures_to_a_student.jpg,left,1,0,0,0
+FED_20190418b_3T2,2,3,1,34,94,Pic_Perc,31,31_implaus_patient_pushes_visitor.jpg,left,1,1,1,0.89947966800537
+FED_20190418b_3T2,2,3,1,35,96,Pic_Perc,1,01_implaus_criminal_arrests_cop.jpg,right,2,1,0,1.54515491200436
+FED_20190418b_3T2,2,3,1,36,98,Pic_Perc,28,28_plaus_father_laces_shoes_of_child.jpg,right,2,1,0,1.33227358901058
+FED_20190418b_3T2,2,3,1,37,100,Pic_Perc,7,07_implaus_baby_feeding_mother.jpg,left,1,1,1,1.11545799400483
+FED_20190418b_3T2,2,3,1,38,102,Pic_Perc,20,20_plaus_chef_cooks_for_lady.jpg,left,1,1,1,1.59766679099994
+FED_20190418b_3T2,2,3,1,39,104,Pic_Perc,34,34_plaus_dog_leading_blind_person.jpg,left,1,1,1,1.04785792400071
+FED_20190418b_3T2,2,3,1,40,106,Pic_Perc,35,35_implaus_girl_rejects_bouncer.jpg,left,1,1,1,1.68106907400943
+FED_20190418b_3T2,2,3,1,41,108,Pic_Perc,18,18_plaus_waiter_serving_customer.jpg,left,1,1,1,1.09624364100455
+FED_20190418b_3T2,2,3,1,42,110,FIX,0,+,-,0,0,0,0
+FED_20190418b_3T2,2,3,1,43,134,Pic_Perc,15,15_implaus_snorkler_bites_shark.jpg,right,2,1,0,1.40217086100893
+FED_20190418b_3T2,2,3,1,44,136,Pic_Perc,16,16_plaus_professor_lectures_to_a_student.jpg,left,1,2,0,0.971109353005886
+FED_20190418b_3T2,2,3,1,45,138,Pic_Perc,31,31_implaus_patient_pushes_visitor.jpg,left,1,1,1,1.15311537300295
+FED_20190418b_3T2,2,3,1,46,140,Pic_Perc,1,01_implaus_criminal_arrests_cop.jpg,right,2,1,0,1.69153844700486
+FED_20190418b_3T2,2,3,1,47,142,Pic_Perc,28,28_plaus_father_laces_shoes_of_child.jpg,right,2,2,1,1.20273756400275
+FED_20190418b_3T2,2,3,1,48,144,Pic_Perc,7,07_implaus_baby_feeding_mother.jpg,left,1,2,0,1.53228714900615
+FED_20190418b_3T2,2,3,1,49,146,Pic_Perc,20,20_plaus_chef_cooks_for_lady.jpg,left,1,2,0,1.13216469100735
+FED_20190418b_3T2,2,3,1,50,148,Pic_Perc,34,34_plaus_dog_leading_blind_person.jpg,left,1,2,0,0.92830433700874
+FED_20190418b_3T2,2,3,1,51,150,Pic_Perc,35,35_implaus_girl_rejects_bouncer.jpg,left,1,1,1,0.747120147003443
+FED_20190418b_3T2,2,3,1,52,152,Pic_Perc,18,18_plaus_waiter_serving_customer.jpg,left,1,2,0,1.06365506100701
+FED_20190418b_3T2,2,3,1,53,156,Pic_Sem,25,25_implaus_girl_gives_present_to_santa.jpg,left,2,1,0,1.04689267699723
+FED_20190418b_3T2,2,3,1,54,158,Pic_Sem,13,13_implaus_princess_kidnaping_pirate.jpg,left,2,1,0,0.879498889000388
+FED_20190418b_3T2,2,3,1,55,160,Pic_Sem,9,09_implaus_bride_carries_groom.jpg,left,2,1,0,1.01009029100533
+FED_20190418b_3T2,2,3,1,56,162,Pic_Sem,38,38_plaus_tailor_measuring_princess.jpg,left,1,1,1,0.810524915010319
+FED_20190418b_3T2,2,3,1,57,164,Pic_Sem,32,32_plaus_relative_visits_patient.jpg,left,1,1,1,0.977924450009596
+FED_20190418b_3T2,2,3,1,58,166,Pic_Sem,40,40_plaus_chauffeur_opens_door_for_lady.jpg,left,1,1,1,1.041177445004
+FED_20190418b_3T2,2,3,1,59,168,Pic_Sem,27,27_implaus_athlete_applauds_the_lady.jpg,right,2,1,0,1.30835492500046
+FED_20190418b_3T2,2,3,1,60,170,Pic_Sem,3,03_implaus_patient_uses_stethoscope_on_doctor.jpg,left,2,1,0,1.15762608000659
+FED_20190418b_3T2,2,3,1,61,172,Pic_Sem,6,06_plaus_ghost_frightens_girl.jpg,right,1,1,1,0.823880593001377
+FED_20190418b_3T2,2,3,1,62,174,Pic_Sem,12,12_plaus_photographer_photographes_model.jpg,right,1,1,1,1.05777471400506
+FED_20190418b_3T2,2,3,1,63,178,Sent_Perc,28,The son is tying the father's shoes.,left,1,0,0,0
+FED_20190418b_3T2,2,3,1,64,180,Sent_Perc,12,The model is taking a picture of the photographer.,right,2,2,1,1.1503761470085
+FED_20190418b_3T2,2,3,1,65,182,Sent_Perc,27,The lady is applauding the athlete.,left,1,1,1,0.950783574997331
+FED_20190418b_3T2,2,3,1,66,184,Sent_Perc,5,The dentist is treating the patient.,left,1,2,0,0.819462184008444
+FED_20190418b_3T2,2,3,1,67,186,Sent_Perc,32,The patient is bringing flowers to the relative.,left,1,1,1,0.818701374009834
+FED_20190418b_3T2,2,3,1,68,188,Sent_Perc,19,The lawyer is giving money to the beggar.,right,2,2,1,1.53666280600009
+FED_20190418b_3T2,2,3,1,69,190,Sent_Perc,31,The visitor is pushing the patient.,left,1,1,1,1.11878079699818
+FED_20190418b_3T2,2,3,1,70,192,Sent_Perc,34,The blind person is leading the dog.,left,1,1,1,1.26773690000118
+FED_20190418b_3T2,2,3,1,71,194,Sent_Perc,35,The bouncer is preventing the woman from entering.,left,1,1,1,1.13281201700738
+FED_20190418b_3T2,2,3,1,72,196,Sent_Perc,25,Santa is giving the girl a present.,right,2,2,1,0.833892135007773
+FED_20190418b_3T2,2,3,1,73,200,Sent_Sem,30,The mouse is chasing the cat.,left,2,1,0,1.11494163800671
+FED_20190418b_3T2,2,3,1,74,202,Sent_Sem,17,The vampire is biting the woman.,right,1,1,1,1.76270930100873
+FED_20190418b_3T2,2,3,1,75,204,Sent_Sem,39,The lifeguard is saving the grandmother.,right,1,1,1,1.18107759099803
+FED_20190418b_3T2,2,3,1,76,206,Sent_Sem,10,The king is entertaining the jester.,left,2,1,0,1.2957726540044
+FED_20190418b_3T2,2,3,1,77,208,Sent_Sem,37,The man is proposing to the woman.,left,1,1,1,1.71460261900211
+FED_20190418b_3T2,2,3,1,78,210,Sent_Sem,18,The customer is serving the waiter.,left,2,2,1,1.14439218000916
+FED_20190418b_3T2,2,3,1,79,212,Sent_Sem,7,The mother is feeding the baby.,right,1,1,1,1.12705373100471
+FED_20190418b_3T2,2,3,1,80,214,Sent_Sem,40,The lady is opening the door for the chauffeur.,right,2,1,0,1.00935977400513
+FED_20190418b_3T2,2,3,1,81,216,Sent_Sem,3,The doctor is using a stethoscope on the patient.,left,1,1,1,1.40858342900174
+FED_20190418b_3T2,2,3,1,82,218,Sent_Sem,11,The lion is pouncing on the Safari guide.,right,1,2,0,1.5237733140093
+FED_20190418b_3T2,2,3,1,83,220,FIX,0,+,-,0,0,0,0
