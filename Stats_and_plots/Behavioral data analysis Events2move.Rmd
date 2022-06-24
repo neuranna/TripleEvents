@@ -1,0 +1,164 @@
+---
+title: "Events2move behavioral - Experiment 1"
+author: "Anna Ivanova"
+date: "6/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls()) 
+
+library(lmerTest)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+```
+
+## Load behavioral data
+
+```{r load data, echo=FALSE}
+files = list.files(path='../data/behavioral/Events2move', pattern="*.csv")
+dat = do.call(rbind, lapply(files, function(x) read.csv(paste('../data/behavioral/Events2move/', x, sep=''))))
+
+# clean
+dat = dat %>%
+  rename(SubjID=subjid, Condition=condition, ItemNum=item,
+         Response=response, Accuracy=accuracy) %>%
+  mutate(SubjID=str_trim(SubjID, side="both")) %>%
+  mutate(Condition = recode(Condition,
+                            'Sem-photo'='Pic_Sem',
+                            'Sem-sent'='Sent_Sem',
+                            'Perc-photo'='Pic_Perc',
+                            'Perc-sent'='Sent_Perc'))
+
+# keep only data from participants who also have fMRI results (aka were not excluded)
+sessions_clean = read.csv('../Participant_info/TripleEvents_sessions_clean.csv')
+sessions_clean_list = as.character(unlist(sessions_clean %>% select(-UID)))
+dat = dat %>% filter(SubjID %in% sessions_clean_list)
+
+dat_RT = dat %>%
+  filter(!is.na(Response))
+dat_acc = dat %>%
+    filter(!is.na(Response))
+```
+
+## Response Rate
+
+```{r response rate, echo=FALSE}
+dat_responserate = dat %>%
+  mutate(Responded = ifelse(is.na(RT), 0, 1)) %>%
+  group_by(SubjID, Condition) %>%
+  summarize(ResponseRate = sum(Responded)/n())
+
+mean_rr = dat_responserate %>%
+  group_by(Condition) %>%
+  summarize(ResponseRate = mean(ResponseRate))
+grandmean_rr = mean(mean_rr$ResponseRate)
+mean_rr
+```
+
+Average response rate was `r round(grandmean_rr,2)`.
+
+## Reaction Times
+
+```{r RT analysis, echo=FALSE}
+dat_sentsem = dat_RT %>% filter(Condition=='Sent_Sem')
+cat('Sent Sem RT =', round(mean(dat_sentsem$RT),3), '(SD = ', round(sd(dat_sentsem$RT),3), ')\n')
+
+dat_sentperc = dat_RT %>% filter(Condition=='Sent_Perc')
+cat('Sent Perc RT =', round(mean(dat_sentperc$RT),3), '(SD = ', round(sd(dat_sentperc$RT),3), ')\n')
+
+dat_picsem = dat_RT %>% filter(Condition=='Pic_Sem')
+cat('Pic Sem RT =', round(mean(dat_picsem$RT),3), '(SD = ', round(sd(dat_picsem$RT),3), ')\n')
+
+dat_picperc = dat_RT %>% filter(Condition=='Pic_Perc')
+cat('Pic Perc RT =', round(mean(dat_picperc$RT),3), '(SD = ', round(sd(dat_picperc$RT),3), ')\n')
+
+cat('Overall=', round(mean(dat_RT$RT),3), '(SD = ', round(sd(dat_RT$RT),3), ')\n')
+```
+
+Overall reaction time was `r round(mean(dat_RT$RT),2)`s, SD=`r round(sd(dat_RT$RT),2)` 
+(Sent Sem: `r round(mean(dat_sentsem$RT),2)`s, SD=`r round(sd(dat_sentsem$RT),2)`; Sent Perc: `r round(mean(dat_sentperc$RT),2)`s, SD=`r round(sd(dat_sentperc$RT),2)`, 
+Pic Sem: `r round(mean(dat_picsem$RT),2)`s, SD=`r round(sd(dat_picsem$RT),2)`, Pic Perc: `r round(mean(dat_picperc$RT),2)`s, SD=`r round(sd(dat_picperc$RT),2)`)
+
+
+```{r lmer model RT, echo=FALSE}
+dat_RT = dat_RT %>%
+  mutate(StimType = factor(ifelse(Condition %in% c('Sent_Sem', 'Sent_Perc'), 'Sent', 'Pic'),
+         levels=c('Pic', 'Sent'))) %>%
+  mutate(Task = factor(ifelse(Condition %in% c('Sent_Sem', 'Pic_Sem'), 'Sem', 'Perc'),
+         levels=c('Perc', 'Sem')))
+
+contrasts(dat_RT$StimType) = c(-0.5, 0.5)
+contrasts(dat_RT$Task) = c(-0.5, 0.5)
+colnames(attr(dat_RT$StimType, "contrasts")) = "Sent>Pic"
+colnames(attr(dat_RT$Task, "contrasts")) = "Sem>Perc"
+
+m = lmer(RT ~ StimType*Task + (1|SubjID) + (1|ItemNum), data=dat_RT, REML=FALSE)
+summary(m)
+```
+
+RTs for the semantic task were slightly lower than for the perceptual task ($\beta$=`r round(coef(summary(m))[3,1], 2)`, SE=`r round(coef(summary(m))[3,2], 2)`, p<.001), 
+with an interaction between stimulus type and task ($\beta$=`r round(coef(summary(m))[4,1], 2)`, SE=`r round(coef(summary(m))[4,2], 2)`, p=`r round(coef(summary(m))[4,5], 3)`). There was no main effect of stimulus type.
+
+
+```{r RT plot, echo=FALSE}
+ggplot(data=dat_RT %>% filter(RT>0))+
+    stat_summary(mapping = aes(x = Condition, y = RT), 
+               geom = 'col', fun.y = 'mean', color = 'gray',
+               show.legend=FALSE)+
+    stat_summary(mapping = aes(x = Condition, y = RT), 
+               geom = 'errorbar', fun.data = 'mean_se', color = 'black', 
+               size = 1, width=0.3) + theme_minimal()
+```
+
+## Accuracies
+
+```{r accuracy analysis, echo=FALSE}
+cat('SentSem Accuracy=', mean(dat_sentsem$Accuracy), '\n')
+cat('SentPerc Accuracy=', mean(dat_sentperc$Accuracy), '\n')
+cat('PicSem Accuracy=', mean(dat_picsem$Accuracy), '\n')
+cat('PicPerc Accuracy=', mean(dat_picperc$Accuracy), '\n')
+cat('Overall Accuracy=', mean(dat_acc$Accuracy), '\n')
+```
+
+Overall mean accuracy was `r round(mean(dat_acc$Accuracy),2)`, SD=`r round(sd(dat_acc$Accuracy),2)` 
+(Sent Sem: `r round(mean(dat_sentsem$Accuracy),2)`, SD=`r round(sd(dat_sentsem$Accuracy),2)`; Sent Perc: `r round(mean(dat_sentperc$Accuracy),2)`, SD=`r round(sd(dat_sentperc$Accuracy),2)`, 
+Pic Sem: `r round(mean(dat_picsem$Accuracy),2)`, SD=`r round(sd(dat_picsem$Accuracy),2)`, Pic Perc: `r round(mean(dat_picperc$Accuracy),2)`, SD=`r round(sd(dat_picperc$Accuracy),2)`)
+
+```{r acc by person, echo=FALSE}
+acc_by_person = dat_acc %>% group_by(SubjID) %>%
+  summarize(Accuracy=mean(Accuracy))
+```
+
+```{r lmer model accuracy, echo=FALSE}
+dat_acc = dat_acc %>%
+  mutate(StimType = factor(ifelse(Condition %in% c('Sent_Sem', 'Sent_Perc'), 'Sent', 'Pic'),
+         levels=c('Pic', 'Sent'))) %>%
+  mutate(Task = factor(ifelse(Condition %in% c('Sent_Sem', 'Pic_Sem'), 'Sem', 'Perc'),
+         levels=c('Perc', 'Sem')))
+
+contrasts(dat_acc$StimType) = c(-0.5, 0.5)
+contrasts(dat_acc$Task) = c(-0.5, 0.5)
+colnames(attr(dat_acc$StimType, "contrasts")) = "Sent>Pic"
+colnames(attr(dat_acc$Task, "contrasts")) = "Sem>Perc"
+
+m = glmer(Accuracy ~ StimType*Task + (1|SubjID) + (1|ItemNum), data=dat_RT, family='binomial')
+summary(m)
+```
+
+Accuracy was lower for the semantic task than for the perceptual task ($\beta$=`r round(coef(summary(m))[3,1], 2)`, SE=`r round(coef(summary(m))[3,2], 2)`, p=`r round(coef(summary(m))[3,4], 3)`) 
+and for sentence stimuli compared to picture stimuli  ($\beta$=`r round(coef(summary(m))[2,1], 2)`, SE=`r round(coef(summary(m))[2,2], 2)`, p=`r round(coef(summary(m))[2,4], 3)`), 
+with an interaction between stimulus type and task ($\beta$=`r round(coef(summary(m))[4,1], 2)`, SE=`r round(coef(summary(m))[4,2], 2)`, p=`r round(coef(summary(m))[4,4], 3)`). 
+
+```{r acc plot, echo=FALSE}
+ggplot(data=dat_acc)+
+    stat_summary(mapping = aes(x = Condition, y = Accuracy), 
+               geom = 'col', fun.y = 'mean', color = 'gray',
+               show.legend=FALSE)+
+    stat_summary(mapping = aes(x = Condition, y = Accuracy), 
+               geom = 'errorbar', fun.data = 'mean_se', color = 'black', 
+               size = 1, width=0.3) + theme_minimal()
+```
