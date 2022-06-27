@@ -3,7 +3,7 @@ filename = 'spm_ss_mROI_data.csv';
 date = '20220601';
 rootpath = '/om2/user/annaiv/TripleEvents';
 basename = 'mROI_';
-output_dir = fullfile(rootpath, 'results_mROI');
+output_dir = fullfile(rootpath, 'data', 'results_mROI');
 if ~exist(output_dir, 'dir')
     mkdir(output_dir)
 end
@@ -14,7 +14,7 @@ network_loc_tasks = {{'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_
     {'spatialFIN'}, {'spatialFIN'}};
 main_tasks = {'spatialFIN', 'SWNlocIPS168_3runs', 'langlocSN', ...
     'EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep',...
-    'Categorization', 'Categorization_v2'};
+    'Categorization', 'Categorization_v2', 'Categorization_semperc'};
 
 for i=1:length(networks)
     network = networks{i};
