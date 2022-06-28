@@ -97,15 +97,16 @@ elseif strcmp(network, 'language')
     parcel_file = fullfile(parcel_filepath, 'allParcels_language.nii');  
     loc_tasks = {'SWNlocIPS168_3runs', 'langlocSN'};
     loc_contrasts = {'S-N'};
-elseif strcmp(network, 'MD') || strcmp(network, 'DMN')
+elseif strcmp(network, 'MD') 
     parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_MD_LHRH_HE197';
     parcel_file = fullfile(parcel_filepath, 'MDfuncparcels_Apr2017.img');  
     loc_tasks = {'spatialFIN'};
-    if strcmp(network, 'MD')
-        loc_contrasts = {'H-E'};
-    else
-        loc_contrasts = {'E-H'};
-    end
+    loc_contrasts = {'H-E'};
+elseif strcmp(network, 'DMN')
+    parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_DMN_LHRH_EH197';
+    parcel_file = fullfile(parcel_filepath, 'allParcels_DMN.img');
+    loc_tasks = {'spatialFIN'};
+    loc_contrasts = {'E-H'};
 else
     error('No such network: %s', network)
 end
