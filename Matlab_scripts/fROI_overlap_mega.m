@@ -61,7 +61,7 @@ for i=1:length(tasks1)
         % compare
         for nsub=1:length(fROIfiles1)
             output_file = fullfile(output_dir,...
-                [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' task1 '_' task2 '.csv']);
+                [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' network1 '_' task1 '_' network2 '_' task2 '.csv']);
             calculate_parcel_overlap(fROIfiles1{nsub}, fROIfiles2{nsub}, output_file);
         end
     end
@@ -85,15 +85,16 @@ elseif strcmp(network, 'language')
     parcel_file = fullfile(parcel_filepath, 'allParcels_language.nii');  
     loc_tasks = {'SWNlocIPS168_3runs', 'langlocSN'};
     loc_contrast_nums = {{4},{3}};
-elseif strcmp(network, 'MD') || strcmp(network, 'DMN')
+elseif strcmp(network, 'MD') 
     parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_MD_LHRH_HE197';
     parcel_file = fullfile(parcel_filepath, 'MDfuncparcels_Apr2017.img');  
     loc_tasks = {'spatialFIN'};
-    if strcmp(network, 'MD')
-        loc_contrast_nums = {{3}};
-    else
-        loc_contrast_nums = {{4}};
-    end
+    loc_contrast_nums = {{3}};
+elseif strcmp(network, 'DMN')
+    parcel_filepath = '/mindhive/evlab/u/Shared/ROIS_Nov2020/Func_DMN_LHRH_EH197';
+    parcel_file = fullfile(parcel_filepath, 'allParcels_DMN.img');
+    loc_tasks = {'spatialFIN'};
+    loc_contrast_nums = {{4}};
 else
     error('No such network: %s', network)
 end
