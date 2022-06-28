@@ -3,6 +3,7 @@
 % networks: 'language', 'MD', 'DMN', 'events'
 %
 % 2022-06-10: created by Anna Ivanova
+% 2022-06-28: fixed DMN parcel
 
 function [] = fROI_overlap_withintask(network_index)
 
@@ -12,8 +13,6 @@ addpath(genpath('/om/group/evlab/software/spm12'))
 rmpath(genpath('/om/group/evlab/software/spm12/external/fieldtrip/compat'))   % wrong istable function
 
 %% specify params
-date = '20220610';
-
 networks = {'language', 'MD', 'DMN', 'events'};
 network = networks{network_index};
 [parcel_hashname, tasks, contrast_names] = define_network_params(network);
@@ -42,12 +41,12 @@ for i=1:length(tasks)
         session_info_thisanalysis(:,task)];
     subjects = rowfun(@(uid, session) make_fROI_path(data_dir, task, uid, session, contrast_names, parcel_hashname),... 
         subject_info, 'OutputVariableNames', {'fROIpath1', 'fROIpath2'});
-    fROIfiles1 = cellstr(subjects.fROIpath1');
-    fROIfiles2 = cellstr(subjects.fROIpath2');
+    fROIfiles1 = cellstr(subjects.fROIpath1);
+    fROIfiles2 = cellstr(subjects.fROIpath2);
     % compare
     for nsub=1:length(fROIfiles1)
         output_file = fullfile(output_dir,...
-            [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' network '_' task '_' task '.csv']);
+            [sprintf('%03d', session_info_thisanalysis.UID(nsub)) '_' network '_' task '_' network '_' task '.csv'])
         calculate_parcel_overlap(fROIfiles1{nsub}, fROIfiles2{nsub}, output_file);
     end
         
@@ -93,12 +92,20 @@ function [fROIpath1, fROIpath2] = make_fROI_path(data_dir, task, uid, session, c
 
 session = strcat(uid, '_', session{:}, '_PL2017');
 fROInames = get_fROI_name(data_dir, session, task, contrast_names, parcel_hashname);
-fROIpath1 = fullfile(data_dir, session, ['firstlevel_' task], fROInames{1});
-fROIpath2 = fullfile(data_dir, session, ['firstlevel_' task], fROInames{2});
+fROIpath1 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{1}));
+fROIpath2 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{2}));
 end
 
 
+function [output_table] = get_sessions(input_table, task)
 
+output_table = input_table(~strcmp(input_table{:,task}, 'NA'),:);
+
+% 199 only did one spatialFIN run
+if (strcmp(task, 'spatialFIN'))
+    output_table = output_table(output_table.UID~=199,:);
+end
+end
 
 
 function [fROInames] = get_fROI_name(data_dir, sub, task, contrast_names, parcel_hashname)
