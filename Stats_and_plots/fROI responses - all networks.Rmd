@@ -8,9 +8,11 @@ output: html_document
 # SETUP
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(echo = TRUE)
 
 rm(list=ls()) 
+library(lme4)
+library(lmerTest)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -38,107 +40,73 @@ facet_label_size = 12
 plot_dir = 'Plots/'
 ```
 
-# EVENTSALL 
+## Supporting functions
 
-## Read data
+### Read data
 
 ```{r read data, echo=FALSE}
-base_dir = '../data/results_mROI/events'
-lang1 = 'SWNlocIPS168_3runs'
-lang2 = 'langlocSN'
-lang3 = lang2
-MD = 'spatialFIN'
-objectsem = 'Categorization_semperc'
-
-expt1 = 'EventsOrig_instrsep_2runs'
-dat1 = rbind(
-  read.csv(paste(paste(base_dir, expt1, expt1, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt1, lang1, sep='_'), '.csv', sep=''))
-)
-dat1 = dat1 %>%
-  mutate(Effect = recode(dat1$Effect, 
-    'Sem_sent'='Sent_Sem', 'Sem_photo'='Pic_Sem', 'Perc_sent'='Sent_Perc', 'Perc_photo'='Pic_Perc'))
-
-expt2 = 'events2move_instrsep'
-dat2 = rbind(
-  read.csv(paste(paste(base_dir, expt2, expt2, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt2, lang2, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt2, MD, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt2, objectsem, sep='_'), '.csv', sep=''))
-)
-dat2 = dat2 %>%
-  mutate(Effect = recode(dat2$Effect, 
-    'Sem-sent'='Sent_Sem', 'Sem-photo'='Pic_Sem', 'Perc-sent'='Sent_Perc', 'Perc-photo'='Pic_Perc'))
-
-expt3 = 'EventsRev_instrsep'
-dat3 = rbind(
-  read.csv(paste(paste(base_dir, expt3, expt3, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt3, lang3, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt3, MD, sep='_'), '.csv', sep='')),
-  read.csv(paste(paste(base_dir, expt3, objectsem, sep='_'), '.csv', sep=''))
-)
-
-# dat1$Experiment = expt1
-# dat2$Experiment = expt2
-# dat3$Experiment = expt3
-# dat$Experiment = factor(dat$Experiment, levels=c(expt1, expt2, expt3))
-dat1$Experiment = 'Experiment 1'
-dat2$Experiment = 'Experiment 2'
-dat3$Experiment = 'Experiment 3'
-
-
-# combine
-dat = rbind(dat1, dat2, dat3)
-
-# ignore the word condition (from EventsOrig langloc)
-dat = dat %>% filter(Effect!='W')
-dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'N', 'H', 'E', 'SEM', 'PERC'))
-dat$ROI = factor(dat$ROI)
-dat$Experiment = factor(dat$Experiment)
+read_data <- function(prefix, loctasks) {
+  base_dir = paste('../data/results_mROI/', prefix, sep='')
+  lang1 = 'SWNlocIPS168_3runs'
+  lang2 = 'langlocSN'
+  lang3 = lang2
+  MD = 'spatialFIN'
+  objectsem = 'Categorization_semperc'
+  
+  expt1 = 'EventsOrig_instrsep_2runs'
+  loctask1 = loctasks[1]
+  if (loctask1!='NONE') {
+    dat1 = rbind(
+      read.csv(paste(paste(base_dir, loctask1, expt1, sep='_'), '.csv', sep='')),
+      read.csv(paste(paste(base_dir, loctask1, lang1, sep='_'), '.csv', sep=''))
+    )
+    dat1 = dat1 %>%
+      mutate(Effect = recode(dat1$Effect, 
+        'Sem_sent'='Sent_Sem', 'Sem_photo'='Pic_Sem', 'Perc_sent'='Sent_Perc', 'Perc_photo'='Pic_Perc'))
+    dat1$Experiment = 'Experiment 1'
+  }
+    
+  expt2 = 'events2move_instrsep'
+  loctask2 = loctasks[2]
+  dat2 = rbind(
+    read.csv(paste(paste(base_dir, loctask2, expt2, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask2, lang2, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask2, MD, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask2, objectsem, sep='_'), '.csv', sep=''))
+  )
+  dat2 = dat2 %>%
+    mutate(Effect = recode(dat2$Effect, 
+      'Sem-sent'='Sent_Sem', 'Sem-photo'='Pic_Sem', 'Perc-sent'='Sent_Perc', 'Perc-photo'='Pic_Perc'))
+  dat2$Experiment = 'Experiment 2'
+  
+  expt3 = 'EventsRev_instrsep'
+  loctask3 = loctasks[3]
+  dat3 = rbind(
+    read.csv(paste(paste(base_dir, loctask3, expt3, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask3, lang3, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask3, MD, sep='_'), '.csv', sep='')),
+    read.csv(paste(paste(base_dir, loctask3, objectsem, sep='_'), '.csv', sep=''))
+  )
+  dat3$Experiment = 'Experiment 3'
+  
+  # combine
+  if (loctask1!='NONE') {
+    dat = rbind(dat1, dat2, dat3) } 
+  else {
+    dat = rbind(dat2, dat3)
+  }
+  
+  # ignore the word condition (from EventsOrig langloc)
+  dat = dat %>% filter(Effect!='W')
+  dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
+                                             'S', 'N', 'H', 'E', 'SEM', 'PERC'))
+  dat$ROI = factor(dat$ROI)
+  dat$Experiment = factor(dat$Experiment)
+  return(dat)
+}
 ```
 
-## Label ROIs
-
-```{r}
-dat = dat %>%
-  # mutate(ROIgroup = ifelse(ROI %in% c(5,10), 'Cerebellum',
-  #                          ifelse(ROI %in% c(1,2,7), 'Frontal cortex', 
-  #                                 ifelse(ROI %in% c(3,4,6,8), 'Temporo-Parietal cortex', 'Visual cortex')))) %>%
-  mutate(ROI=recode(ROI, 
-                    '1'='F2', '2'='F1', '3'='TP3', '4'='TP2', '5'='Cer1', '6'='TP4',
-                    '7'='F3', '8'='TP1', '9'='O1', '10'='Cer2', '11'='O2'))
-dat$ROI = factor(dat$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
-
-dat = dat %>% 
-  mutate(ROIgroup = ifelse(ROI %in% c('Cer1','Cer2'), 'Cerebellum',
-                           ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
-                                  ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
-dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
-```
-
-## Left-out participants
-
-Some participants were intentionally left out during parcel definition.
-```{r}
-left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
-dat = dat %>%
-  separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
-  mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
-```
-
-## Stats
-
-```{r}
-# ignore categorization here
-dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
-dat.stats$Effect = factor(dat.stats$Effect, 
-                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
-dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject, 
-                                  levels=c('FALSE', 'TRUE'))
-```
-
-### Contrasts
+### Contrasts (for a df with events+lang+MD conditions)
 
 ```{r}
 set_contrasts <- function(dat.stats) {
@@ -160,29 +128,10 @@ set_contrasts <- function(dat.stats) {
 }
 ```
 
-### Selectivity (all expts together)
-
+### Stats
 ```{r}
-dat.stats = set_contrasts(dat.stats)
-
-model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
-coef_names = row.names(coefficients(summary(model)))
-```
-
-```{r}
-# Contrast effects in each ROI, FDR-corrected
-
-model.dfs <- list()
-index = 1
-
-for (roi in unique(dat$ROI)) {
-  dat.roi = dat.stats %>% filter(ROI==roi)
-  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
-               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-  model.df = data.frame(coef_names,
-                        summary(model)$coefficients[,'Estimate'],
-                        summary(model)$coefficients[,'Std. Error'],
-                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+extract_stats <- function(m, coef_names) {
+  model.df = data.frame(coef_names, summary(m)$coefficients[,c(1,2,5)]) %>%
     mutate(ROI=roi)
   names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'ROI')
   model.df = model.df[,c(5,1,2,3,4)] %>%
@@ -190,128 +139,23 @@ for (roi in unique(dat$ROI)) {
            SE = round(SE, 2),
            p.value = ifelse(p.value>0.001, round(p.value, 3),
                             formatC(p.value, format = "e", digits = 2)))
-  
-  model.dfs[[index]] <- model.df
-  index = index+1
+  return(model.df)
 }
 
-stats_df = do.call("rbind", model.dfs)
-# FDR correction
-stats_df = stats_df %>%
-  group_by(`Regression Term`) %>%
-  mutate(p.value = p.adjust(p.value, method="fdr")) %>%
-  mutate(p.value.FDR = ifelse(p.value>=0.001, as.character(round(p.value, 3)), '<.001')) %>%
-  mutate(pLabel = ifelse(p.value<0.001, "***", 
-                       ifelse(p.value<0.01, "**",
-                              ifelse(p.value<0.05, "*", ""))))
-stats_df$p.value = NULL
-
-write.table(stats_df, file = "Tables/ROI stats.csv", sep = ",", quote = FALSE, row.names = F)
-```
-
-### By experiment (events only)
-
-```{r}
-dat.stats.byexpt =dat %>% 
-  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
-  separate(Effect, c('StimType', 'Task'), sep="_") 
-dat.stats.byexpt$StimType = factor(dat.stats.byexpt$StimType, levels=c('Pic', 'Sent'))
-dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
-
-model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
-coef_names = row.names(coefficients(summary(model)))
-```
-
-```{r}
-# Contrast effects in each ROI, FDR-corrected
-
-model.dfs <- list()
-index = 1
-
-for (expt in unique(dat.stats.byexpt$Experiment)) {
-  for (roi in unique(dat.stats.byexpt$ROI)) {
-    dat.roi = dat.stats.byexpt %>% filter(ROI==roi, Experiment==expt) 
-    model = lmer(EffectSize ~ Task*StimType + (1+Task+StimType|Subject), data=dat.roi, REML=FALSE,
-                 control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-    model.df = data.frame(coef_names,
-                          summary(model)$coefficients[,'Estimate'],
-                          summary(model)$coefficients[,'Std. Error'],
-                          summary(model)$coefficients[,'Pr(>|t|)']) %>% 
-      mutate(ROI=roi, Experiment=expt)
-    names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'ROI', 'Experiment')
-    model.df = model.df[,c(5,6,1,2,3,4)] %>%
-      mutate(Beta = round(Beta, 2), 
-             SE = round(SE, 2),
-             p.value = ifelse(p.value>0.001, round(p.value, 3),
-                              formatC(p.value, format = "e", digits = 2)))
-    
-    model.dfs[[index]] <- model.df
-    index = index+1
-  }
+correct_FDR <- function(stats_df) {
+  stats_df = stats_df %>%
+    group_by(`Regression Term`) %>%
+    mutate(p.value = p.adjust(p.value, method="fdr")) %>%
+    mutate(p.value.FDR = ifelse(p.value>=0.001, as.character(round(p.value, 3)), '<.001')) %>%
+    mutate(pLabel = ifelse(p.value<0.001, "***", 
+                         ifelse(p.value<0.01, "**",
+                                ifelse(p.value<0.05, "*", ""))))
+  stats_df$p.value = NULL
+  return(stats_df)
 }
-  
-stats_df = do.call("rbind", model.dfs)
-# FDR correction
-stats_df = stats_df %>%
-  group_by(`Regression Term`) %>%
-  mutate(p.value = p.adjust(p.value, method="fdr")) %>%
-  mutate(p.value.FDR = ifelse(p.value>=0.001, as.character(round(p.value, 3)), '<.001')) %>%
-  mutate(pLabel = ifelse(p.value<0.001, "***", 
-                       ifelse(p.value<0.01, "**",
-                              ifelse(p.value<0.05, "*", ""))))
-stats_df$p.value = NULL
-
-write.table(stats_df, file = "Tables/ROI stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
 ```
 
-### Generalization to left-out participants
-
-```{r}
-model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
-coef_names = row.names(coefficients(summary(model)))
-```
-```{r}
-# Contrast effects in each participant group, FDR-corrected
-
-model.dfs <- list()
-index = 1
-
-for (group in unique(dat.stats$LeftOutSubject)) {
-  dat.group = dat.stats %>% filter(LeftOutSubject==group)
-  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.group, REML=FALSE,
-               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-  model.df = data.frame(coef_names,
-                        summary(model)$coefficients[,'Estimate'],
-                        summary(model)$coefficients[,'Std. Error'],
-                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
-    mutate(Group=group)
-  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Group')
-  model.df = model.df[,c(5,1,2,3,4)] %>%
-    mutate(Beta = round(Beta, 2), 
-           SE = round(SE, 2),
-           p.value = ifelse(p.value>0.001, round(p.value, 3),
-                            formatC(p.value, format = "e", digits = 2)))
-  
-  model.dfs[[index]] <- model.df
-  index = index+1
-}
-
-stats_df = do.call("rbind", model.dfs)
-# FDR correction
-stats_df = stats_df %>%
-  group_by(`Regression Term`) %>%
-  mutate(p.value = p.adjust(p.value, method="fdr")) %>%
-  mutate(p.value.FDR = ifelse(p.value>=0.001, as.character(round(p.value, 3)), '<.001')) %>%
-  mutate(pLabel = ifelse(p.value<0.001, "***", 
-                       ifelse(p.value<0.01, "**",
-                              ifelse(p.value<0.05, "*", ""))))
-stats_df$p.value = NULL
-
-write.table(stats_df, file = "Tables/Events stats left out participants.csv", sep = ",", quote = FALSE, row.names = F)
-```
-
-
-## Plot
+### Plot
 
 ```{r}
 plot_fROI_responses <- function (df, split_by_expt=FALSE, split_by_ROIgroup=FALSE, include_objectsem=FALSE,
@@ -361,8 +205,170 @@ return(f)
 
 ```
 
+# EVENTSALL 
+
+## Read and clean data
+
+```{r}
+event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
+dat = read_data('events', event_expts)
+
+dat = dat %>%
+  mutate(ROI=recode(ROI, 
+                    '1'='F2', '2'='F1', '3'='TP3', '4'='TP2', '5'='Cer1', '6'='TP4',
+                    '7'='F3', '8'='TP1', '9'='O1', '10'='Cer2', '11'='O2'))
+dat$ROI = factor(dat$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+
+dat = dat %>% 
+  mutate(ROIgroup = ifelse(ROI %in% c('Cer1','Cer2'), 'Cerebellum',
+                           ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
+                                  ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
+dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
+```
+
+## Left-out participants
+
+Some participants were intentionally left out during parcel definition.
+```{r}
+left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
+dat = dat %>%
+  separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
+  mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
+```
+
+## Stats
+
+```{r}
+# ignore categorization here
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject, 
+                                  levels=c('FALSE', 'TRUE'))
+```
+
+### Selectivity (all expts together)
+
+```{r}
+dat.stats = set_contrasts(dat.stats)
+
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+```
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  m = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(m, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/ROI stats.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+### By experiment (events only)
+
+```{r}
+dat.stats.byexpt =dat %>% 
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  separate(Effect, c('StimType', 'Task'), sep="_") 
+dat.stats.byexpt$StimType = factor(dat.stats.byexpt$StimType, levels=c('Pic', 'Sent'))
+dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
+
+model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+```
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+
+model.dfs <- list()
+index = 1
+
+for (expt in unique(dat.stats.byexpt$Experiment)) {
+  for (roi in unique(dat.stats.byexpt$ROI)) {
+    dat.roi = dat.stats.byexpt %>% filter(ROI==roi, Experiment==expt) 
+    model = lmer(EffectSize ~ Task*StimType + (1+Task+StimType|Subject), data=dat.roi, REML=FALSE,
+                 control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+    model.df = data.frame(coef_names,
+                          summary(model)$coefficients[,'Estimate'],
+                          summary(model)$coefficients[,'Std. Error'],
+                          summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+      mutate(ROI=roi, Experiment=expt)
+    names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'ROI', 'Experiment')
+    model.df = model.df[,c(5,6,1,2,3,4)] %>%
+      mutate(Beta = round(Beta, 2), 
+             SE = round(SE, 2),
+             p.value = ifelse(p.value>0.001, round(p.value, 3),
+                              formatC(p.value, format = "e", digits = 2)))
+    
+    model.dfs[[index]] <- model.df
+    index = index+1
+  }
+}
+  
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/ROI stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+### Generalization to left-out participants
+
+```{r}
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+```
+```{r}
+# Contrast effects in each participant group, FDR-corrected
+
+model.dfs <- list()
+index = 1
+
+for (group in unique(dat.stats$LeftOutSubject)) {
+  dat.group = dat.stats %>% filter(LeftOutSubject==group)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.group, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.df = data.frame(coef_names,
+                        summary(model)$coefficients[,'Estimate'],
+                        summary(model)$coefficients[,'Std. Error'],
+                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+    mutate(Group=group)
+  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Group')
+  model.df = model.df[,c(5,1,2,3,4)] %>%
+    mutate(Beta = round(Beta, 2), 
+           SE = round(SE, 2),
+           p.value = ifelse(p.value>0.001, round(p.value, 3),
+                            formatC(p.value, format = "e", digits = 2)))
+  
+  model.dfs[[index]] <- model.df
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/Events stats left out participants.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+
+## Plot
+
 ### By ROI group
 ```{r}
+plot_name = 'EventsAll parcels'
 plot_fROI_responses(dat, split_by_ROIgroup = TRUE, ylim=c(-1,3.5))
 ggsave(paste(plot_dir, plot_name,' by ROI group.png',sep=''), 
        width=ROI_plot_width+4, height=plot_height_1row+4, units='cm')
@@ -407,31 +413,13 @@ ggsave(paste(plot_dir,plot_name,'.png',sep=''),
 
 ## Read data
 
-```{r read data, echo=FALSE}
-dat1.e = read.csv('../data/neuro/EventsOrig/langloc_events.csv')
-dat1.l = read.csv('../data/neuro/EventsOrig/langloc_lang.csv')
-dat1 = rbind(dat1.e, dat1.l)
-
-dat2.e = read.csv('../data/neuro/Events2move/langloc_events.csv')
-dat2.l = read.csv('../data/neuro/Events2move/langloc_lang.csv')
-dat2.s = read.csv('../data/neuro/Events2move/langloc_spatialFIN.csv')
-dat2 = rbind(dat2.e, dat2.l, dat2.s)
-
-dat3.e = read.csv('../data/neuro/EventsRev/langloc_events.csv')
-dat3.l = read.csv('../data/neuro/EventsRev/langloc_lang.csv')
-dat3.s = read.csv('../data/neuro/EventsRev/langloc_spatialFIN.csv')
-dat3 = rbind(dat3.e, dat3.l, dat3.s)
-
-dat1$Experiment = 'EventsOrig'
-dat2$Experiment = 'Events2move'
-dat3$Experiment = 'EventsRev'
-
-# combine
-dat = rbind(dat1, dat2, dat3) 
+```{r}
+lang_expts = c('SWNlocIPS168_3runs', 'langlocSN', 'langlocSN')
+dat = read_data('language', lang_expts)
 
 # clean
 dat = dat %>%
-  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH')) %>%
+  mutate(Hemisphere = ifelse(ROI %in% c(1,2,3,4,5,6), 'LH', 'RH')) %>%
   mutate(ROI = recode(dat$ROI,
         '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
         '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
@@ -440,127 +428,116 @@ dat = dat %>%
 dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
                                    'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
 
-# ignore the word condition (from EventsOrig langloc)
-dat = dat %>% filter(Effect!='W')
-dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'N', 'H', 'E'))
-dat$ROI = factor(dat$ROI)
-
 # split by hemi
 dat.lh = dat %>% filter(Hemisphere=='LH')
 dat.rh = dat %>% filter(Hemisphere=='RH')
 ```
 
+## Stats
+
+```{r}
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+```
+
+### Selectivity (all expts together)
+
+```{r}
+dat.stats = set_contrasts(dat.stats)
+
+m = lmer(EffectSize ~ Effect*Experiment*Hemisphere + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
+summary(m)
+```
+
+As expected, response to sentence reading was stronger than to nonword reading ($\beta$=`r round(coef(summary(m))[2,1], 2)`, SE=`r round(coef(summary(m))[2,2], 2)`, p=`r round(coef(summary(m))[2,5], 3)`).
+For the critical experiments, there was a strong effect of task (semantic > perceptual; $\beta$=`r round(coef(summary(m))[4,1], 2)`, SE=`r round(coef(summary(m))[4,2], 2)`, p=`r round(coef(summary(m))[4,5], 3)`), 
+stimulus type (sentences > pictures; $\beta$=`r round(coef(summary(m))[5,1], 2)`, SE=`r round(coef(summary(m))[5,2], 2)`, p=`r round(coef(summary(m))[5,5], 3)`), 
+and an interaction between task type and stimulus type ($\beta$=`r round(coef(summary(m))[6,1], 2)`, SE=`r round(coef(summary(m))[6,2], 2)`, p=`r round(coef(summary(m))[6,5], 3)`), 
+indicating a preference for sentences during the semantic task. These results are consistent with those reported in Ivanova et al (2021), who analyzed a subset of these data (specifically, Experiment 3).
+
+The sentence reading>nonword reading was stronger in left hemisphere ($\beta$=`r round(coef(summary(m))['EffectS-N:HemisphereRH',1], 2)`, SE=`r round(coef(summary(m))['EffectS-N:HemisphereRH',2], 2)`, p=`r round(coef(summary(m))['EffectS-N:HemisphereRH',5], 3)`), in line with numerous accounts of left-lateralized responses to language. For the critical experiments, the effects of semantic 
+There was no significant difference between hemispheres in response strength to semantic tasks (collapsed across stimulus modalities) with respect to the baseline (p=.060). 
+
+
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(model, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/language ROI stats.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+### By experiment (events only)
+
+```{r}
+dat.stats.byexpt =dat %>% 
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  separate(Effect, c('StimType', 'Task'), sep="_") 
+dat.stats.byexpt$StimType = factor(dat.stats.byexpt$StimType, levels=c('Pic', 'Sent'))
+dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
+
+model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+```
+
 ## Plot 
 
 ### Mean hemisphere
-```{r calc hemi means, echo=FALSE}
+```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
-  summarize(EffectSize = mean(EffectSize))
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
 
 plot_name = 'Language Network'
-ggplot(data=dat.mean)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', 
-               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', 
-               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
-ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
-       width=hemi_plot_width, height=hemi_plot_height_3expt, units='cm')
+plot_fROI_responses(dat.mean)
+
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
 ### ROIs by hemisphere
 
-```{r plot , echo=FALSE}
+```{r}
 plot_name = 'Language Network - LH'
-ggplot(data=dat.lh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', 
-               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', 
-               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+plot_fROI_responses(dat.lh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
 
-```{r plot , echo=FALSE}
+```{r}
 plot_name = 'Language Network - RH'
-ggplot(data=dat.rh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', 
-               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', 
-               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+plot_fROI_responses(dat.rh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
 
 
 # MD 
 
 ## Read data
+```{r}
+MD_expts = c('NONE', 'spatialFIN', 'spatialFIN')
+dat = read_data('MD', MD_expts)
 
-```{r read data, echo=FALSE}
-dat2.e = read.csv('../data/neuro/Events2move/MDloc_events.csv')
-dat2.l = read.csv('../data/neuro/Events2move/MDloc_lang.csv')
-dat2.s = read.csv('../data/neuro/Events2move/MDloc_spatialFIN.csv')
-dat2 = rbind(dat2.e, dat2.l, dat2.s)
-
-dat3.e = read.csv('../data/neuro/EventsRev/MDloc_events.csv')
-dat3.l = read.csv('../data/neuro/EventsRev/MDloc_lang.csv')
-dat3.s = read.csv('../data/neuro/EventsRev/MDloc_spatialFIN.csv')
-dat3 = rbind(dat3.e, dat3.l, dat3.s)
-
-dat2$Experiment = 'Events2move'
-dat3$Experiment = 'EventsRev'
-
-# combine
-dat = rbind(dat2, dat3)
-dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'N', 'H', 'E'))
-dat$ROI = factor(dat$ROI)
-
-# separate by hemisphere
+# split by hemi
 dat = dat %>% separate(ROI, c("Hemisphere", NA), remove=FALSE)
 dat.lh = dat %>% filter(Hemisphere=='LH')
 dat.rh = dat %>% filter(Hemisphere=='RH')
@@ -569,107 +546,45 @@ dat.rh = dat %>% filter(Hemisphere=='RH')
 ## Plot 
 
 ### Mean hemisphere
-```{r calc hemi means, echo=FALSE}
+```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
-  summarize(EffectSize = mean(EffectSize))
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
 
 plot_name = 'MD Network'
-ggplot(data=dat.mean)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', 
-               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', 
-               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
-ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
-       width=hemi_plot_width, height=hemi_plot_height_2expt, units='cm')
+plot_fROI_responses(dat.mean)
+
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
 ### ROIs by hemisphere
 
-```{r plot , echo=FALSE}
+```{r}
 plot_name = 'MD Network - LH'
-ggplot(data=dat.lh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+plot_fROI_responses(dat.lh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
 
-```{r plot , echo=FALSE}
+```{r}
 plot_name = 'MD Network - RH'
-ggplot(data=dat.rh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+plot_fROI_responses(dat.rh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
+
 
 # DMN 
 
 ## Read data
+```{r}
+DMN_expts = c('NONE', 'spatialFIN', 'spatialFIN')
+dat = read_data('DMN', DMN_expts)
 
-```{r read data, echo=FALSE}
-dat2.e = read.csv('../data/neuro/Events2move/DMNloc_events.csv')
-dat2.l = read.csv('../data/neuro/Events2move/DMNloc_lang.csv')
-dat2.s = read.csv('../data/neuro/Events2move/DMNloc_spatialFIN.csv')
-dat2 = rbind(dat2.e, dat2.l, dat2.s)
-
-dat3.e = read.csv('../data/neuro/EventsRev/DMNloc_events.csv')
-dat3.l = read.csv('../data/neuro/EventsRev/DMNloc_lang.csv')
-dat3.s = read.csv('../data/neuro/EventsRev/DMNloc_spatialFIN.csv')
-dat3 = rbind(dat3.e, dat3.l, dat3.s)
-
-dat2$Experiment = 'Events2move'
-dat3$Experiment = 'EventsRev'
-
-# combine
-dat = rbind(dat2, dat3)
-dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                           'S', 'N', 'H', 'E'))
 dat = dat %>%
-  mutate(Hemisphere = ifelse(ROI<7, 'LH', 'RH')) %>%
+  mutate(Hemisphere = ifelse(ROI %in% c(1,2,3,4,5,6), 'LH', 'RH')) %>%
   mutate(ROI = recode(dat$ROI,
         '1'='LH_FrontalMed', '2'='LH_PostCing', '3'='LH_TPJ',
         '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTemp',
@@ -679,86 +594,36 @@ dat = dat %>%
 # split by hemi
 dat.lh = dat %>% filter(Hemisphere=='LH')
 dat.rh = dat %>% filter(Hemisphere=='RH')
-dat$ROI = factor(dat$ROI)
-dat.lh$ROI = factor(dat.lh$ROI)
-dat.rh$ROI = factor(dat.rh$ROI)
 ```
 
 ## Plot 
 
 ### Mean hemisphere
-```{r calc hemi means, echo=FALSE}
+```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
-  summarize(EffectSize = mean(EffectSize))
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
 
-plot_name = 'Default Network'
-ggplot(data=dat.mean)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', 
-               position=position_dodge(preserve="single"), alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=Hemisphere, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', 
-               position=position_dodge(width=0.7, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
-ggsave(paste('plots/',plot_name,'_hemi.png',sep=''), 
-       width=hemi_plot_width, height=hemi_plot_height_2expt, units='cm')
+plot_name = 'Default Mode Network'
+plot_fROI_responses(dat.mean)
+
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
 ### ROIs by hemisphere
 
-```{r plot , echo=FALSE}
-plot_name = 'Default Network - LH'
-ggplot(data=dat.lh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+```{r}
+plot_name = 'Default Mode Network - LH'
+plot_fROI_responses(dat.lh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
-```{r plot , echo=FALSE}
-plot_name = 'Default Network - RH'
-ggplot(data=dat.rh)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
-               geom='col', fun.y='mean', color='black', position='dodge', alpha=0.85, width=0.7)+
-  facet_grid(Experiment ~ .)+
-  stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
-               geom='errorbar', fun.data='mean_se', color='black', position=position_dodge(.7), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'))+
-  theme_classic()+
-  geom_hline(yintercept=0, size=0.5)+
-  ggtitle(plot_name)+
-  theme(axis.text.x = element_text(size=axis_text_size, angle=90, color='black'), 
-        axis.title.y = element_text(size=axis_title_size), 
-        axis.text.y = element_text(size=axis_text_size), 
-        legend.text = element_text(size=legend_size), 
-        strip.text.x = element_text(size=facet_label_size),
-        title = element_text(size=title_size, face='bold'))
+
+```{r}
+plot_name = 'Default Mode Network - RH'
+plot_fROI_responses(dat.rh)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=ROI_plot_height_3expt, units='cm')
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
