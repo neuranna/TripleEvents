@@ -14,6 +14,7 @@ library(dplyr)
 library(stringr)
 library(reshape)
 library(gplots)
+library(patchwork)
 ```
 
 ## Plotting settings 
@@ -234,4 +235,53 @@ ggplot(data=dat.events2events)+
   theme_classic()
 ggsave(paste(plot_dir, "overlap_eventsexpts.png", sep=""),
       width=plot_width, height=plot_height_1row, units='cm')
+```
+
+# Extra - langloc
+
+```{r}
+dat.lang2lang = dat.full %>% 
+  filter(Network1=='language' & Network2=='language') %>%
+  filter(ROI1==ROI2) %>% mutate(ROI=ROI1) %>% select(-ROI1, -ROI2) %>%
+  filter(Experiment1==Experiment2) %>% mutate(Experiment=Experiment1) %>% 
+  select(-Experiment1, -Experiment2)
+
+dat.lang2lang.mean = dat.lang2lang %>% 
+  group_by(UID, Experiment) %>% 
+  summarize(Overlap=mean(Overlap))
+
+p.lang.mean = ggplot(data=dat.lang2lang.mean, mapping=aes(x='Mean', y=Overlap, fill=Experiment))+
+  stat_summary(geom='col', fun='mean', color='black', 
+               position=position_dodge(), alpha=0.85,
+               show.legend = FALSE)+
+  stat_summary(geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.9), width=0)+
+  geom_point(shape=21, size=0.5, position=position_jitter(width=0.02),
+             show.legend = FALSE)+
+  facet_wrap(.~Experiment, nrow=2)+
+  geom_hline(yintercept=0, size=0.5)+
+  labs(x=NULL)+
+  coord_cartesian(ylim=c(0,1))+
+  theme_classic()+
+  theme(strip.text = element_blank(),
+        axis.text.x = element_text(angle=90))
+
+
+p.lang.roi = ggplot(data=dat.lang2lang, mapping=aes(x=ROI, y=Overlap, fill=Experiment))+
+  stat_summary(geom='col', fun='mean', color='black', 
+               position=position_dodge(), alpha=0.85)+
+  stat_summary(geom='errorbar', fun.data='mean_se', color='black', 
+               position=position_dodge(width=0.9), width=0)+
+  geom_point(shape=21, size=0.5, position=position_jitter(width=0.02))+
+  facet_wrap(.~Experiment, nrow=2)+
+  geom_hline(yintercept=0, size=0.5)+
+  labs(x=NULL, y=NULL)+
+  coord_cartesian(ylim=c(0,1))+
+  theme_classic()+
+  theme(strip.text = element_blank(),
+        axis.text.x = element_text(angle=90))
+
+p.lang.mean + p.lang.roi + plot_layout(widths=c(1,6))
+ggsave(paste(plot_dir, 'langloc overlap.png', sep=''),
+       width=plot_width, height=plot_height_3rows, units='cm')
 ```

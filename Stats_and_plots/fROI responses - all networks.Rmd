@@ -405,7 +405,7 @@ ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''),
 dat.mean = dat %>%
   group_by(Experiment, Subject, Effect, LeftOutSubject) %>%
   summarize(EffectSize = mean(EffectSize)) %>%
-  mutate(ROI=ifelse(LeftOutSubject, 'Group2 (n=9)', 'Group1 (n=30)'))
+  mutate(ROI=ifelse(LeftOutSubject, 'Group2 (n=11)', 'Group1 (n=30)'))
 
 plot_name = 'Events Parcels - Left-out subjects'
 plot_fROI_responses(dat.mean)
