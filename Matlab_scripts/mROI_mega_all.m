@@ -88,8 +88,8 @@ end
 function [parcel_file, loc_tasks, loc_contrasts] = define_network_params(network)
 
 if strcmp(network, 'events')
-    parcel_filepath ='/home/annaiv/annaiv/TripleEvents/GSS_EventsAll/Sent_Sem-Perc_Pic_Sem-Perc_n30_20220530/';
-    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200.nii');   
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
 elseif strcmp(network, 'language')
