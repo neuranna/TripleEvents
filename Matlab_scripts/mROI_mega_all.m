@@ -109,7 +109,7 @@ elseif strcmp(network, 'DMN')
     loc_contrasts = {'E-H'};
 elseif strcmp(network, 'events_flipped')
     parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
-    parcel_file = fullfile(parcel_filepath, 'allParcels_language_flipped.nii');  
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Pic_Sem-Perc'};
 else
