@@ -14,7 +14,7 @@ addpath /om/group/evlab/software/conn
 conn_module el init
 
 %% specify params
-date = '20220601';
+date = '20240917';
 [parcel_file, loc_tasks, loc_contrasts] = define_network_params(network);
 
 main_tasks = {'spatialFIN', 'SWNlocIPS168_3runs', 'langlocSN', ...
@@ -58,7 +58,7 @@ for i=1:length(loc_tasks)
     
     % run the analysis
     ss=struct(...
-            'swd', ['/om2/user/annaiv/TripleEvents/mROI_' network '/' loc_task '_' main_task '_' date],...   % output directory
+            'swd', ['/home/ruiminga/TripleEvents_data/mROI_' network '/' loc_task '_' main_task '_' date],...   % output directory
             'EffectOfInterest_spm',{spmfiles_main},...                      % first-level SPM.mat files
             'Localizer_spm', {spmfiles_loc},...
             'EffectOfInterest_contrasts',{main_contrasts},...    % contrasts of interest
@@ -107,6 +107,11 @@ elseif strcmp(network, 'DMN')
     parcel_file = fullfile(parcel_filepath, 'allParcels_DMN.img');
     loc_tasks = {'spatialFIN'};
     loc_contrasts = {'E-H'};
+elseif strcmp(network, 'events_flipped')
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'allParcels_language_flipped.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Pic_Sem-Perc'};
 else
     error('No such network: %s', network)
 end
