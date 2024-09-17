@@ -46,7 +46,7 @@ plot_dir = 'Plots/'
 
 ```{r read data, echo=FALSE}
 read_data <- function(prefix, loctasks) {
-  base_dir = paste('../data/results_mROI/', prefix, sep='')
+  base_dir = paste('../../TripleEvents_data/data/results_mROI/', prefix, sep='')
   lang1 = 'SWNlocIPS168_3runs'
   lang2 = 'langlocSN'
   lang3 = lang2
@@ -71,8 +71,8 @@ read_data <- function(prefix, loctasks) {
   dat2 = rbind(
     read.csv(paste(paste(base_dir, loctask2, expt2, sep='_'), '.csv', sep='')),
     read.csv(paste(paste(base_dir, loctask2, lang2, sep='_'), '.csv', sep='')),
-    read.csv(paste(paste(base_dir, loctask2, MD, sep='_'), '.csv', sep='')),
-    read.csv(paste(paste(base_dir, loctask2, objectsem, sep='_'), '.csv', sep=''))
+    read.csv(paste(paste(base_dir, loctask2, MD, sep='_'), '.csv', sep=''))
+    #read.csv(paste(paste(base_dir, loctask2, objectsem, sep='_'), '.csv', sep=''))
   )
   dat2 = dat2 %>%
     mutate(Effect = recode(dat2$Effect, 
@@ -84,8 +84,8 @@ read_data <- function(prefix, loctasks) {
   dat3 = rbind(
     read.csv(paste(paste(base_dir, loctask3, expt3, sep='_'), '.csv', sep='')),
     read.csv(paste(paste(base_dir, loctask3, lang3, sep='_'), '.csv', sep='')),
-    read.csv(paste(paste(base_dir, loctask3, MD, sep='_'), '.csv', sep='')),
-    read.csv(paste(paste(base_dir, loctask3, objectsem, sep='_'), '.csv', sep=''))
+    read.csv(paste(paste(base_dir, loctask3, MD, sep='_'), '.csv', sep=''))
+    #read.csv(paste(paste(base_dir, loctask3, objectsem, sep='_'), '.csv', sep=''))
   )
   dat3$Experiment = 'Experiment 3'
   
@@ -217,13 +217,16 @@ return(f)
 
 ```{r}
 event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
-dat = read_data('events', event_expts)
+dat = read_data('events_flipped', event_expts)
 
 dat = dat %>%
   mutate(ROI=recode(ROI, 
-                    '1'='F2', '2'='F1', '3'='TP3', '4'='TP2', '5'='Cer1', '6'='TP4',
-                    '7'='F3', '8'='TP1', '9'='O1', '10'='Cer2', '11'='O2'))
+                    '2'='F2', '4'='F1', '14'='TP3', '12'='TP2', '20'='Cer1', '10'='TP4',
+                    '6'='F3', '8'='TP1', '16'='O1', '22'='Cer2', '18'='O2'))
 dat$ROI = factor(dat$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+
+# EDITTED Remove rows where ROI is NA (i.e., levels not in the specified list)
+dat <- dat[!is.na(dat$ROI), ]
 
 dat = dat %>% 
   mutate(ROIgroup = ifelse(ROI %in% c('Cer1','Cer2'), 'Cerebellum',

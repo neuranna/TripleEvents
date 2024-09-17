@@ -112,6 +112,11 @@ elseif strcmp(network, 'events_flipped')
     parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Pic_Sem-Perc'};
+elseif strcmp(network, 'events_picContrast')
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Pic_Sem-Perc'};
 else
     error('No such network: %s', network)
 end
