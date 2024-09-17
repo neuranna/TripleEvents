@@ -217,7 +217,7 @@ return(f)
 
 ```{r}
 event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
-dat = read_data('events_picContrast', event_expts)
+dat = read_data('events', event_expts)
 
 dat = dat %>%
   mutate(ROI=recode(ROI, 

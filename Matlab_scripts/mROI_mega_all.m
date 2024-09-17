@@ -107,17 +107,34 @@ elseif strcmp(network, 'DMN')
     parcel_file = fullfile(parcel_filepath, 'allParcels_DMN.img');
     loc_tasks = {'spatialFIN'};
     loc_contrasts = {'E-H'};
+
 elseif strcmp(network, 'events_flipped')
     parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
     parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
-    loc_contrasts = {'Pic_Sem-Perc'};
+    loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
 elseif strcmp(network, 'events_picContrast')
     parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
     parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Pic_Sem-Perc'};
+elseif strcmp(network, 'events_flipped_picContrast')
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Pic_Sem-Perc'};
+elseif strcmp(network, 'events_sentContrast')
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc'};
+elseif strcmp(network, 'events_flipped_sentContrast')
+    parcel_filepath = '/home/ruiminga/TripleEvents/new_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc'};
 else
+    
     error('No such network: %s', network)
 end
 end
