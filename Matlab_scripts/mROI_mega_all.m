@@ -133,8 +133,27 @@ elseif strcmp(network, 'events_flipped_sentContrast')
     parcel_file = fullfile(parcel_filepath, 'fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii');  
     loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
     loc_contrasts = {'Sent_Sem-Perc'};
+elseif strcmp(network, 'left_ATL_inferior_pole')
+    parcel_filepath = '/nese/mit/group/evlab/u/jshe/TripleEvents/tsnr_analysis/ATL_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'left_inferior_pole.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
+elseif strcmp(network, 'right_ATL_inferior_pole')
+    parcel_filepath = '/nese/mit/group/evlab/u/jshe/TripleEvents/tsnr_analysis/ATL_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'right_inferior_pole.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
+elseif strcmp(network, 'left_ATL_inferior_pole_middle')
+    parcel_filepath = '/nese/mit/group/evlab/u/jshe/TripleEvents/tsnr_analysis/ATL_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'left_inferior_pole_middle.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
+elseif strcmp(network, 'right_ATL_inferior_pole_middle')
+    parcel_filepath = '/nese/mit/group/evlab/u/jshe/TripleEvents/tsnr_analysis/ATL_parcels/';
+    parcel_file = fullfile(parcel_filepath, 'right_inferior_pole_middle.nii');  
+    loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
+    loc_contrasts = {'Sent_Sem-Perc', 'Pic_Sem-Perc'};
 else
-    
     error('No such network: %s', network)
 end
 end
