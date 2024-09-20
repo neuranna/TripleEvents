@@ -21,6 +21,7 @@ SUBJECT_INFO_PATH = '/nese/mit/group/evlab/u/jshe/TripleEvents/Participant_info/
 def get_unique(matrix):
     return np.unique(matrix.reshape(-1))
 
+
 def calculate_tsnr(data, save_path):
     '''
     calcuate tsnr matrix and save the matrix to desired directory
@@ -60,6 +61,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
     input: np array of 3d matrix
     plot six views of brain tsnr results
     '''
+    number_zero = np.log(1e-10)
+    brain_matrix[brain_matrix == number_zero] = np.nan
+    
     tsnr = brain_matrix
 
     # Convert to nifti image
@@ -86,7 +90,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[0],
         title='Left Hemisphere - Lateral View',
         threshold=0.2,
-        colorbar=False
+        colorbar=False,
+        vmin=0,
+        vmax=6
     )
 
     # Plot right hemisphere lateral view
@@ -97,7 +103,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[1],
         title='Right Hemisphere - Lateral View',
         threshold=0.2,
-        colorbar=False
+        colorbar=False,
+        vmin=0,
+        vmax=6
     )
 
     # Plot left hemisphere medial view
@@ -108,7 +116,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[2],
         title='Left Hemisphere - Medial View',
         threshold=0.2,
-        colorbar=False
+        colorbar=False,
+        vmin=0,
+        vmax=6
     )
 
     # Plot right hemisphere medial view
@@ -119,7 +129,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[3],
         title='Right Hemisphere - Medial View',
         threshold=0.2,
-        colorbar=False
+        colorbar=False,
+        vmin=0,
+        vmax=6
     )
 
     # Plot left hemisphere ventral view
@@ -130,7 +142,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[4],
         title='Left Hemisphere - Ventral View',
         threshold=0.2,
-        colorbar=False
+        colorbar=False,
+        vmin=0,
+        vmax=6
     )
 
     # Plot right hemisphere ventral view
@@ -141,7 +155,9 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
         axes=axes[5],
         title='Right Hemisphere - Ventral View',
         threshold=0.2,
-        colorbar=True
+        colorbar=True,
+        vmin=0,
+        vmax=6
     )
 
     plt.tight_layout()
@@ -151,49 +167,52 @@ def plot_tsnr(brain_matrix, affine, header, save_path):
     plt.close()
 
 
-# getting a list of subject IDs
-subject_df = pd.read_csv(SUBJECT_INFO_PATH)
+def main():
+    # getting a list of subject IDs
+    subject_df = pd.read_csv(SUBJECT_INFO_PATH)
 
-session_id_list = []
-for i in range(len(subject_df)):
-    if not pd.isna(subject_df['EventsOrig_instrsep_2runs'][i]):
-        session_id = subject_df['EventsOrig_instrsep_2runs'][i]
-    elif not pd.isna(subject_df['events2move_instrsep'][i]):
-        session_id = subject_df['events2move_instrsep'][i]
-    elif not pd.isna(subject_df['EventsRev_instrsep'][i]):
-        session_id = subject_df['EventsRev_instrsep'][i]
-    else:
-        raise ValueError('Session ID not found')
+    session_id_list = []
+    for i in range(len(subject_df)):
+        if not pd.isna(subject_df['EventsOrig_instrsep_2runs'][i]):
+            session_id = subject_df['EventsOrig_instrsep_2runs'][i]
+        elif not pd.isna(subject_df['events2move_instrsep'][i]):
+            session_id = subject_df['events2move_instrsep'][i]
+        elif not pd.isna(subject_df['EventsRev_instrsep'][i]):
+            session_id = subject_df['EventsRev_instrsep'][i]
+        else:
+            raise ValueError('Session ID not found')
 
-    uid = str(subject_df['UID'][i])
+        uid = str(subject_df['UID'][i])
 
-    # handling cases where double digit uids have 0 added in front of them
-    if len(uid) == 2:
-        uid = '0' + uid
-        
-    session_id_list.append(uid + '_'+ session_id+'_PL2017')
-
-
-
-for session_id in tqdm(session_id_list, desc="Processing sessions"):
-    data_path = join(SUBJECTS, session_id, 'nii')
-    save_matrix_dir = join(ANALYSIS_PATH, 'tsnr_matrices', session_id)
-    save_plot_dir = join(ANALYSIS_PATH, 'tsnr_plots', session_id)
-
-    if not exists(save_matrix_dir):
-        os.makedirs(save_matrix_dir)
-
-    if not exists(save_plot_dir):
-        os.makedirs(save_plot_dir)
-
-    for file in os.listdir(data_path):
-        if file.startswith('swr') and file.endswith('.nii'):
-            filepath = f'{data_path}/{file}'
-            save_file_name = file.strip('.nii')
-
-            data, affine, header = load_img(filepath)
+        # handling cases where double digit uids have 0 added in front of them
+        if len(uid) == 2:
+            uid = '0' + uid
             
-            tsnr_matrix = calculate_tsnr(data, f'{save_matrix_dir}/{save_file_name}.npy')
-            plot_tsnr(tsnr_matrix, affine=affine, header=header, save_path=f'{save_plot_dir}/{save_file_name}.png')
+        session_id_list.append(uid + '_'+ session_id+'_PL2017')
 
 
+
+    for session_id in tqdm(session_id_list, desc="Processing sessions"):
+        data_path = join(SUBJECTS, session_id, 'nii')
+        save_matrix_dir = join(ANALYSIS_PATH, 'tsnr_matrices', session_id)
+        save_plot_dir = join(ANALYSIS_PATH, 'tsnr_plots', session_id)
+
+        if not exists(save_matrix_dir):
+            os.makedirs(save_matrix_dir)
+
+        if not exists(save_plot_dir):
+            os.makedirs(save_plot_dir)
+
+        for file in os.listdir(data_path):
+            if file.startswith('swr') and file.endswith('.nii'):
+                filepath = f'{data_path}/{file}'
+                save_file_name = file.strip('.nii')
+
+                data, affine, header = load_img(filepath)
+                
+                tsnr_matrix = calculate_tsnr(data, f'{save_matrix_dir}/{save_file_name}.npy')
+                plot_tsnr(tsnr_matrix, affine=affine, header=header, save_path=f'{save_plot_dir}/{save_file_name}.png')
+
+
+if __name__ == '__main__':
+    main()
