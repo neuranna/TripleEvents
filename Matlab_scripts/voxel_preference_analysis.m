@@ -14,7 +14,7 @@ contrasts = {
     {'Sem_photo' 'Perc_photo' 'Sem_sent' 'Perc_sent'},...
     {'Sem-photo','Perc-photo','Sem-sent','Perc-sent'},...
     {'Pic_Sem','Pic_Perc','Sent_Sem','Sent_Perc'}
-}
+};
 
 output_dir = './voxel_preference_analysis';
 if ~exist(output_dir, 'dir')
@@ -28,7 +28,7 @@ for i=1:length(loc_tasks)
     contrasts_thisloc = contrasts{i};
 
     % define SPM paths
-    session_info_thisanalysis = get_sessions(session_info, loc_task, main_task);
+    session_info_thisanalysis = get_sessions(session_info, loc_task);
     if height(session_info_thisanalysis)==0
         continue
     end
