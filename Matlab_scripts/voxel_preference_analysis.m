@@ -1,5 +1,5 @@
 % This script examines the voxel's response (contrast effect size) to the pic_sem - pic_perc and sent_sem - sent_perc 
-
+addpath(genpath('/om/group/evlab/software/spm12'))
 %% get SPM files for all relevant participants
 data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
 
@@ -20,6 +20,13 @@ output_dir = './voxel_preference_analysis';
 if ~exist(output_dir, 'dir')
     mkdir(output_dir)
 end
+
+parcel_img = '../new_parcels/fROIs_filtered_overlap60_minsize200_relabeled.nii';
+V_parcel = spm_vol(parcel_img);
+data_parcel = round(spm_read_vols(V_parcel));
+% the different nonzero values in localizer file, as roi label
+roi_labels = unique(data_parcel);
+roi_labels = roi_labels(roi_labels~=0);
 
 
 for i=1:length(loc_tasks)
@@ -52,10 +59,6 @@ for i=1:length(loc_tasks)
         V_localizer = spm_vol(localizer_path);
         data_localizer = spm_read_vols(V_localizer);
 
-        % the different nonzero values in localizer file, as roi label
-        roi_labels = unique(data_localizer);
-        roi_labels = roi_labels(roi_labels~=0);
-
         % Load SPM.mat
         load(spmfile_loc);
 
@@ -83,7 +86,8 @@ for i=1:length(loc_tasks)
         output_table = {'roi_label', 'x', 'y', 'z', 'effect_size_photo', 'effect_size_sent'};
         for k = 1:length(roi_labels)
             roi_label = roi_labels(k);
-            roi_mask = data_localizer == roi_label;
+            % mask the localizer data in the parcel image with the roi label
+            roi_mask = roi_localizer == 1 & data_parcel == roi_label;
             [x,y,z] = ind2sub(size(roi_mask), find(roi_mask));
             for l = 1:length(x)
                 x_coord = x(l);
