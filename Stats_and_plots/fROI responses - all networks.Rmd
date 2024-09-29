@@ -216,9 +216,8 @@ return(f)
 ## Read and clean data
 
 ```{r}
-for (prefix in c('events', 'events_flipped', 'events_picContrast', 'events_flipped_picContrast', 'events_sentContrast', 'events_flipped_sentContrast')) {
 event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
-dat = read_data(, event_expts)
+dat = read_data('events', event_expts)
 
 dat = dat %>%
   mutate(ROI=recode(ROI, 
@@ -234,23 +233,39 @@ dat = dat %>%
                            ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
                                   ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
 dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
+```
 
+## Left-out participants
+
+Some participants were intentionally left out during parcel definition.
+```{r}
 left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
 dat = dat %>%
   separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
   mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
+```
 
+## Stats
+
+```{r}
+# ignore categorization here
 dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
 dat.stats$Effect = factor(dat.stats$Effect, 
                           levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
 dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject, 
                                   levels=c('FALSE', 'TRUE'))
+```
 
+### Selectivity (all expts together)
+
+```{r}
 dat.stats = set_contrasts(dat.stats)
 
 model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
+```
 
+```{r}
 # Contrast effects in each ROI, FDR-corrected
 model.dfs <- list()
 index = 1
@@ -268,8 +283,11 @@ stats_df = do.call("rbind", model.dfs)
 stats_df = correct_FDR(stats_df)
 
 write.table(stats_df, file = "Tables/ROI stats.csv", sep = ",", quote = FALSE, row.names = F)
+```
 
+### By experiment (events only)
 
+```{r}
 dat.stats.byexpt =dat %>% 
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   separate(Effect, c('StimType', 'Task'), sep="_") 
@@ -278,7 +296,9 @@ dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
 
 model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
+```
 
+```{r}
 # Contrast effects in each ROI, FDR-corrected
 
 model.dfs <- list()
@@ -311,11 +331,15 @@ stats_df = do.call("rbind", model.dfs)
 stats_df = correct_FDR(stats_df)
 
 write.table(stats_df, file = "Tables/ROI stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
+```
 
+### Generalization to left-out participants
 
+```{r}
 model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
-
+```
+```{r}
 # Contrast effects in each participant group, FDR-corrected
 
 model.dfs <- list()
@@ -346,14 +370,22 @@ stats_df = do.call("rbind", model.dfs)
 stats_df = correct_FDR(stats_df)
 
 write.table(stats_df, file = "Tables/Events stats left out participants.csv", sep = ",", quote = FALSE, row.names = F)
+```
 
 
+## Plot
+
+### By ROI group
+```{r}
 plot_name = 'EventsAll parcels'
 plot_fROI_responses(dat, split_by_ROIgroup = TRUE, ylim=c(-1,3.5))
-ggsave(paste(plot_dir, prefix, plot_name,' by ROI group.png',sep=''), 
+ggsave(paste(plot_dir, plot_name,' by ROI group.png',sep=''), 
        width=ROI_plot_width+4, height=plot_height_1row+4, units='cm')
+```
 
-# by experiment
+### By Experiment
+
+```{r}
 dat.mean = dat %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   group_by(Experiment, Subject, Effect) %>%
@@ -366,7 +398,381 @@ plt.by_expt.mean = plot_fROI_responses(dat.mean, split_by_expt=TRUE, show_legend
 plt.by_expt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_expt=TRUE, ylim=c(-1,4.5))
 
 plt.by_expt.mean + plt.by_expt.ROI + plot_layout(widths=c(1,6))
-ggsave(paste(plot_dir, prefix, plot_name,' by expt.png',sep=''), 
+ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''), 
        width=ROI_plot_width+4, height=plot_height_3rows, units='cm')
+```
+
+### Generalization to left-out participants
+
+```{r}
+dat.mean = dat %>%
+  group_by(Experiment, Subject, Effect, LeftOutSubject) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=ifelse(LeftOutSubject, 'Group2 (n=11)', 'Group1 (n=30)'))
+
+plot_name = 'Events Parcels - Left-out subjects'
+plot_fROI_responses(dat.mean)
+
+ggsave(paste(plot_dir,plot_name,'.png',sep=''),
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
+```
+
+
+# LANG 
+
+## Read data
+
+```{r}
+lang_expts = c('SWNlocIPS168_3runs', 'langlocSN', 'langlocSN')
+dat = read_data('language', lang_expts)
+
+# clean
+dat = dat %>%
+  mutate(Hemisphere = ifelse(ROI %in% c(1,2,3,4,5,6), 'LH', 'RH')) %>%
+  mutate(ROI = recode(dat$ROI,
+        '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
+        '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
+        '7'='RIFG_orb', '8'='RIFG', '9'='RMFG',
+        '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG'))
+dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
+                                   'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+
+# split by hemi
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
+```
+
+## Stats
+
+```{r}
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+dat.stats = set_contrasts(dat.stats)
+```
+
+### Selectivity (all expts together)
+
+```{r}
+# Contrast effects in each hemisphere, FDR-corrected
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+
+model.dfs <- list()
+index = 1
+
+for (hemi in unique(dat.stats$Hemisphere)) {
+  dat.hemi = dat.stats %>% filter(Hemisphere==hemi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.hemi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.df = data.frame(coef_names,
+                        summary(model)$coefficients[,'Estimate'],
+                        summary(model)$coefficients[,'Std. Error'],
+                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+    mutate(Hemisphere=hemi)
+  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Hemisphere')
+  model.df = model.df[,c(5,1,2,3,4)] %>%
+    mutate(Beta = round(Beta, 2), 
+           SE = round(SE, 2),
+           p.value = ifelse(p.value>0.001, round(p.value, 3),
+                            formatC(p.value, format = "e", digits = 2)))
+  
+  model.dfs[[index]] <- model.df
+  index = index+1
 }
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/Lang stats by hemi.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(model, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/Lang stats by fROI.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+
+## Plot 
+
+### Mean hemisphere
+```{r}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
+
+plot_name = 'Language Network'
+p.lang = plot_fROI_responses(dat.mean, show_legend = FALSE)
+```
+
+### ROIs by hemisphere
+
+```{r}
+plot_name = 'Language Network - LH'
+plot_fROI_responses(dat.lh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+```{r}
+plot_name = 'Language Network - RH'
+plot_fROI_responses(dat.rh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+
+# MD 
+
+## Read data
+```{r}
+MD_expts = c('NONE', 'spatialFIN', 'spatialFIN')
+dat = read_data('MD', MD_expts)
+
+# split by hemi
+dat = dat %>% separate(ROI, c("Hemisphere", NA), remove=FALSE)
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
+```
+
+## Stats
+
+```{r}
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+dat.stats = set_contrasts(dat.stats)
+```
+
+### Selectivity (all expts together)
+
+```{r}
+# Contrast effects in each hemisphere, FDR-corrected
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+
+model.dfs <- list()
+index = 1
+
+for (hemi in unique(dat.stats$Hemisphere)) {
+  dat.hemi = dat.stats %>% filter(Hemisphere==hemi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.hemi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.df = data.frame(coef_names,
+                        summary(model)$coefficients[,'Estimate'],
+                        summary(model)$coefficients[,'Std. Error'],
+                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+    mutate(Hemisphere=hemi)
+  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Hemisphere')
+  model.df = model.df[,c(5,1,2,3,4)] %>%
+    mutate(Beta = round(Beta, 2), 
+           SE = round(SE, 2),
+           p.value = ifelse(p.value>0.001, round(p.value, 3),
+                            formatC(p.value, format = "e", digits = 2)))
+  
+  model.dfs[[index]] <- model.df
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/MD stats by hemi.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(model, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/MD stats by fROI.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+## Plot 
+
+### Mean hemisphere
+```{r}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
+
+plot_name = 'MD Network'
+p.MD = plot_fROI_responses(dat.mean)
+p.MD 
+
+ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
+```
+
+### ROIs by hemisphere
+
+```{r}
+plot_name = 'MD Network - LH'
+plot_fROI_responses(dat.lh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+```{r}
+plot_name = 'MD Network - RH'
+plot_fROI_responses(dat.rh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+
+# DMN 
+
+## Read data
+```{r}
+DMN_expts = c('NONE', 'spatialFIN', 'spatialFIN')
+dat = read_data('DMN', DMN_expts)
+
+dat = dat %>%
+  mutate(Hemisphere = ifelse(ROI %in% c(1,2,3,4,5,6), 'LH', 'RH')) %>%
+  mutate(ROI = recode(dat$ROI,
+        '1'='LH_FrontalMed', '2'='LH_PostCing', '3'='LH_TPJ',
+        '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTemp',
+        '7'='RH_FrontalMed', '8'='RH_PostCing', '9'='RH_TPJ',
+        '10'='RH_MidCing', '11'='RH_STGorInsula', '12'='RH_AntTemp'))
+
+# split by hemi
+dat.lh = dat %>% filter(Hemisphere=='LH')
+dat.rh = dat %>% filter(Hemisphere=='RH')
+```
+
+## Stats
+
+```{r}
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+dat.stats = set_contrasts(dat.stats)
+```
+
+### Selectivity (all expts together)
+
+```{r}
+# Contrast effects in each hemisphere, FDR-corrected
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
+coef_names = row.names(coefficients(summary(model)))
+
+model.dfs <- list()
+index = 1
+
+for (hemi in unique(dat.stats$Hemisphere)) {
+  dat.hemi = dat.stats %>% filter(Hemisphere==hemi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.hemi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.df = data.frame(coef_names,
+                        summary(model)$coefficients[,'Estimate'],
+                        summary(model)$coefficients[,'Std. Error'],
+                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+    mutate(Hemisphere=hemi)
+  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Hemisphere')
+  model.df = model.df[,c(5,1,2,3,4)] %>%
+    mutate(Beta = round(Beta, 2), 
+           SE = round(SE, 2),
+           p.value = ifelse(p.value>0.001, round(p.value, 3),
+                            formatC(p.value, format = "e", digits = 2)))
+  
+  model.dfs[[index]] <- model.df
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/DMN stats by hemi.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(model, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/DMN stats by fROI.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+## Plot 
+
+### Mean hemisphere
+```{r}
+dat.mean <- dat %>% 
+  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI=Hemisphere)
+
+plot_name = 'Default Mode Network'
+p.DMN = plot_fROI_responses(dat.mean, show_legend = FALSE)
+```
+
+### ROIs by hemisphere
+
+```{r}
+plot_name = 'Default Mode Network - LH'
+plot_fROI_responses(dat.lh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+```{r}
+plot_name = 'Default Mode Network - RH'
+plot_fROI_responses(dat.rh)
+ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row, units='cm')
+```
+
+# COMBINE PLOTS
+```{r}
+p.lang / p.MD / p.DMN
+ggsave(paste('Plots/', 'three networks by hemi.png', sep=''), 
+       width=ROI_plot_width, height=plot_height_3rows, units='cm')
 ```

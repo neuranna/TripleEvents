@@ -7,7 +7,7 @@ session_file = '../Participant_info/TripleEvents_sessions_clean.csv';
 session_info = readtable(session_file);
 
 localizer_location_file = './localizer_location.csv';
-localizer_location = readtable(localizer_location_file);
+localizer_location = readtable(localizer_location_file, "Delimiter", ",");
 
 loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
 contrasts = {

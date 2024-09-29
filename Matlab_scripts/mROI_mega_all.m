@@ -75,7 +75,7 @@ for i=1:length(loc_tasks)
     if length(loc_contrasts)>1
         ss.Localizer_conjunction_type = 'max';
     end
-
+    break
     ss=spm_ss_design(ss);                                          % see help spm_ss_design for additional information
     ss=spm_ss_estimate(ss);
 end
