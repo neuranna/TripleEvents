@@ -10,7 +10,7 @@ data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
 session_file = '../Participant_info/TripleEvents_sessions_clean.csv';
 session_info = readtable(session_file);
 
-localizer_location_file = './localizer_location.csv';
+localizer_location_file = './localizer_source.csv';
 localizer_location = readtable(localizer_location_file, "Delimiter", ",");
 
 loc_tasks = {'EventsRev_instrsep', 'events2move_instrsep', 'EventsOrig_instrsep_2runs'};
@@ -49,7 +49,8 @@ for i=1:length(loc_tasks)
         % Get subject
         subject = subject_info_loc(j,1);
         % in the localizer_location table, get the row with UID = subject, get the path in Localizer column
-        localizer_path = localizer_location(strcmp(localizer_location.UID, subject),:).Localizer;
+        idx_match = localizer_location.UID == str2double(subject.Var1{1});
+        localizer_path = localizer_location(idx_match,:).Localizer;
         % Read the nii file in Localizer column
         V_localizer = spm_vol(localizer_path);
         data_localizer = spm_read_vols(V_localizer);
