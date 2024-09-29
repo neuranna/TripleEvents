@@ -87,7 +87,7 @@ for i=1:length(loc_tasks)
         for k = 1:length(roi_labels)
             roi_label = roi_labels(k);
             % mask the localizer data in the parcel image with the roi label
-            roi_mask = roi_localizer == 1 & data_parcel == roi_label;
+            roi_mask = data_localizer == 1 & data_parcel == roi_label;
             [x,y,z] = ind2sub(size(roi_mask), find(roi_mask));
             for l = 1:length(x)
                 x_coord = x(l);
