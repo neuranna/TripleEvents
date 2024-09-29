@@ -1,8 +1,4 @@
 % This script examines the voxel's response (contrast effect size) to the pic_sem - pic_perc and sent_sem - sent_perc 
-addpath(genpath('/om/group/evlab/software/spm12'))
-addpath(genpath('/om/group/evlab/software/spm_ss'))
-addpath /om/group/evlab/software/conn
-conn_module el init
 
 %% get SPM files for all relevant participants
 data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
@@ -44,12 +40,13 @@ for i=1:length(loc_tasks)
     spmfiles_loc = cellstr(subjects_loc.SPMpath');
 
     for j = 1:length(spmfiles_loc)
+        addpath(genpath('/om/group/evlab/software/spm12'))
         spmfile_loc = spmfiles_loc{j};
 
         % Get subject
-        subject = subject_info_loc(j,1);
+        subject = subject_info_loc(j,1).Var1{1};
         % in the localizer_location table, get the row with UID = subject, get the path in Localizer column
-        idx_match = localizer_location.UID == str2double(subject.Var1{1});
+        idx_match = localizer_location.UID == str2double(subject);
         localizer_path = localizer_location(idx_match,:).Localizer{1};
         % Read the nii file in Localizer column
         V_localizer = spm_vol(localizer_path);
@@ -100,7 +97,8 @@ for i=1:length(loc_tasks)
 
         % Export the table to a csv file in the output directory
         output_file = fullfile(output_dir, strcat(subject, '_', loc_task, '_voxel_preference.csv'));
-        writetable(cell2table(output_table), output_file, 'WriteVariableNames', false);
+        restoredefaultpath;
+        writecell(output_table, output_file);
     end
 
 end
