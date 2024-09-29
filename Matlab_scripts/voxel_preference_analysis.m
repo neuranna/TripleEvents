@@ -1,4 +1,8 @@
 % This script examines the voxel's response (contrast effect size) to the pic_sem - pic_perc and sent_sem - sent_perc 
+addpath(genpath('/om/group/evlab/software/spm12'))
+addpath(genpath('/om/group/evlab/software/spm_ss'))
+addpath /om/group/evlab/software/conn
+conn_module el init
 
 %% get SPM files for all relevant participants
 data_dir = "/mindhive/evlab/u/Shared/SUBJECTS";
