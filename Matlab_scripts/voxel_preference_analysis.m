@@ -50,7 +50,7 @@ for i=1:length(loc_tasks)
         subject = subject_info_loc(j,1);
         % in the localizer_location table, get the row with UID = subject, get the path in Localizer column
         idx_match = localizer_location.UID == str2double(subject.Var1{1});
-        localizer_path = localizer_location(idx_match,:).Localizer;
+        localizer_path = localizer_location(idx_match,:).Localizer{1};
         % Read the nii file in Localizer column
         V_localizer = spm_vol(localizer_path);
         data_localizer = spm_read_vols(V_localizer);
@@ -63,10 +63,10 @@ for i=1:length(loc_tasks)
         load(spmfile_loc);
 
         % In the table in SPM.xCon (1xn struct), get the row with name = contrasts_thisloc{1} + 'minus' + contrasts_thisloc{2}, get the row number
-        contrast_name_photo = strcat(contrasts_thisloc{1}, 'minus', contrasts_thisloc{2});
+        contrast_name_photo = 'Pic_Sem-Perc';
         contrast_row_photo = find(strcmp({SPM.xCon.name}, contrast_name_photo));
         % In the table in SPM.xCon (1xn struct), get the row with name = contrasts_thisloc{3} + 'minus' + contrasts_thisloc{4}, get the row number
-        contrast_name_sent = strcat(contrasts_thisloc{3}, 'minus', contrasts_thisloc{4});
+        contrast_name_sent = 'Sent_Sem-Perc'
         contrast_row_sent = find(strcmp({SPM.xCon.name}, contrast_name_sent));
 
         % in the same folder as SPM, find the con_%04d.nii files corresponding to the contrast_row_photo and contrast_row_sent
@@ -83,6 +83,7 @@ for i=1:length(loc_tasks)
 
         % for each roi label, get each the voxels with that label in localizer, and get the effect size for photo and sent conditions, save them in a table
         % including the roi label, the 3D location of the voxel, the effect size for photo, the effect size for sent
+        output_table = {'roi_label', 'x', 'y', 'z', 'effect_size_photo', 'effect_size_sent'};
         for k = 1:length(roi_labels)
             roi_label = roi_labels(k);
             roi_mask = data_localizer == roi_label;
@@ -99,6 +100,7 @@ for i=1:length(loc_tasks)
 
         % Export the table to a csv file in the output directory
         output_file = fullfile(output_dir, strcat(subject, '_', loc_task, '_voxel_preference.csv'));
+        writetable(cell2table(output_table), output_file, 'WriteVariableNames', false);
     end
 
 end
