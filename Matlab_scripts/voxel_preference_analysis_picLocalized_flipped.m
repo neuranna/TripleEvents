@@ -21,9 +21,10 @@ if ~exist(output_dir, 'dir')
     mkdir(output_dir)
 end
 
-parcel_img = '../new_parcels/fROIs_filtered_overlap60_minsize200_relabeled_flipped.nii';
+parcel_img = '../new_parcels/fROIs_filtered_overlap60_minsize200_relabeled_flipped_reheadered.nii';
 V_parcel = spm_vol(parcel_img);
 data_parcel = round(spm_read_vols(V_parcel));
+
 % the different nonzero values in localizer file, as roi label
 roi_labels = unique(data_parcel);
 roi_labels = roi_labels(roi_labels~=0);
