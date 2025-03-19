@@ -1,6 +1,6 @@
 %% MEGA MROI SCRIPT - DEFINE fROIs AND ESTIMATE EFFECTS OF INTEREST
 %
-% localizer_task: 'language', 'MD', 'DMN', 'events'
+% network: 'language', 'MD', 'DMN', 'events'
 % main_task_index: currently 1-7
 %
 % 2022-06-01: created by Anna Ivanova
