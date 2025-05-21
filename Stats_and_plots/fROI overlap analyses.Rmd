@@ -35,7 +35,15 @@ facet_label_size = 12
 plot_dir = 'Plots/'
 ```
 
+## fROI labels
 
+```{r}
+lang_frois = c('LH_IFG_orb', 'LH_IFG', 'LH_MFG', 'LH_AntTemp', 'LH_PostTemp', 'LH_AngG',
+               'RH_IFG_orb', 'RH_IFG', 'RH_MFG','RH_AntTemp', 'RH_PostTemp', 'RH_AngG')
+semantic_frois = c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2')
+md_frois = c('LH_postParietal','LH_midParietal','LH_antParietal','LH_supFrontal','LH_precentral_A','LH_precentral_B','LH_midFrontal','LH_midFrontalOrb','LH_insula','LH_medialFrontal','RH_postParietal','RH_midParietal','RH_antParietal','RH_supFrontal','RH_precentral_A','RH_precentral_B','RH_midFrontal','RH_midFrontalOrb','RH_insula','RH_medialFrontal')
+dmn_frois = c('LH_FrontalMed', 'LH_PostCing', 'LH_TPJ','LH_MidCing', 'LH_STGorInsula', 'LH_AntTempr','RH_FrontalMed', 'RH_PostCing', 'RH_TPJ','RH_MidCing', 'RH_STGorInsula', 'RH_AntTempr')
+```
 
 # Supporting functions
 
@@ -51,45 +59,44 @@ read_datafile <- function(data_path, filename, expt1, expt2) {
 rename_ROI_col <- function(ROIcol, network) {
   if (network=='language') {
     result = recode(ROIcol,
-            '1'='LIFG_orb', '2'='LIFG', '3'='LMFG',
-            '4'='LAntTemp', '5'='LPostTemp', '6'='LAngG',
-            '7'='RIFG_orb', '8'='RIFG', '9'='RMFG',
-            '10'='RAntTemp', '11'='RPostTemp', '12'='RAngG') 
-    result = factor(result, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPostTemp', 'LAngG',
-                                     'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
+            '1'='LH_IFG_orb', '2'='LH_IFG', '3'='LH_MFG',
+            '4'='LH_AntTemp', '5'='LH_PostTemp', '6'='LH_AngG',
+            '7'='RH_IFG_orb', '8'='RH_IFG', '9'='RH_MFG',
+            '10'='RH_AntTemp', '11'='RH_PostTemp', '12'='RH_AngG') 
+    result = factor(result, levels=lang_frois)
   } else if (network=='MD') {
     result = recode(ROIcol, 
-                       '1'='postParietal',
-                        '2'='midParietal',
-                        '3'='antParietal',
-                        '4'='supFrontal',
-                        '5'='precentral_A',
-                        '6'='precentral_B',
-                        '7'='midFrontal',
-                        '8'='midFrontalOrb',
-                        '9'='insula',
-                        '10'='medialFrontal',
-                        '11'='postParietal',
-                        '12'='midParietal',
-                        '13'='antParietal',
-                        '14'='supFrontal',
-                        '15'='precentral_A',
-                        '16'='precentral_B',
-                        '17'='midFrontal',
-                        '18'='midFrontalOrb',
-                        '19'='insula',
-                        '20'='medialFrontal') 
+                       '1'='LH_postParietal',
+                        '2'='LH_midParietal',
+                        '3'='LH_antParietal',
+                        '4'='LH_supFrontal',
+                        '5'='LH_precentral_A',
+                        '6'='LH_precentral_B',
+                        '7'='LH_midFrontal',
+                        '8'='LH_midFrontalOrb',
+                        '9'='LH_insula',
+                        '10'='LH_medialFrontal',
+                        '11'='RH_postParietal',
+                        '12'='RH_midParietal',
+                        '13'='RH_antParietal',
+                        '14'='RH_supFrontal',
+                        '15'='RH_precentral_A',
+                        '16'='RH_precentral_B',
+                        '17'='RH_midFrontal',
+                        '18'='RH_midFrontalOrb',
+                        '19'='RH_insula',
+                        '20'='RH_medialFrontal') 
   } else if (network=='DMN') {
     result = recode(ROIcol,
         '1'='LH_FrontalMed', '2'='LH_PostCing', '3'='LH_TPJ',
-        '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTemp',
+        '4'='LH_MidCing', '5'='LH_STGorInsula', '6'='LH_AntTempr',
         '7'='RH_FrontalMed', '8'='RH_PostCing', '9'='RH_TPJ',
-        '10'='RH_MidCing', '11'='RH_STGorInsula', '12'='RH_AntTemp')
+        '10'='RH_MidCing', '11'='RH_STGorInsula', '12'='RH_AntTempr')
   } else if (network=="events") {
     result = recode(ROIcol, 
                     '1'='F2', '2'='F1', '3'='TP3', '4'='TP2', '5'='Cer1', '6'='TP4',
                     '7'='F3', '8'='TP1', '9'='O1', '10'='Cer2', '11'='O2')
-    result = factor(result, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+    result = factor(result, levels=semantic_frois)
   } else {
     stop(paste('Unknown network:', network))
   }
@@ -192,21 +199,33 @@ ggplot(data=dat.events)+
 #dat.wide =  pivot_wider(dat.mean, names_from=c(Network2, ROI2), values_from=meanOverlap)
 dat$Network1 = factor(dat$Network1, levels=c('events', 'language', 'MD', 'DMN'))
 
+froi_order = c(unique(substring(lang_frois, 4)), 
+               unique(substring(md_frois, 4)),
+               unique(substring(dmn_frois, 4)))
+
 d = dat %>% 
   filter(Network2=='events') %>%
+  filter(Network1!='events') %>%
+  filter(!(startsWith(ROI1, 'R'))) %>%
   mutate(Network1 = recode(Network1, 'events'='')) %>%
   group_by(ROI1, ROI2, Network1, Network2) %>% 
   summarize(meanOverlap = mean(Overlap)) %>%
   ungroup() %>%
-  mutate(ROI1 = paste(Network1, ROI1, sep=' ')) 
-dat.wide = as.matrix( cast(d, ROI1 ~ ROI2, add.missing = TRUE, fill=0, value='meanOverlap'))
+  mutate(ROI1 = substring(ROI1,4))
+d$ROI1 = factor(d$ROI1, levels=froi_order)
+d$ROI2 = factor(d$ROI2, levels=semantic_frois)
 
 ggplot(d)+
-  geom_tile(mapping=aes(x=ROI2, y=ROI1, fill=meanOverlap))+
-  scale_y_discrete(limits=rev)
+  geom_tile(mapping=aes(x=ROI2, y=ROI1, fill=meanOverlap), color="black")+
+  scale_y_discrete(limits=rev)+
+  labs(x="", y="", fill="Mean\noverlap ")+
+  scale_x_discrete(position = "top")+
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
+  coord_fixed()
 
 ggsave(paste(plot_dir, "overlap_heatmap.png", sep=""),
-      width=plot_width*0.75, height=plot_height_3rows, units='cm')
+      width=plot_width*0.5, height=14, units='cm')
 ```
 
 # Different Events Experiments

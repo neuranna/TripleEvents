@@ -124,7 +124,7 @@ O2,Experiment 1,TaskSem,0.87,0.26,0.004,**
 O2,Experiment 1,StimTypeSent,-0.21,0.24,0.497,
 O2,Experiment 1,TaskSem:StimTypeSent,-0.2,0.26,0.79,
 O2,Experiment 2,(Intercept),2.78,0.37,<.001,***
-O2,Experiment 2,TaskSem,0.91,0.27,0.006,**
+O2,Experiment 2,TaskSem,0.91,0.27,0.005,**
 O2,Experiment 2,StimTypeSent,-0.26,0.2,0.322,
 O2,Experiment 2,TaskSem:StimTypeSent,0.16,0.14,0.667,
 O2,Experiment 3,(Intercept),1.9,0.27,<.001,***
