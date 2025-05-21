@@ -175,7 +175,7 @@ correct_FDR <- function(stats_df) {
 
 ```{r}
 plot_fROI_responses <- function (df, split_by_expt=FALSE, split_by_ROIgroup=FALSE, include_objectsem=FALSE,
-                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7){
+                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7, plot_title=NULL){
 
 if (!include_objectsem) {
   df = df %>% filter(!(Effect %in% c('SEM', 'PERC')))
@@ -193,12 +193,12 @@ f = ggplot(data=df)+
                              'gray80', 'gray20', '#0000B2', '#B2B2FF', '#D5C33B', '#F4EF3B'))+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  labs(x=NULL, y='Effect size')+
+  labs(x=NULL, y='Effect size', title=plot_title)+
   theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
         axis.title.y = element_text(size=axis_title_size), 
         axis.text.y = element_text(size=axis_text_size), 
         legend.text = element_text(size=legend_size), 
-        title = element_text(size=title_size, face='bold'))
+        plot.title = element_text(size=title_size, face='bold', hjust = 0.5))
 
 if (split_by_expt) {
   f = f + facet_grid(Experiment ~ .)
@@ -906,9 +906,9 @@ ggsave(paste('Plots/', 'three networks by hemi.png', sep=''),
 ```{r}
 event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
 dat.lvATL = read_data('left_ATL_inferior_pole_middle', event_expts)
-dat.lvATL$ROI = 'left_vATL'
+dat.lvATL$ROI = 'left'
 dat.rvATL = read_data('right_ATL_inferior_pole_middle', event_expts)
-dat.rvATL$ROI = 'right_vATL'
+dat.rvATL$ROI = 'right'
 
 dat = rbind(dat.lvATL, dat.rvATL)
 ```
@@ -964,8 +964,91 @@ dat.mean <- dat %>%
   group_by(Effect, Subject, Experiment, ROI) %>% 
   summarize(EffectSize = mean(EffectSize)) 
 
-plot_name = 'Ventral ATL by expt'
-p.vatl = plot_fROI_responses(dat.mean, show_legend = TRUE)
+plot_title = 'vATL'
+p.vatl = plot_fROI_responses(dat.mean, show_legend = FALSE, ylim=c(-1, 1), plot_title=plot_title)
 p.vatl
 ```
 
+# RH semantic demand homotops
+
+## Read data
+
+```{r}
+event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
+dat = read_data('events_flipped', event_expts)
+
+# temporary
+dat$ROI = as.integer(dat$ROI) 
+dat = dat %>% filter(ROI%%2==0) %>% mutate(ROI=as.character(ROI/2))
+
+dat = dat %>%
+  mutate(ROI=recode(ROI, 
+                    '1'='F1', '2'='F2', '3'='F3', '4'='TP1', '5'='TP2', '6'='TP3',
+                    '7'='TP4', '8'='O1', '9'='O2', '10'='Cer1', '11'='Cer2'))
+dat$ROI = factor(dat$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+
+dat = dat %>% 
+  mutate(ROIgroup = ifelse(ROI %in% c('Cer1','Cer2'), 'Cerebellum',
+                           ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
+                                  ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
+dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
+```
+
+## Stats
+
+```{r}
+# ignore categorization here
+dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats$Effect = factor(dat.stats$Effect, 
+                          levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
+```
+
+### Selectivity (all expts together)
+
+```{r}
+dat.stats = set_contrasts(dat.stats)
+
+model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
+#coef_names = row.names(coefficients(summary(model)))
+coef_names = c('Intercept', 'S-N', 'H-E', 'Task Sem>Perc', 'StimType Sent>Pic', 'Task:StimType',
+               'Sent_Sem>S', 'SemTask>WMTask', 'E2>E3', 'E1>E3', 'S>N:E2>E3', 'H-E:E2>E3',
+               'Sem>Perc:E2>E3', 'Sent>Pic:E2>E3', 'Task:StimType:E2>E3', 'Sent_Sem>S:E2>E3',
+               'SemTask>WMTask:E2>E3', 'S-N:E1>E3', 'Sem>Perc:E1>E3', 'Sent>Pic:E1>E3', 
+               'Task:StimType:E1>E3', 'Sent_Sem>S:E1>E3')
+```
+
+```{r}
+# Contrast effects in each ROI, FDR-corrected
+model.dfs <- list()
+index = 1
+
+for (roi in unique(dat$ROI)) {
+  dat.roi = dat.stats %>% filter(ROI==roi)
+  m = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.roi, REML=FALSE,
+               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  model.dfs[[index]] <- extract_stats(m, coef_names)
+  index = index+1
+}
+
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = correct_FDR(stats_df)
+
+write.table(stats_df, file = "Tables/RH semantic ROI stats.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
+## Plot
+
+### By ROI
+```{r}
+plot_title = 'RH homotops'
+p.RHsem = plot_fROI_responses(dat, split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
+```
+
+# COMBINE PLOTS ATL + RH
+```{r}
+(p.vatl | p.RHsem) + plot_layout(widths = c(1, 4)) + plot_annotation(tag_levels = 'A') & 
+  theme(plot.tag = element_text(face = "bold"))
+ggsave(paste('Plots/', 'other suspects.png', sep=''), 
+       width=ROI_plot_width, height=plot_height_1row+2, units='cm')
+```
