@@ -38,6 +38,17 @@ axis_text_size = 12
 facet_label_size = 12
 
 plot_dir = 'Plots/'
+
+condition_labels = c(
+  "Sent_Sem" = "Sentences, semantic task",
+  "Sent_Perc" = "Sentences, perceptual task",
+  "Pic_Sem" = "Pictures, semantic task",
+  "Pic_Perc" = "Pictures, perceptual task",
+  "S" = "Sentence reading",
+  "N" = "Nonword reading",
+  "H" = "Hard WM",
+  "E" = "Easy WM"
+)
 ```
 
 ## Supporting functions
@@ -190,7 +201,8 @@ f = ggplot(data=df)+
                geom='errorbar', fun.data='mean_se', color='black', 
                position=position_dodge(col_width, preserve="single"), size=0.5, width=0)+
   scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF', '#D5C33B', '#F4EF3B'))+
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF', '#D5C33B', '#F4EF3B'),
+                    labels=condition_labels)+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
   labs(x=NULL, y='Effect size', title=plot_title)+
@@ -394,9 +406,10 @@ write.table(stats_df, file = "Tables/Events stats left out participants.csv", se
 ### By ROI group
 ```{r}
 plot_name = 'EventsAll parcels'
-plot_fROI_responses(dat, split_by_ROIgroup = TRUE, ylim=c(-1,3.5), col_width=0.82)
+plot_fROI_responses(dat, split_by_ROIgroup = TRUE, ylim=c(-1,3.5), col_width=0.7)
+
 ggsave(paste(plot_dir, plot_name,' by ROI group.png',sep=''), 
-       width=ROI_plot_width, height=plot_height_1row, units='cm')
+       width=ROI_plot_width+3, height=plot_height_1row+3, units='cm')
 ```
 
 ### By Experiment
@@ -595,35 +608,25 @@ dat.mean <- dat %>%
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
-plot_name = 'Language Network by expt'
-p.lang = plot_fROI_responses(dat.mean, show_legend = FALSE)
+plot_title = 'Language Network'
+p.lang = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
+p.lang
 ```
 
-This is just for me:
-```{r}
-dat.mean <- dat %>% 
-  group_by(Effect, Subject, Experiment, Hemisphere) %>% 
-  summarize(EffectSize = mean(EffectSize)) %>%
-  mutate(ROI=Hemisphere)
 
-plot_name = 'Language Network'
-p.lang = plot_fROI_responses(dat.mean, split_by_expt=TRUE)
-ggsave(paste('plots/',plot_name,'_by_expt.png',sep=''), 
-       width=hemi_plot_width+4, height=plot_height_3rows, units='cm')
-```
 
 TEMP FOR THE REVIEW:
 ```{r}
-dat.mean.5ROIs <- dat.lh %>% 
-  filter(ROI!="LAngG") %>%
-  filter(Effect=="Pic_Sem") %>%
-  group_by(Subject, Experiment) %>% 
-  summarize(EffectSize = mean(EffectSize))
-
-d1 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 1")
-d2 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 2")
-write.csv(d1, "EventsOrig_5fROIs_Sem_Pic.csv")
-write.csv(d2, "Events2move_5fROIs_Sem_Pic.csv")
+# dat.mean.5ROIs <- dat.lh %>% 
+#   filter(ROI!="LAngG") %>%
+#   filter(Effect=="Pic_Sem") %>%
+#   group_by(Subject, Experiment) %>% 
+#   summarize(EffectSize = mean(EffectSize))
+# 
+# d1 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 1")
+# d2 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 2")
+# write.csv(d1, "EventsOrig_5fROIs_Sem_Pic.csv")
+# write.csv(d2, "Events2move_5fROIs_Sem_Pic.csv")
 ```
 
 
@@ -752,8 +755,8 @@ dat.mean <- dat %>%
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
-plot_name = 'MD Network'
-p.MD = plot_fROI_responses(dat.mean)
+plot_title = 'Multiple Demand Network'
+p.MD = plot_fROI_responses(dat.mean, plot_title = plot_title)
 p.MD 
 
 ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
@@ -873,8 +876,9 @@ dat.mean <- dat %>%
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
-plot_name = 'Default Mode Network'
-p.DMN = plot_fROI_responses(dat.mean, show_legend = FALSE)
+plot_title = 'Default Mode Network\n'
+p.DMN = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
+p.DMN
 ```
 
 ### ROIs by hemisphere
@@ -897,7 +901,7 @@ ggsave(paste('plots/',plot_name,'_ROI.png',sep=''),
 ```{r}
 p.lang / p.MD / p.DMN
 ggsave(paste('Plots/', 'three networks by hemi.png', sep=''), 
-       width=ROI_plot_width, height=plot_height_3rows, units='cm')
+       width=ROI_plot_width, height=plot_height_3rows+3, units='cm')
 ```
 
 # ATL follow up
@@ -992,6 +996,9 @@ dat = dat %>%
                            ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
                                   ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
 dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
+
+# Because O1 and O2 are already essentially homotops, omitting them here
+dat = dat %>% filter(!(ROI %in% c('O1', 'O2'))) 
 ```
 
 ## Stats
@@ -1041,14 +1048,14 @@ write.table(stats_df, file = "Tables/RH semantic ROI stats.csv", sep = ",", quot
 
 ### By ROI
 ```{r}
-plot_title = 'RH homotops'
+plot_title = 'Contralateral fROIs'
 p.RHsem = plot_fROI_responses(dat, split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
 ```
 
 # COMBINE PLOTS ATL + RH
 ```{r}
-(p.vatl | p.RHsem) + plot_layout(widths = c(1, 4)) + plot_annotation(tag_levels = 'A') & 
+(p.vatl | p.RHsem) + plot_layout(widths = c(1, 3.5)) + plot_annotation(tag_levels = 'A') & 
   theme(plot.tag = element_text(face = "bold"))
 ggsave(paste('Plots/', 'other suspects.png', sep=''), 
-       width=ROI_plot_width, height=plot_height_1row+2, units='cm')
+       width=ROI_plot_width+4, height=plot_height_1row+3, units='cm')
 ```
