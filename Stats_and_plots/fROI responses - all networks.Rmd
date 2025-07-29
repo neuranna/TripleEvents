@@ -255,6 +255,12 @@ dat = dat %>%
 dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
 ```
 
+## Remove occipital ROIs
+```{r}
+dat = dat %>%
+  filter(ROIgroup!='Occipital cortex')
+```
+
 ## Left-out participants
 
 Some participants were intentionally left out during parcel definition.
@@ -367,6 +373,7 @@ write.table(stats_df, file = "Tables/semantic ROI stats by experiment.csv", sep 
 model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
 ```
+
 ```{r}
 # Contrast effects in each participant group, FDR-corrected
 
@@ -527,8 +534,15 @@ dat$ROI = factor(dat$ROI, levels=c('LIFG_orb', 'LIFG', 'LMFG', 'LAntTemp', 'LPos
                                    'RIFG_orb', 'RIFG', 'RMFG','RAntTemp', 'RPostTemp', 'RAngG'))
 
 # split by hemi
-dat.lh = dat %>% filter(Hemisphere=='LH')
+#dat.lh = dat %>% filter(Hemisphere=='LH')
 dat.rh = dat %>% filter(Hemisphere=='RH')
+```
+
+## Only leave core 5 ROIs
+```{r}
+dat = dat %>% filter(Hemisphere=='LH')
+dat.ag = dat %>% filter(ROI=='LAngG')
+dat = dat %>% filter(ROI!='LAngG')
 ```
 
 ## Stats
@@ -631,11 +645,11 @@ TEMP FOR THE REVIEW:
 
 
 
-### ROIs by hemisphere
+### By ROI
 
 ```{r}
-plot_name = 'Language Network - LH'
-plot_fROI_responses(dat.lh)
+plot_name = 'Language Network - core'
+plot_fROI_responses(dat)
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
        width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
@@ -651,7 +665,7 @@ ggsave(paste('plots/',plot_name,'_ROI.png',sep=''),
 ### Plot avg poster
 
 ```{r}
-dat2plot <- dat.lh %>% 
+dat2plot <- dat %>% 
   filter(Experiment=='Experiment 3') %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   group_by(Subject, Effect) %>%
