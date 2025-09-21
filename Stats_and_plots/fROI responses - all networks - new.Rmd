@@ -196,7 +196,7 @@ f = ggplot(data=df)+
         plot.title = element_text(size=title_size, face='bold', hjust = 0.5))
 
 if (split_by_expt) {
-  f = f + facet_grid(Experiment ~ .)
+  f = f + facet_grid(~ Experiment)
 }
 if (split_by_ROIgroup) {
   f = f + ggforce::facet_row(vars(ROIgroup), scales = 'free', space = 'free') 
@@ -422,9 +422,9 @@ ggsave(paste(plot_dir, plot_name, '.png',sep=''),
 ```
 ### By experiment 
 
-#### Sample fROI - STOPPED HERE y axis 
+#### Sample fROI (F2)
 ```{r}
-plot_name = 'Events Parcels F1 by expt'
+plot_name = 'Events Parcels F2 by expt'
 
 dat.mean = dat %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
@@ -432,13 +432,13 @@ dat.mean = dat %>%
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI = "Average")
 
-plt.by_expt.mean = plot_fROI_responses(dat %>% filter(ROI=='F1') %>%
+plt.by_expt.mean = plot_fROI_responses(dat %>% filter(ROI=='F2') %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), 
   split_by_expt=TRUE, show_legend=FALSE, show_facet_labels=FALSE)
 
 plt.by_expt.mean
 ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
-       width=hemi_plot_width-10, height=plot_height_3rows, units='cm')
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
 #### Avg
@@ -456,35 +456,10 @@ plt.by_expt.mean = plot_fROI_responses(dat.mean,
   split_by_expt=TRUE, show_legend=FALSE, show_facet_labels=FALSE)
 
 ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''), 
-       width=hemi_plot_width-10, height=plot_height_3rows, units='cm')
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
-### fROI poster
 
-```{r}
-plot_name = 'Events Parcels Avg across expts'
-plt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), show_legend=FALSE)
-
-ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
-       width=ROI_plot_width, height=plot_height_1row-2, units='cm')
-```
-
-### Plot avg poster
-
-```{r}
-dat2plot <- dat %>% 
-  filter(ROIgroup!='Occipital cortex') %>%
-  group_by(Subject, Effect) %>%
-  summarize(EffectSize=mean(EffectSize)) %>%
-  mutate(ROI='')
-
-plot_name = 'Events Parcels all conds'
-p.ev = plot_fROI_responses(dat2plot, show_legend = FALSE)
-p.ev
-
-ggsave(paste('plots/',plot_name,' avg except Occ.png',sep=''), 
-       width=hemi_plot_width/2, height=plot_height_1row, units='cm')
-```
 
 ### Generalization to left-out participants
 
@@ -500,15 +475,7 @@ plot_fROI_responses(dat.mean)
 ggsave(paste(plot_dir,plot_name,'.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
-### PRES 8cond
-```{r}
-plot_name = 'Events Parcels Avg 8cond'
 
-plt.by_expt.mean = plot_fROI_responses(dat.mean, show_legend=FALSE, show_facet_labels=FALSE)
-
-ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
-       width=hemi_plot_width-8, height=plot_height_1row, units='cm')
-```
 
 # LANG 
 
