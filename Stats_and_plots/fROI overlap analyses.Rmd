@@ -195,6 +195,87 @@ ggplot(data=dat.events)+
 #       width=plot_width, height=plot_height, units='cm')
 ```
 
+### Language
+
+```{r}
+#dat.wide =  pivot_wider(dat.mean, names_from=c(Network2, ROI2), values_from=meanOverlap)
+dat$Network1 = factor(dat$Network1, levels=c('events', 'language', 'MD', 'DMN'))
+
+froi_order = c(unique(substring(lang_frois, 4)), 
+               unique(substring(md_frois, 4)),
+               unique(substring(dmn_frois, 4)))
+
+# remove occipital ROIs
+dat = dat %>% 
+  filter(!(ROI1 %in% c("O1", "O2"))) %>% 
+  filter(!(ROI2 %in% c("O1", "O2")))
+
+d = dat %>% 
+  filter(Network2=='events') %>%
+  filter(Network1=='language') %>%
+  filter(!(startsWith(ROI1, 'R'))) %>%
+  filter(ROI1!="LH_AngG") %>%
+  mutate(Network1 = recode(Network1, 'events'='')) %>%
+  group_by(ROI1, ROI2, Network1, Network2) %>% 
+  summarize(meanOverlap = mean(Overlap)) %>%
+  ungroup() %>%
+  mutate(ROI1 = substring(ROI1,4))
+d$ROI1 = factor(d$ROI1, levels=froi_order)
+d$ROI2 = factor(d$ROI2, levels=semantic_frois)
+
+ggplot(d)+
+  geom_tile(mapping=aes(x=ROI1, y=ROI2, fill=meanOverlap), color="black")+
+  scale_y_discrete(limits=rev)+
+  labs(x="", y="", fill="Mean\noverlap ")+
+  scale_x_discrete(position = "top")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
+  coord_fixed()
+
+ggsave(paste(plot_dir, "overlap_heatmap.png", sep=""),
+      width=plot_width*0.5, height=8, units='cm')
+```
+
+### MD
+
+```{r}
+#dat.wide =  pivot_wider(dat.mean, names_from=c(Network2, ROI2), values_from=meanOverlap)
+dat$Network1 = factor(dat$Network1, levels=c('events', 'language', 'MD', 'DMN'))
+
+froi_order = c(unique(substring(lang_frois, 4)), 
+               unique(substring(md_frois, 4)),
+               unique(substring(dmn_frois, 4)))
+
+# remove occipital ROIs
+dat = dat %>% 
+  filter(!(ROI1 %in% c("O1", "O2"))) %>% 
+  filter(!(ROI2 %in% c("O1", "O2")))
+
+d = dat %>% 
+  filter(Network2=='events') %>%
+  filter(Network1=='language') %>%
+  filter(!(startsWith(ROI1, 'R'))) %>%
+  filter(ROI1!="LH_AngG") %>%
+  mutate(Network1 = recode(Network1, 'events'='')) %>%
+  group_by(ROI1, ROI2, Network1, Network2) %>% 
+  summarize(meanOverlap = mean(Overlap)) %>%
+  ungroup() %>%
+  mutate(ROI1 = substring(ROI1,4))
+d$ROI1 = factor(d$ROI1, levels=froi_order)
+d$ROI2 = factor(d$ROI2, levels=semantic_frois)
+
+ggplot(d)+
+  geom_tile(mapping=aes(x=ROI1, y=ROI2, fill=meanOverlap), color="black")+
+  scale_y_discrete(limits=rev)+
+  labs(x="", y="", fill="Mean\noverlap ")+
+  scale_x_discrete(position = "top")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
+  coord_fixed()
+
+ggsave(paste(plot_dir, "overlap_heatmap.png", sep=""),
+      width=plot_width*0.5, height=8, units='cm')
+```
+
+
 ```{r}
 #dat.wide =  pivot_wider(dat.mean, names_from=c(Network2, ROI2), values_from=meanOverlap)
 dat$Network1 = factor(dat$Network1, levels=c('events', 'language', 'MD', 'DMN'))

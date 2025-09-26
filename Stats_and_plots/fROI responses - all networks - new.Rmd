@@ -172,8 +172,13 @@ correct_FDR <- function(stats_df) {
 ### Plot
 
 ```{r}
+default_colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF')
+
 plot_fROI_responses <- function (df, split_by_expt=FALSE, split_by_ROIgroup=FALSE, 
-                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7, plot_title=NULL,plot_subjectdata=TRUE){
+                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7,
+                                 colors=default_colors,
+                                 plot_title=NULL,plot_subjectdata=TRUE, ylabel='Effect size'){
 
 f = ggplot(data=df)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
@@ -183,12 +188,11 @@ f = ggplot(data=df)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', 
                position=position_dodge(col_width, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF'),
+  scale_fill_manual(values=colors,
                     labels=condition_labels)+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  labs(x=NULL, y='Effect size', title=plot_title)+
+  labs(x=NULL, y=ylabel, title=plot_title)+
   theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
         axis.title.y = element_text(size=axis_title_size), 
         axis.text.y = element_text(size=axis_text_size), 
@@ -441,7 +445,7 @@ ggsave(paste(plot_dir, plot_name,'.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
-#### Avg
+#### Avg by expt
 
 ```{r}
 plot_name = 'Events Parcels Avg'
@@ -459,9 +463,46 @@ ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
+## Avg across expt
+### SN 
+```{r}
+plot_name = 'Events Parcels Avg'
+
+dat.mean = dat %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
+
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE)
+
+ggsave(paste(plot_dir, plot_name,' across all expt SN.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
+```
 
 
-### Generalization to left-out participants
+### HE 
+```{r}
+plot_name = 'Events Parcels Avg'
+colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             '#0000B2', '#B2B2FF')
+
+dat.mean = dat %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'H', 'E')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
+
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE, colors=colors)
+
+ggsave(paste(plot_dir, plot_name,' across all expt HE.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
+```
+
+
+## Generalization to left-out participants
 
 ```{r}
 dat.mean = dat %>%
@@ -578,33 +619,28 @@ write.table(stats_df, file = "Tables/Lang stats by fROI.csv", sep = ",", quote =
 
 ## Plot 
 
-### Mean hemisphere
+Do not plot MD responses
+
+```{r}
+dat = dat %>% filter(!(Effect %in% c('E', 'H')))
+```
+
+### Mean core
 ```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
-  mutate(ROI=Hemisphere)
+  mutate(ROI="Average")
 
-plot_title = 'Language Network'
-p.lang = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
-p.lang
+plot_name = 'Language Network - core'
+#plot_title = 'Language Network'
+p.lang_avg = plot_fROI_responses(dat.mean, show_legend = FALSE)
+p.lang_avg
+
+ggsave(paste(plot_dir, plot_name,' avg.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row, units='cm')
 ```
 
-
-
-TEMP FOR THE REVIEW:
-```{r}
-# dat.mean.5ROIs <- dat.lh %>% 
-#   filter(ROI!="LAngG") %>%
-#   filter(Effect=="Pic_Sem") %>%
-#   group_by(Subject, Experiment) %>% 
-#   summarize(EffectSize = mean(EffectSize))
-# 
-# d1 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 1")
-# d2 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 2")
-# write.csv(d1, "EventsOrig_5fROIs_Sem_Pic.csv")
-# write.csv(d2, "Events2move_5fROIs_Sem_Pic.csv")
-```
 
 
 
@@ -612,10 +648,21 @@ TEMP FOR THE REVIEW:
 
 ```{r}
 plot_name = 'Language Network - core'
-plot_fROI_responses(dat)
+p.lang_roi = plot_fROI_responses(dat, ylabel="")
+p.lang_roi
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=plot_height_1row, units='cm')
+       width=ROI_plot_width, height=plot_height_1row+4, units='cm')
 ```
+
+### Combine
+
+```{r}
+p.lang_avg + p.lang_roi + plot_layout(widths = c(1,3))
+ggsave(paste('plots/',plot_name,'_avg_and_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row+4, units='cm')
+```
+
+### RH - appendix
 
 ```{r}
 plot_name = 'Language Network - RH'
@@ -727,16 +774,20 @@ write.table(stats_df, file = "Tables/MD stats by fROI.csv", sep = ",", quote = F
 
 ### Mean hemisphere
 ```{r}
+colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             '#0000B2', '#B2B2FF')
+
 dat.mean <- dat %>% 
+  filter(!(Effect %in% c("S", "N"))) %>%
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
 plot_title = 'Multiple Demand Network'
-p.MD = plot_fROI_responses(dat.mean, plot_title = plot_title)
+p.MD = plot_fROI_responses(dat.mean, plot_title = plot_title, show_legend = FALSE, colors=colors)
 p.MD 
 
-ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+ggsave(paste('plots/',plot_title,'_hemi.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
@@ -849,12 +900,13 @@ write.table(stats_df, file = "Tables/DMN stats by fROI.csv", sep = ",", quote = 
 ### Mean hemisphere
 ```{r}
 dat.mean <- dat %>% 
+  filter(!(Effect %in% c("S", "N"))) %>%
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
 plot_title = 'Default Mode Network\n'
-p.DMN = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
+p.DMN = plot_fROI_responses(dat.mean, colors=colors, plot_title = plot_title)
 p.DMN
 ```
 
@@ -874,11 +926,11 @@ ggsave(paste('plots/',plot_name,'_ROI.png',sep=''),
        width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
 
-# COMBINE PLOTS 3 NETWORKS
+# COMBINE PLOTS 2 NETWORKS
 ```{r}
-p.lang / p.MD / p.DMN
-ggsave(paste('Plots/', 'three networks by hemi.png', sep=''), 
-       width=ROI_plot_width, height=plot_height_3rows+3, units='cm')
+p.MD + p.DMN
+ggsave(paste('Plots/', 'twonetworks by hemi.png', sep=''), 
+       width=ROI_plot_width, height=plot_height_1row+10, units='cm')
 ```
 
 # ATL follow up
