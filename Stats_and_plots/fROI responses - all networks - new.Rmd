@@ -131,7 +131,7 @@ set_contrasts <- function(dat.stats) {
   }
   
   # custom coding for effect
-  h = hypr(S~N, H~E, 0~0.5*(Sent_Sem+Pic_Sem), (Sent_Sem+Pic_Sem)~(Sent_Perc+Pic_Perc), (Sent_Sem+Sent_Perc)~(Pic_Sem+Pic_Perc), Sent_Sem-Sent_Perc~Pic_Sem-Pic_Perc,    # main
+  h = hypr(S~N, H~E, 0~0.5*(Sent_Sem+Pic_Sem), 0.5*(Sent_Sem+Pic_Sem)~0.5*(Sent_Perc+Pic_Perc), (Sent_Sem+Sent_Perc)~(Pic_Sem+Pic_Perc), Sent_Sem-Sent_Perc~Pic_Sem-Pic_Perc,    # main
            Sent_Sem~S, (Sent_Sem+Pic_Sem)~(H+E), 
            levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
   
@@ -249,6 +249,16 @@ dat.all = dat.all %>%
 dat.all$ROIgroup = factor(dat.all$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
 ```
 
+## Left-out participants
+
+Some participants were intentionally left out during parcel definition.
+```{r}
+left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
+dat.all = dat.all %>%
+  separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
+  mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
+```
+
 ## Separate occipital ROIs
 ```{r}
 dat = dat.all %>%
@@ -257,19 +267,12 @@ dat.occipital = dat.all %>%
   filter(ROIgroup=='Occipital cortex')
 ```
 
-## Left-out participants
-
-Some participants were intentionally left out during parcel definition.
-```{r}
-left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
-dat = dat %>%
-  separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
-  mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
-```
 
 ## Stats
 
 ```{r}
+dat.stats <- dat
+
 dat.stats$Effect = factor(dat.stats$Effect, 
                           levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
 dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject, 
@@ -281,13 +284,14 @@ dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject,
 ```{r}
 dat.stats = set_contrasts(dat.stats)
 
-model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
+model = lmer(EffectSize ~ Effect*Experiment + (1|ROI) + (1|Subject), data=dat.stats, REML=FALSE)
 #coef_names = row.names(coefficients(summary(model)))
 coef_names = c('Intercept', 'S-N', 'H-E', 'Task Sem>Perc', 'StimType Sent>Pic', 'Task:StimType',
                'Sent_Sem>S', 'SemTask>WMTask', 'E2>E3', 'E1>E3', 'S>N:E2>E3', 'H-E:E2>E3',
                'Sem>Perc:E2>E3', 'Sent>Pic:E2>E3', 'Task:StimType:E2>E3', 'Sent_Sem>S:E2>E3',
                'SemTask>WMTask:E2>E3', 'S-N:E1>E3', 'Sem>Perc:E1>E3', 'Sent>Pic:E1>E3', 
                'Task:StimType:E1>E3', 'Sent_Sem>S:E1>E3')
+summary(model)
 ```
 
 ```{r}
@@ -317,11 +321,48 @@ dat.stats.byexpt =dat %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   separate(Effect, c('StimType', 'Task'), sep="_") 
 dat.stats.byexpt$StimType = factor(dat.stats.byexpt$StimType, levels=c('Pic', 'Sent'))
-dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
+contrasts(dat.stats.byexpt$StimType) <- contr.sum(levels(dat.stats.byexpt$StimType))
+dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Sem', 'Perc'))
 
+# get coef names
 model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
 ```
+
+```{r}
+# Contrast effects in each experiment, FDR-corrected across expts
+
+model.dfs <- list()
+index = 1
+
+for (expt in unique(dat.stats.byexpt$Experiment)) {
+    dat.expt = dat.stats.byexpt %>% filter(Experiment==expt) 
+    model = lmer(EffectSize ~ Task*StimType + (1|ROI) + (1+Task+StimType|Subject), data=dat.expt, REML=FALSE,
+                 control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+    model.df = data.frame(coef_names,
+                          summary(model)$coefficients[,'Estimate'],
+                          summary(model)$coefficients[,'Std. Error'],
+                          summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+      mutate(Experiment=expt)
+    names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Experiment')
+    model.df = model.df[,c(5,1,2,3,4)] %>%
+      mutate(Beta = round(Beta, 2), 
+             SE = round(SE, 2),
+             p.value = ifelse(p.value>0.001, round(p.value, 3),
+                              formatC(p.value, format = "e", digits = 2)))
+    
+    model.dfs[[index]] <- model.df
+    index = index+1
+  
+}
+  
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = stats_df %>% correct_FDR() 
+
+write.table(stats_df, file = "Tables/semantic stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
 
 ```{r}
 # Contrast effects in each ROI, FDR-corrected
@@ -481,6 +522,23 @@ ggsave(paste(plot_dir, plot_name,' across all expt SN.png',sep=''),
        width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
 ```
 
+### SN - TP3 only
+```{r}
+plot_name = 'TP3'
+
+dat.mean = dat %>%
+  filter(ROI=='TP3') %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
+
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE)
+
+ggsave(paste(plot_dir, plot_name,' across all expt SN.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
+```
 
 ### HE 
 ```{r}
@@ -565,34 +623,21 @@ dat.stats = set_contrasts(dat.stats)
 model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
 
-model.dfs <- list()
-index = 1
+model.df = data.frame(coef_names,
+                      summary(model)$coefficients[,'Estimate'],
+                      summary(model)$coefficients[,'Std. Error'],
+                      summary(model)$coefficients[,'Pr(>|t|)']) 
+names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value')
+model.df = model.df %>%
+  mutate(Beta = round(Beta, 2), 
+         SE = round(SE, 2),
+         p.value = ifelse(p.value>0.001, round(p.value, 3),
+                          formatC(p.value, format = "e", digits = 2)))
 
-for (hemi in unique(dat.stats$Hemisphere)) {
-  dat.hemi = dat.stats %>% filter(Hemisphere==hemi)
-  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.hemi, REML=FALSE,
-               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-  model.df = data.frame(coef_names,
-                        summary(model)$coefficients[,'Estimate'],
-                        summary(model)$coefficients[,'Std. Error'],
-                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
-    mutate(Hemisphere=hemi)
-  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Hemisphere')
-  model.df = model.df[,c(5,1,2,3,4)] %>%
-    mutate(Beta = round(Beta, 2), 
-           SE = round(SE, 2),
-           p.value = ifelse(p.value>0.001, round(p.value, 3),
-                            formatC(p.value, format = "e", digits = 2)))
-  
-  model.dfs[[index]] <- model.df
-  index = index+1
-}
-
-stats_df = do.call("rbind", model.dfs)
 # FDR correction
-stats_df = correct_FDR(stats_df)
+stats_df = correct_FDR(model.df)
 
-write.table(stats_df, file = "Tables/Lang stats by hemi.csv", sep = ",", quote = FALSE, row.names = F)
+write.table(stats_df, file = "Tables/Lang stats.csv", sep = ",", quote = FALSE, row.names = F)
 ```
 
 
@@ -995,11 +1040,15 @@ write.table(stats_df, file = "Tables/vATL stats by hemi.csv", sep = ",", quote =
 ```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, ROI) %>% 
-  summarize(EffectSize = mean(EffectSize)) 
+  summarize(EffectSize = mean(EffectSize)) %>%
+  filter(!(Effect %in% c('H', 'E')))
 
 plot_title = 'vATL'
-p.vatl = plot_fROI_responses(dat.mean, show_legend = FALSE, ylim=c(-1, 1), plot_title=plot_title)
+p.vatl = plot_fROI_responses(dat.mean, show_legend = FALSE, ylim=c(-1, 1))
 p.vatl
+
+ggsave(paste(plot_dir, plot_title,' SN.png',sep=''), 
+       width=hemi_plot_width-5, height=plot_height_1row+5, units='cm')
 ```
 
 # RH semantic demand homotops

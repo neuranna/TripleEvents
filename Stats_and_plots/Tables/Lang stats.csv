@@ -1,0 +1,23 @@
+Regression Term,Beta,SE,p.value.FDR,pLabel
+(Intercept),1.19,0.23,0.002,**
+EffectS-N,1.35,0.07,<.001,***
+EffectH-E,-0.17,0.08,0.025,*
+EffectTaskSem>Perc,0.76,0.06,<.001,***
+EffectStimTypeSent>Pic,0.86,0.12,<.001,***
+EffectTask:StimType,0.52,0.12,<.001,***
+EffectSent_Sem>S,-0.36,0.08,<.001,***
+EffectSemTask>WMTask,2.97,0.12,<.001,***
+ExperimentE2>E3,0.43,0.07,<.001,***
+ExperimentE1>E3,-0.42,0.1,<.001,***
+EffectS-N:ExperimentE2>E3,0.26,0.09,0.006,**
+EffectH-E:ExperimentE2>E3,0,0.08,1,
+EffectTaskSem>Perc:ExperimentE2>E3,0.17,0.08,0.043,*
+EffectStimTypeSent>Pic:ExperimentE2>E3,-0.03,0.17,0.844,
+EffectTask:StimType:ExperimentE2>E3,0.01,0.17,0.93,
+EffectSent_Sem>S:ExperimentE2>E3,0.08,0.11,0.464,
+EffectSemTask>WMTask:ExperimentE2>E3,0.43,0.13,<.001,***
+EffectS-N:ExperimentE1>E3,-0.52,0.12,<.001,***
+EffectTaskSem>Perc:ExperimentE1>E3,-0.23,0.09,0.009,**
+EffectStimTypeSent>Pic:ExperimentE1>E3,-0.04,0.18,0.841,
+EffectTask:StimType:ExperimentE1>E3,-0.06,0.18,0.731,
+EffectSent_Sem>S:ExperimentE1>E3,0.24,0.12,0.048,*

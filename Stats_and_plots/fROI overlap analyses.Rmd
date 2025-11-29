@@ -15,6 +15,7 @@ library(stringr)
 library(reshape)
 library(gplots)
 library(patchwork)
+library(forcats)
 ```
 
 ## Plotting settings 
@@ -231,11 +232,11 @@ ggplot(d)+
   theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
   coord_fixed()
 
-ggsave(paste(plot_dir, "overlap_heatmap.png", sep=""),
+ggsave(paste(plot_dir, "overlap_heatmap_lang.png", sep=""),
       width=plot_width*0.5, height=8, units='cm')
 ```
 
-### MD
+### MD DMN
 
 ```{r}
 #dat.wide =  pivot_wider(dat.mean, names_from=c(Network2, ROI2), values_from=meanOverlap)
@@ -252,7 +253,7 @@ dat = dat %>%
 
 d = dat %>% 
   filter(Network2=='events') %>%
-  filter(Network1=='language') %>%
+  filter(Network1 %in% c('MD', 'DMN')) %>%
   filter(!(startsWith(ROI1, 'R'))) %>%
   filter(ROI1!="LH_AngG") %>%
   mutate(Network1 = recode(Network1, 'events'='')) %>%
@@ -260,6 +261,7 @@ d = dat %>%
   summarize(meanOverlap = mean(Overlap)) %>%
   ungroup() %>%
   mutate(ROI1 = substring(ROI1,4))
+
 d$ROI1 = factor(d$ROI1, levels=froi_order)
 d$ROI2 = factor(d$ROI2, levels=semantic_frois)
 
@@ -271,7 +273,31 @@ ggplot(d)+
   theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
   coord_fixed()
 
-ggsave(paste(plot_dir, "overlap_heatmap.png", sep=""),
+ggsave(paste(plot_dir, "overlap_heatmap_MD_DMN.svg", sep=""),
+      width=plot_width*0.5, height=8, units='cm')
+
+
+# SMALLER PLOT
+#keep only nonzero overlap ROIs
+d.totaloverlap = d %>% group_by(ROI1) %>%
+  summarize(overlapsum = sum(meanOverlap)) %>% 
+  filter(overlapsum>0.01)  # threshold here
+
+d.short = d %>%
+  filter(ROI1 %in% d.totaloverlap$ROI1) %>%
+  mutate(ROI1 = paste(Network1, ROI1))
+d.short$ROI1 = fct_relevel(d.short$ROI1, "DMN TPJ", after = Inf)
+
+ggplot(d.short)+
+  geom_tile(mapping=aes(x=ROI1, y=ROI2, fill=meanOverlap), color="black")+
+  scale_y_discrete(limits=rev)+
+  labs(x="", y="", fill="Mean\noverlap ")+
+  scale_x_discrete(position = "top")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 0, vjust=2))+
+  coord_fixed()
+
+
+ggsave(paste(plot_dir, "overlap_heatmap_MD_DMN_short.svg", sep=""),
       width=plot_width*0.5, height=8, units='cm')
 ```
 

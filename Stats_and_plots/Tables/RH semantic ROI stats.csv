@@ -2,7 +2,7 @@ ROI,Regression Term,Beta,SE,p.value.FDR,pLabel
 F1,Intercept,1.95,0.16,<.001,***
 F1,S-N,-0.01,0.17,0.965,
 F1,H-E,0.57,0.2,0.036,*
-F1,Task Sem>Perc,1.55,0.24,<.001,***
+F1,Task Sem>Perc,0.77,0.12,<.001,***
 F1,StimType Sent>Pic,-1.01,0.24,<.001,***
 F1,Task:StimType,-0.17,0.24,0.615,
 F1,Sent_Sem>S,0.87,0.17,<.001,***
@@ -11,20 +11,20 @@ F1,E2>E3,0.5,0.16,0.014,*
 F1,E1>E3,-0.32,0.23,0.243,
 F1,S>N:E2>E3,0.16,0.24,0.995,
 F1,H-E:E2>E3,0.01,0.2,0.946,
-F1,Sem>Perc:E2>E3,0.36,0.34,0.862,
+F1,Sem>Perc:E2>E3,0.18,0.17,0.862,
 F1,Sent>Pic:E2>E3,-0.09,0.34,0.9,
 F1,Task:StimType:E2>E3,0.03,0.34,0.962,
 F1,Sent_Sem>S:E2>E3,0.2,0.24,0.63,
 F1,SemTask>WMTask:E2>E3,0.64,0.28,0.087,
 F1,S-N:E1>E3,-0.25,0.26,0.873,
-F1,Sem>Perc:E1>E3,-0.36,0.36,0.491,
+F1,Sem>Perc:E1>E3,-0.18,0.18,0.491,
 F1,Sent>Pic:E1>E3,-0.16,0.36,0.782,
 F1,Task:StimType:E1>E3,0.15,0.36,0.935,
 F1,Sent_Sem>S:E1>E3,-0.34,0.26,0.291,
 F2,Intercept,1.39,0.13,<.001,***
 F2,S-N,0.04,0.18,0.965,
 F2,H-E,0.31,0.21,0.201,
-F2,Task Sem>Perc,1.31,0.25,<.001,***
+F2,Task Sem>Perc,0.65,0.13,<.001,***
 F2,StimType Sent>Pic,-0.92,0.25,<.001,***
 F2,Task:StimType,-0.19,0.25,0.615,
 F2,Sent_Sem>S,0.64,0.18,0.001,**
@@ -33,20 +33,20 @@ F2,E2>E3,0.34,0.16,0.065,
 F2,E1>E3,-0.36,0.2,0.189,
 F2,S>N:E2>E3,0.05,0.25,0.995,
 F2,H-E:E2>E3,0.09,0.21,0.946,
-F2,Sem>Perc:E2>E3,0.11,0.36,0.978,
+F2,Sem>Perc:E2>E3,0.05,0.18,0.978,
 F2,Sent>Pic:E2>E3,-0.12,0.36,0.9,
 F2,Task:StimType:E2>E3,-0.02,0.36,0.962,
 F2,Sent_Sem>S:E2>E3,0.26,0.25,0.601,
 F2,SemTask>WMTask:E2>E3,0,0.29,0.996,
 F2,S-N:E1>E3,-0.18,0.27,0.873,
-F2,Sem>Perc:E1>E3,-0.18,0.38,0.721,
+F2,Sem>Perc:E1>E3,-0.09,0.19,0.721,
 F2,Sent>Pic:E1>E3,-0.32,0.38,0.782,
 F2,Task:StimType:E1>E3,0.01,0.38,0.978,
 F2,Sent_Sem>S:E1>E3,-0.45,0.27,0.291,
 F3,Intercept,0.24,0.11,0.033,*
 F3,S-N,-0.17,0.13,0.887,
 F3,H-E,0.3,0.15,0.088,
-F3,Task Sem>Perc,0.51,0.18,0.007,**
+F3,Task Sem>Perc,0.25,0.09,0.007,**
 F3,StimType Sent>Pic,-0.06,0.18,0.759,
 F3,Task:StimType,-0.14,0.18,0.615,
 F3,Sent_Sem>S,0.29,0.13,0.044,*
@@ -55,20 +55,20 @@ F3,E2>E3,0.29,0.12,0.054,
 F3,E1>E3,-0.34,0.16,0.166,
 F3,S>N:E2>E3,-0.11,0.18,0.995,
 F3,H-E:E2>E3,0.1,0.15,0.946,
-F3,Sem>Perc:E2>E3,0.61,0.26,0.189,
+F3,Sem>Perc:E2>E3,0.3,0.13,0.189,
 F3,Sent>Pic:E2>E3,-0.17,0.26,0.9,
 F3,Task:StimType:E2>E3,-0.02,0.26,0.962,
 F3,Sent_Sem>S:E2>E3,0.18,0.19,0.601,
 F3,SemTask>WMTask:E2>E3,0.37,0.21,0.153,
 F3,S-N:E1>E3,0.06,0.2,0.873,
-F3,Sem>Perc:E1>E3,-0.49,0.28,0.429,
+F3,Sem>Perc:E1>E3,-0.24,0.14,0.429,
 F3,Sent>Pic:E1>E3,-0.19,0.28,0.782,
 F3,Task:StimType:E1>E3,0.17,0.28,0.935,
 F3,Sent_Sem>S:E1>E3,-0.24,0.2,0.291,
 TP1,Intercept,1.54,0.11,<.001,***
 TP1,S-N,-0.11,0.15,0.965,
 TP1,H-E,0.33,0.17,0.088,
-TP1,Task Sem>Perc,0.81,0.21,<.001,***
+TP1,Task Sem>Perc,0.4,0.1,<.001,***
 TP1,StimType Sent>Pic,-1.86,0.21,<.001,***
 TP1,Task:StimType,-0.38,0.21,0.378,
 TP1,Sent_Sem>S,0.2,0.15,0.192,
@@ -77,20 +77,20 @@ TP1,E2>E3,0.56,0.13,<.001,***
 TP1,E1>E3,-0.44,0.17,0.081,
 TP1,S>N:E2>E3,-0.02,0.21,0.995,
 TP1,H-E:E2>E3,-0.05,0.17,0.946,
-TP1,Sem>Perc:E2>E3,0.03,0.29,0.978,
+TP1,Sem>Perc:E2>E3,0.02,0.15,0.978,
 TP1,Sent>Pic:E2>E3,-0.43,0.29,0.643,
 TP1,Task:StimType:E2>E3,0.05,0.29,0.962,
 TP1,Sent_Sem>S:E2>E3,0.29,0.21,0.601,
 TP1,SemTask>WMTask:E2>E3,0.52,0.24,0.087,
 TP1,S-N:E1>E3,-0.07,0.22,0.873,
-TP1,Sem>Perc:E1>E3,-0.31,0.31,0.491,
+TP1,Sem>Perc:E1>E3,-0.16,0.15,0.491,
 TP1,Sent>Pic:E1>E3,0.14,0.31,0.782,
 TP1,Task:StimType:E1>E3,-0.03,0.31,0.978,
 TP1,Sent_Sem>S:E1>E3,-0.38,0.22,0.291,
 TP2,Intercept,1.08,0.15,<.001,***
 TP2,S-N,-0.1,0.19,0.965,
 TP2,H-E,0.5,0.22,0.088,
-TP2,Task Sem>Perc,0.89,0.27,0.001,**
+TP2,Task Sem>Perc,0.45,0.13,0.001,**
 TP2,StimType Sent>Pic,-1.16,0.27,<.001,***
 TP2,Task:StimType,-0.37,0.27,0.378,
 TP2,Sent_Sem>S,0.49,0.19,0.018,*
@@ -99,20 +99,20 @@ TP2,E2>E3,0.32,0.17,0.072,
 TP2,E1>E3,-0.22,0.22,0.352,
 TP2,S>N:E2>E3,0.01,0.27,0.995,
 TP2,H-E:E2>E3,-0.07,0.22,0.946,
-TP2,Sem>Perc:E2>E3,0.01,0.38,0.978,
+TP2,Sem>Perc:E2>E3,0.01,0.19,0.978,
 TP2,Sent>Pic:E2>E3,-0.57,0.38,0.643,
 TP2,Task:StimType:E2>E3,-0.12,0.38,0.962,
 TP2,Sent_Sem>S:E2>E3,0.12,0.27,0.829,
 TP2,SemTask>WMTask:E2>E3,0.42,0.31,0.228,
 TP2,S-N:E1>E3,-0.13,0.28,0.873,
-TP2,Sem>Perc:E1>E3,-0.1,0.4,0.796,
+TP2,Sem>Perc:E1>E3,-0.05,0.2,0.796,
 TP2,Sent>Pic:E1>E3,-0.07,0.4,0.856,
 TP2,Task:StimType:E1>E3,0.2,0.4,0.935,
 TP2,Sent_Sem>S:E1>E3,-0.35,0.28,0.291,
 TP3,Intercept,0.85,0.08,<.001,***
 TP3,S-N,0.18,0.12,0.887,
 TP3,H-E,-0.11,0.13,0.452,
-TP3,Task Sem>Perc,1.03,0.16,<.001,***
+TP3,Task Sem>Perc,0.51,0.08,<.001,***
 TP3,StimType Sent>Pic,-0.6,0.16,<.001,***
 TP3,Task:StimType,-0.23,0.16,0.378,
 TP3,Sent_Sem>S,0.2,0.12,0.113,
@@ -121,20 +121,20 @@ TP3,E2>E3,0.08,0.1,0.488,
 TP3,E1>E3,-0.22,0.12,0.189,
 TP3,S>N:E2>E3,0,0.16,0.995,
 TP3,H-E:E2>E3,-0.05,0.13,0.946,
-TP3,Sem>Perc:E2>E3,0.1,0.23,0.978,
+TP3,Sem>Perc:E2>E3,0.05,0.12,0.978,
 TP3,Sent>Pic:E2>E3,-0.17,0.23,0.9,
 TP3,Task:StimType:E2>E3,0.15,0.23,0.962,
 TP3,Sent_Sem>S:E2>E3,0.17,0.16,0.601,
 TP3,SemTask>WMTask:E2>E3,0.07,0.19,0.808,
 TP3,S-N:E1>E3,-0.13,0.17,0.873,
-TP3,Sem>Perc:E1>E3,-0.16,0.25,0.647,
+TP3,Sem>Perc:E1>E3,-0.08,0.12,0.647,
 TP3,Sent>Pic:E1>E3,0.1,0.25,0.782,
 TP3,Task:StimType:E1>E3,0.09,0.25,0.935,
 TP3,Sent_Sem>S:E1>E3,-0.18,0.17,0.348,
 TP4,Intercept,0.65,0.09,<.001,***
 TP4,S-N,0.14,0.14,0.965,
 TP4,H-E,-0.08,0.17,0.629,
-TP4,Task Sem>Perc,1.2,0.2,<.001,***
+TP4,Task Sem>Perc,0.6,0.1,<.001,***
 TP4,StimType Sent>Pic,-0.83,0.2,<.001,***
 TP4,Task:StimType,-0.29,0.2,0.378,
 TP4,Sent_Sem>S,0.38,0.14,0.018,*
@@ -143,20 +143,20 @@ TP4,E2>E3,-0.22,0.12,0.072,
 TP4,E1>E3,-0.19,0.14,0.243,
 TP4,S>N:E2>E3,-0.08,0.2,0.995,
 TP4,H-E:E2>E3,0.09,0.17,0.946,
-TP4,Sem>Perc:E2>E3,-0.17,0.29,0.978,
+TP4,Sem>Perc:E2>E3,-0.09,0.14,0.978,
 TP4,Sent>Pic:E2>E3,-0.09,0.29,0.9,
 TP4,Task:StimType:E2>E3,0.08,0.29,0.962,
 TP4,Sent_Sem>S:E2>E3,-0.02,0.21,0.933,
 TP4,SemTask>WMTask:E2>E3,-0.62,0.24,0.081,
 TP4,S-N:E1>E3,0.1,0.22,0.873,
-TP4,Sem>Perc:E1>E3,-0.49,0.31,0.429,
+TP4,Sem>Perc:E1>E3,-0.24,0.15,0.429,
 TP4,Sent>Pic:E1>E3,-0.27,0.31,0.782,
 TP4,Task:StimType:E1>E3,0.14,0.31,0.935,
 TP4,Sent_Sem>S:E1>E3,-0.28,0.22,0.291,
 Cer1,Intercept,1.11,0.14,<.001,***
 Cer1,S-N,0.01,0.12,0.965,
 Cer1,H-E,0.29,0.14,0.088,
-Cer1,Task Sem>Perc,0.8,0.18,<.001,***
+Cer1,Task Sem>Perc,0.4,0.09,<.001,***
 Cer1,StimType Sent>Pic,-0.38,0.18,0.04,*
 Cer1,Task:StimType,-0.06,0.18,0.716,
 Cer1,Sent_Sem>S,0.44,0.12,0.001,**
@@ -165,20 +165,20 @@ Cer1,E2>E3,0.28,0.13,0.067,
 Cer1,E1>E3,-0.27,0.2,0.243,
 Cer1,S>N:E2>E3,0.06,0.18,0.995,
 Cer1,H-E:E2>E3,-0.03,0.14,0.946,
-Cer1,Sem>Perc:E2>E3,0.29,0.25,0.862,
+Cer1,Sem>Perc:E2>E3,0.14,0.12,0.862,
 Cer1,Sent>Pic:E2>E3,-0.07,0.25,0.9,
 Cer1,Task:StimType:E2>E3,0.08,0.25,0.962,
 Cer1,Sent_Sem>S:E2>E3,0.23,0.18,0.601,
 Cer1,SemTask>WMTask:E2>E3,0.41,0.2,0.108,
 Cer1,S-N:E1>E3,-0.11,0.19,0.873,
-Cer1,Sem>Perc:E1>E3,-0.39,0.26,0.429,
+Cer1,Sem>Perc:E1>E3,-0.19,0.13,0.429,
 Cer1,Sent>Pic:E1>E3,-0.2,0.26,0.782,
 Cer1,Task:StimType:E1>E3,-0.09,0.26,0.935,
 Cer1,Sent_Sem>S:E1>E3,-0.35,0.19,0.291,
 Cer2,Intercept,0.19,0.06,0.002,**
 Cer2,S-N,-0.03,0.09,0.965,
 Cer2,H-E,0.09,0.1,0.449,
-Cer2,Task Sem>Perc,0.32,0.12,0.008,**
+Cer2,Task Sem>Perc,0.16,0.06,0.008,**
 Cer2,StimType Sent>Pic,-0.06,0.12,0.726,
 Cer2,Task:StimType,-0.05,0.12,0.716,
 Cer2,Sent_Sem>S,0.06,0.09,0.454,
@@ -187,13 +187,13 @@ Cer2,E2>E3,-0.05,0.07,0.509,
 Cer2,E1>E3,-0.04,0.09,0.651,
 Cer2,S>N:E2>E3,0,0.12,0.995,
 Cer2,H-E:E2>E3,-0.03,0.1,0.946,
-Cer2,Sem>Perc:E2>E3,0.15,0.17,0.862,
+Cer2,Sem>Perc:E2>E3,0.07,0.09,0.862,
 Cer2,Sent>Pic:E2>E3,0.02,0.17,0.915,
 Cer2,Task:StimType:E2>E3,-0.19,0.17,0.962,
 Cer2,Sent_Sem>S:E2>E3,-0.03,0.12,0.933,
 Cer2,SemTask>WMTask:E2>E3,0.19,0.14,0.228,
 Cer2,S-N:E1>E3,-0.01,0.13,0.948,
-Cer2,Sem>Perc:E1>E3,-0.22,0.18,0.491,
+Cer2,Sem>Perc:E1>E3,-0.11,0.09,0.491,
 Cer2,Sent>Pic:E1>E3,-0.21,0.18,0.782,
 Cer2,Task:StimType:E1>E3,0.18,0.18,0.935,
 Cer2,Sent_Sem>S:E1>E3,-0.02,0.13,0.878,

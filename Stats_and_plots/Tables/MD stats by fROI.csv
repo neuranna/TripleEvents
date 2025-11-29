@@ -2,7 +2,7 @@ ROI,Regression Term,Beta,SE,p.value.FDR,pLabel
 LH_postParietal,(Intercept),2.18,0.2,<.001,***
 LH_postParietal,EffectS-N,-0.3,0.16,0.193,
 LH_postParietal,EffectH-E,1.23,0.16,<.001,***
-LH_postParietal,EffectTaskSem>Perc,1.05,0.28,<.001,***
+LH_postParietal,EffectTaskSem>Perc,0.53,0.14,<.001,***
 LH_postParietal,EffectStimTypeSent>Pic,-1.33,0.28,<.001,***
 LH_postParietal,EffectTask:StimType,-0.48,0.28,0.47,
 LH_postParietal,EffectSent_Sem>S,1.56,0.18,<.001,***
@@ -10,7 +10,7 @@ LH_postParietal,EffectSemTask>WMTask,-3.81,0.26,<.001,***
 LH_postParietal,ExperimentE2>E3,0.35,0.11,0.002,**
 LH_postParietal,EffectS-N:ExperimentE2>E3,0,0.16,1,
 LH_postParietal,EffectH-E:ExperimentE2>E3,0,0.16,1,
-LH_postParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.33,0.28,0.344,
+LH_postParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.16,0.14,0.344,
 LH_postParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-1.12,0.28,0.002,**
 LH_postParietal,EffectTask:StimType:ExperimentE2>E3,-0.15,0.28,0.977,
 LH_postParietal,EffectSent_Sem>S:ExperimentE2>E3,0.03,0.18,0.946,
@@ -18,7 +18,7 @@ LH_postParietal,EffectSemTask>WMTask:ExperimentE2>E3,0.71,0.27,0.018,*
 LH_midParietal,(Intercept),2.19,0.24,<.001,***
 LH_midParietal,EffectS-N,-0.53,0.18,0.03,*
 LH_midParietal,EffectH-E,1.41,0.18,<.001,***
-LH_midParietal,EffectTaskSem>Perc,0.74,0.32,0.034,*
+LH_midParietal,EffectTaskSem>Perc,0.37,0.16,0.034,*
 LH_midParietal,EffectStimTypeSent>Pic,-0.26,0.32,0.789,
 LH_midParietal,EffectTask:StimType,-0.33,0.32,0.714,
 LH_midParietal,EffectSent_Sem>S,1.58,0.21,<.001,***
@@ -26,7 +26,7 @@ LH_midParietal,EffectSemTask>WMTask,-2.38,0.29,<.001,***
 LH_midParietal,ExperimentE2>E3,0.37,0.12,0.005,**
 LH_midParietal,EffectS-N:ExperimentE2>E3,0,0.18,1,
 LH_midParietal,EffectH-E:ExperimentE2>E3,0,0.18,1,
-LH_midParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.47,0.32,0.275,
+LH_midParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.24,0.16,0.275,
 LH_midParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.7,0.32,0.2,
 LH_midParietal,EffectTask:StimType:ExperimentE2>E3,-0.21,0.32,0.977,
 LH_midParietal,EffectSent_Sem>S:ExperimentE2>E3,0.14,0.21,0.716,
@@ -34,7 +34,7 @@ LH_midParietal,EffectSemTask>WMTask:ExperimentE2>E3,0.73,0.3,0.029,*
 LH_antParietal,(Intercept),1.88,0.17,<.001,***
 LH_antParietal,EffectS-N,-0.43,0.14,0.03,*
 LH_antParietal,EffectH-E,1.14,0.14,<.001,***
-LH_antParietal,EffectTaskSem>Perc,0.38,0.25,0.181,
+LH_antParietal,EffectTaskSem>Perc,0.19,0.13,0.181,
 LH_antParietal,EffectStimTypeSent>Pic,-0.48,0.25,0.22,
 LH_antParietal,EffectTask:StimType,-0.38,0.25,0.47,
 LH_antParietal,EffectSent_Sem>S,1.45,0.16,<.001,***
@@ -42,7 +42,7 @@ LH_antParietal,EffectSemTask>WMTask,-2.33,0.23,<.001,***
 LH_antParietal,ExperimentE2>E3,0.4,0.09,<.001,***
 LH_antParietal,EffectS-N:ExperimentE2>E3,0,0.14,1,
 LH_antParietal,EffectH-E:ExperimentE2>E3,0,0.14,1,
-LH_antParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.3,0.25,0.344,
+LH_antParietal,EffectTaskSem>Perc:ExperimentE2>E3,0.15,0.13,0.344,
 LH_antParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.89,0.25,0.005,**
 LH_antParietal,EffectTask:StimType:ExperimentE2>E3,-0.14,0.25,0.977,
 LH_antParietal,EffectSent_Sem>S:ExperimentE2>E3,0.14,0.16,0.623,
@@ -50,7 +50,7 @@ LH_antParietal,EffectSemTask>WMTask:ExperimentE2>E3,0.8,0.24,0.004,**
 LH_supFrontal,(Intercept),2.15,0.18,<.001,***
 LH_supFrontal,EffectS-N,-0.01,0.15,0.977,
 LH_supFrontal,EffectH-E,1,0.15,<.001,***
-LH_supFrontal,EffectTaskSem>Perc,1.24,0.26,<.001,***
+LH_supFrontal,EffectTaskSem>Perc,0.62,0.13,<.001,***
 LH_supFrontal,EffectStimTypeSent>Pic,0.04,0.26,0.935,
 LH_supFrontal,EffectTask:StimType,-0.01,0.26,0.981,
 LH_supFrontal,EffectSent_Sem>S,1.83,0.17,<.001,***
@@ -58,7 +58,7 @@ LH_supFrontal,EffectSemTask>WMTask,-1.08,0.24,<.001,***
 LH_supFrontal,ExperimentE2>E3,0.48,0.1,<.001,***
 LH_supFrontal,EffectS-N:ExperimentE2>E3,0,0.15,1,
 LH_supFrontal,EffectH-E:ExperimentE2>E3,0,0.15,1,
-LH_supFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.46,0.26,0.198,
+LH_supFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.23,0.13,0.198,
 LH_supFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.38,0.26,0.468,
 LH_supFrontal,EffectTask:StimType:ExperimentE2>E3,-0.06,0.26,0.977,
 LH_supFrontal,EffectSent_Sem>S:ExperimentE2>E3,0.37,0.17,0.23,
@@ -66,7 +66,7 @@ LH_supFrontal,EffectSemTask>WMTask:ExperimentE2>E3,0.96,0.25,0.001,**
 LH_Precentral_A_precG,(Intercept),3.01,0.23,<.001,***
 LH_Precentral_A_precG,EffectS-N,-0.31,0.17,0.227,
 LH_Precentral_A_precG,EffectH-E,1.25,0.18,<.001,***
-LH_Precentral_A_precG,EffectTaskSem>Perc,1.56,0.32,<.001,***
+LH_Precentral_A_precG,EffectTaskSem>Perc,0.78,0.16,<.001,***
 LH_Precentral_A_precG,EffectStimTypeSent>Pic,-0.08,0.32,0.877,
 LH_Precentral_A_precG,EffectTask:StimType,-0.2,0.32,0.815,
 LH_Precentral_A_precG,EffectSent_Sem>S,1.79,0.2,<.001,***
@@ -74,7 +74,7 @@ LH_Precentral_A_precG,EffectSemTask>WMTask,0.16,0.29,0.617,
 LH_Precentral_A_precG,ExperimentE2>E3,0.54,0.12,<.001,***
 LH_Precentral_A_precG,EffectS-N:ExperimentE2>E3,0,0.17,1,
 LH_Precentral_A_precG,EffectH-E:ExperimentE2>E3,0,0.18,1,
-LH_Precentral_A_precG,EffectTaskSem>Perc:ExperimentE2>E3,0.58,0.32,0.194,
+LH_Precentral_A_precG,EffectTaskSem>Perc:ExperimentE2>E3,0.29,0.16,0.194,
 LH_Precentral_A_precG,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.41,0.32,0.468,
 LH_Precentral_A_precG,EffectTask:StimType:ExperimentE2>E3,-0.07,0.32,0.977,
 LH_Precentral_A_precG,EffectSent_Sem>S:ExperimentE2>E3,0.42,0.2,0.23,
@@ -82,7 +82,7 @@ LH_Precentral_A_precG,EffectSemTask>WMTask:ExperimentE2>E3,1.09,0.3,0.002,**
 LH_Precentral_B_IFGop,(Intercept),2.78,0.22,<.001,***
 LH_Precentral_B_IFGop,EffectS-N,-0.24,0.19,0.387,
 LH_Precentral_B_IFGop,EffectH-E,1.23,0.2,<.001,***
-LH_Precentral_B_IFGop,EffectTaskSem>Perc,1.82,0.35,<.001,***
+LH_Precentral_B_IFGop,EffectTaskSem>Perc,0.91,0.17,<.001,***
 LH_Precentral_B_IFGop,EffectStimTypeSent>Pic,-0.24,0.35,0.789,
 LH_Precentral_B_IFGop,EffectTask:StimType,-0.12,0.35,0.941,
 LH_Precentral_B_IFGop,EffectSent_Sem>S,1.69,0.22,<.001,***
@@ -90,7 +90,7 @@ LH_Precentral_B_IFGop,EffectSemTask>WMTask,0.2,0.32,0.614,
 LH_Precentral_B_IFGop,ExperimentE2>E3,0.36,0.13,0.01,*
 LH_Precentral_B_IFGop,EffectS-N:ExperimentE2>E3,0,0.19,1,
 LH_Precentral_B_IFGop,EffectH-E:ExperimentE2>E3,0,0.2,1,
-LH_Precentral_B_IFGop,EffectTaskSem>Perc:ExperimentE2>E3,0.39,0.35,0.344,
+LH_Precentral_B_IFGop,EffectTaskSem>Perc:ExperimentE2>E3,0.2,0.17,0.344,
 LH_Precentral_B_IFGop,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.36,0.35,0.468,
 LH_Precentral_B_IFGop,EffectTask:StimType:ExperimentE2>E3,-0.01,0.35,0.982,
 LH_Precentral_B_IFGop,EffectSent_Sem>S:ExperimentE2>E3,0.27,0.22,0.418,
@@ -98,7 +98,7 @@ LH_Precentral_B_IFGop,EffectSemTask>WMTask:ExperimentE2>E3,0.72,0.33,0.045,*
 LH_midFrontal,(Intercept),1.87,0.19,<.001,***
 LH_midFrontal,EffectS-N,-0.3,0.16,0.193,
 LH_midFrontal,EffectH-E,1.25,0.16,<.001,***
-LH_midFrontal,EffectTaskSem>Perc,1.07,0.28,<.001,***
+LH_midFrontal,EffectTaskSem>Perc,0.53,0.14,<.001,***
 LH_midFrontal,EffectStimTypeSent>Pic,-0.17,0.28,0.789,
 LH_midFrontal,EffectTask:StimType,-0.26,0.28,0.714,
 LH_midFrontal,EffectSent_Sem>S,1.71,0.18,<.001,***
@@ -106,7 +106,7 @@ LH_midFrontal,EffectSemTask>WMTask,-0.26,0.26,0.399,
 LH_midFrontal,ExperimentE2>E3,0.41,0.11,<.001,***
 LH_midFrontal,EffectS-N:ExperimentE2>E3,0,0.16,1,
 LH_midFrontal,EffectH-E:ExperimentE2>E3,0,0.16,1,
-LH_midFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.53,0.28,0.194,
+LH_midFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.26,0.14,0.194,
 LH_midFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.29,0.28,0.468,
 LH_midFrontal,EffectTask:StimType:ExperimentE2>E3,0.11,0.28,0.977,
 LH_midFrontal,EffectSent_Sem>S:ExperimentE2>E3,0.36,0.18,0.23,
@@ -114,7 +114,7 @@ LH_midFrontal,EffectSemTask>WMTask:ExperimentE2>E3,0.82,0.26,0.007,**
 LH_midFrontalOrb,(Intercept),1.92,0.25,<.001,***
 LH_midFrontalOrb,EffectS-N,-0.58,0.23,0.093,
 LH_midFrontalOrb,EffectH-E,1.56,0.24,<.001,***
-LH_midFrontalOrb,EffectTaskSem>Perc,1.28,0.42,0.006,**
+LH_midFrontalOrb,EffectTaskSem>Perc,0.64,0.21,0.006,**
 LH_midFrontalOrb,EffectStimTypeSent>Pic,0.03,0.42,0.948,
 LH_midFrontalOrb,EffectTask:StimType,-0.27,0.42,0.815,
 LH_midFrontalOrb,EffectSent_Sem>S,2.21,0.27,<.001,***
@@ -122,7 +122,7 @@ LH_midFrontalOrb,EffectSemTask>WMTask,0.43,0.39,0.352,
 LH_midFrontalOrb,ExperimentE2>E3,0.56,0.16,0.001,**
 LH_midFrontalOrb,EffectS-N:ExperimentE2>E3,0,0.23,1,
 LH_midFrontalOrb,EffectH-E:ExperimentE2>E3,0,0.24,1,
-LH_midFrontalOrb,EffectTaskSem>Perc:ExperimentE2>E3,0.93,0.42,0.14,
+LH_midFrontalOrb,EffectTaskSem>Perc:ExperimentE2>E3,0.47,0.21,0.14,
 LH_midFrontalOrb,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.51,0.42,0.468,
 LH_midFrontalOrb,EffectTask:StimType:ExperimentE2>E3,0.06,0.42,0.977,
 LH_midFrontalOrb,EffectSent_Sem>S:ExperimentE2>E3,0.45,0.27,0.305,
@@ -130,7 +130,7 @@ LH_midFrontalOrb,EffectSemTask>WMTask:ExperimentE2>E3,1.13,0.4,0.014,*
 LH_insula,(Intercept),1.6,0.11,<.001,***
 LH_insula,EffectS-N,-0.08,0.11,0.542,
 LH_insula,EffectH-E,0.83,0.11,<.001,***
-LH_insula,EffectTaskSem>Perc,0.9,0.2,<.001,***
+LH_insula,EffectTaskSem>Perc,0.45,0.1,<.001,***
 LH_insula,EffectStimTypeSent>Pic,-0.06,0.2,0.877,
 LH_insula,EffectTask:StimType,0.13,0.2,0.815,
 LH_insula,EffectSent_Sem>S,1.25,0.13,<.001,***
@@ -138,7 +138,7 @@ LH_insula,EffectSemTask>WMTask,0.38,0.18,0.056,
 LH_insula,ExperimentE2>E3,0.29,0.08,<.001,***
 LH_insula,EffectS-N:ExperimentE2>E3,0,0.11,1,
 LH_insula,EffectH-E:ExperimentE2>E3,0,0.11,1,
-LH_insula,EffectTaskSem>Perc:ExperimentE2>E3,0.41,0.2,0.168,
+LH_insula,EffectTaskSem>Perc:ExperimentE2>E3,0.21,0.1,0.168,
 LH_insula,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.13,0.2,0.569,
 LH_insula,EffectTask:StimType:ExperimentE2>E3,-0.13,0.2,0.977,
 LH_insula,EffectSent_Sem>S:ExperimentE2>E3,0.22,0.13,0.305,
@@ -146,7 +146,7 @@ LH_insula,EffectSemTask>WMTask:ExperimentE2>E3,0.58,0.19,0.007,**
 LH_medialFrontal,(Intercept),1.94,0.14,<.001,***
 LH_medialFrontal,EffectS-N,-0.28,0.13,0.175,
 LH_medialFrontal,EffectH-E,1.04,0.13,<.001,***
-LH_medialFrontal,EffectTaskSem>Perc,1.59,0.24,<.001,***
+LH_medialFrontal,EffectTaskSem>Perc,0.8,0.12,<.001,***
 LH_medialFrontal,EffectStimTypeSent>Pic,-0.1,0.24,0.864,
 LH_medialFrontal,EffectTask:StimType,-0.04,0.24,0.956,
 LH_medialFrontal,EffectSent_Sem>S,1.7,0.15,<.001,***
@@ -154,7 +154,7 @@ LH_medialFrontal,EffectSemTask>WMTask,0.94,0.22,<.001,***
 LH_medialFrontal,ExperimentE2>E3,0.57,0.09,<.001,***
 LH_medialFrontal,EffectS-N:ExperimentE2>E3,0,0.13,1,
 LH_medialFrontal,EffectH-E:ExperimentE2>E3,0,0.13,1,
-LH_medialFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.77,0.24,0.02,*
+LH_medialFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.39,0.12,0.02,*
 LH_medialFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.23,0.24,0.48,
 LH_medialFrontal,EffectTask:StimType:ExperimentE2>E3,0.04,0.24,0.977,
 LH_medialFrontal,EffectSent_Sem>S:ExperimentE2>E3,0.52,0.15,0.018,*
@@ -162,7 +162,7 @@ LH_medialFrontal,EffectSemTask>WMTask:ExperimentE2>E3,1.13,0.22,<.001,***
 RH_postParietal,(Intercept),1.54,0.21,<.001,***
 RH_postParietal,EffectS-N,-0.15,0.19,0.542,
 RH_postParietal,EffectH-E,1.49,0.19,<.001,***
-RH_postParietal,EffectTaskSem>Perc,-0.34,0.34,0.384,
+RH_postParietal,EffectTaskSem>Perc,-0.17,0.17,0.384,
 RH_postParietal,EffectStimTypeSent>Pic,-1.77,0.34,<.001,***
 RH_postParietal,EffectTask:StimType,-0.63,0.34,0.47,
 RH_postParietal,EffectSent_Sem>S,0.87,0.22,<.001,***
@@ -170,7 +170,7 @@ RH_postParietal,EffectSemTask>WMTask,-5.42,0.31,<.001,***
 RH_postParietal,ExperimentE2>E3,-0.14,0.13,0.334,
 RH_postParietal,EffectS-N:ExperimentE2>E3,0,0.19,1,
 RH_postParietal,EffectH-E:ExperimentE2>E3,0,0.19,1,
-RH_postParietal,EffectTaskSem>Perc:ExperimentE2>E3,-0.49,0.34,0.275,
+RH_postParietal,EffectTaskSem>Perc:ExperimentE2>E3,-0.25,0.17,0.275,
 RH_postParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.48,0.34,0.468,
 RH_postParietal,EffectTask:StimType:ExperimentE2>E3,-0.2,0.34,0.977,
 RH_postParietal,EffectSent_Sem>S:ExperimentE2>E3,-0.31,0.22,0.369,
@@ -178,7 +178,7 @@ RH_postParietal,EffectSemTask>WMTask:ExperimentE2>E3,-0.28,0.32,0.46,
 RH_midParietal,(Intercept),1.6,0.26,<.001,***
 RH_midParietal,EffectS-N,-0.34,0.22,0.234,
 RH_midParietal,EffectH-E,1.69,0.22,<.001,***
-RH_midParietal,EffectTaskSem>Perc,-1,0.39,0.017,*
+RH_midParietal,EffectTaskSem>Perc,-0.5,0.19,0.017,*
 RH_midParietal,EffectStimTypeSent>Pic,-0.57,0.39,0.403,
 RH_midParietal,EffectTask:StimType,-0.57,0.39,0.47,
 RH_midParietal,EffectSent_Sem>S,0.7,0.25,0.005,**
@@ -186,7 +186,7 @@ RH_midParietal,EffectSemTask>WMTask,-3.68,0.36,<.001,***
 RH_midParietal,ExperimentE2>E3,-0.19,0.15,0.259,
 RH_midParietal,EffectS-N:ExperimentE2>E3,0,0.22,1,
 RH_midParietal,EffectH-E:ExperimentE2>E3,0,0.22,1,
-RH_midParietal,EffectTaskSem>Perc:ExperimentE2>E3,-1.14,0.39,0.04,*
+RH_midParietal,EffectTaskSem>Perc:ExperimentE2>E3,-0.57,0.19,0.04,*
 RH_midParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.42,0.39,0.468,
 RH_midParietal,EffectTask:StimType:ExperimentE2>E3,-0.41,0.39,0.977,
 RH_midParietal,EffectSent_Sem>S:ExperimentE2>E3,-0.4,0.25,0.305,
@@ -194,7 +194,7 @@ RH_midParietal,EffectSemTask>WMTask:ExperimentE2>E3,-0.38,0.37,0.397,
 RH_antParietal,(Intercept),0.96,0.16,<.001,***
 RH_antParietal,EffectS-N,-0.12,0.16,0.542,
 RH_antParietal,EffectH-E,1.32,0.16,<.001,***
-RH_antParietal,EffectTaskSem>Perc,-1.35,0.29,<.001,***
+RH_antParietal,EffectTaskSem>Perc,-0.68,0.14,<.001,***
 RH_antParietal,EffectStimTypeSent>Pic,-0.45,0.29,0.403,
 RH_antParietal,EffectTask:StimType,-0.37,0.29,0.563,
 RH_antParietal,EffectSent_Sem>S,0.53,0.19,0.004,**
@@ -202,7 +202,7 @@ RH_antParietal,EffectSemTask>WMTask,-3.87,0.26,<.001,***
 RH_antParietal,ExperimentE2>E3,0.12,0.11,0.328,
 RH_antParietal,EffectS-N:ExperimentE2>E3,0,0.16,1,
 RH_antParietal,EffectH-E:ExperimentE2>E3,0,0.16,1,
-RH_antParietal,EffectTaskSem>Perc:ExperimentE2>E3,-0.67,0.29,0.14,
+RH_antParietal,EffectTaskSem>Perc:ExperimentE2>E3,-0.33,0.14,0.14,
 RH_antParietal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.46,0.29,0.464,
 RH_antParietal,EffectTask:StimType:ExperimentE2>E3,-0.27,0.29,0.977,
 RH_antParietal,EffectSent_Sem>S:ExperimentE2>E3,-0.06,0.19,0.878,
@@ -210,7 +210,7 @@ RH_antParietal,EffectSemTask>WMTask:ExperimentE2>E3,0.24,0.27,0.46,
 RH_supFrontal,(Intercept),1.7,0.22,<.001,***
 RH_supFrontal,EffectS-N,0,0.19,0.98,
 RH_supFrontal,EffectH-E,1.55,0.2,<.001,***
-RH_supFrontal,EffectTaskSem>Perc,-0.1,0.35,0.774,
+RH_supFrontal,EffectTaskSem>Perc,-0.05,0.18,0.774,
 RH_supFrontal,EffectStimTypeSent>Pic,-0.27,0.35,0.789,
 RH_supFrontal,EffectTask:StimType,-0.14,0.35,0.941,
 RH_supFrontal,EffectSent_Sem>S,1.23,0.23,<.001,***
@@ -218,7 +218,7 @@ RH_supFrontal,EffectSemTask>WMTask,-3.04,0.32,<.001,***
 RH_supFrontal,ExperimentE2>E3,-0.05,0.13,0.696,
 RH_supFrontal,EffectS-N:ExperimentE2>E3,0,0.19,1,
 RH_supFrontal,EffectH-E:ExperimentE2>E3,0,0.2,1,
-RH_supFrontal,EffectTaskSem>Perc:ExperimentE2>E3,-0.43,0.35,0.344,
+RH_supFrontal,EffectTaskSem>Perc:ExperimentE2>E3,-0.21,0.18,0.344,
 RH_supFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.12,0.35,0.736,
 RH_supFrontal,EffectTask:StimType:ExperimentE2>E3,-0.04,0.35,0.977,
 RH_supFrontal,EffectSent_Sem>S:ExperimentE2>E3,-0.09,0.23,0.878,
@@ -226,7 +226,7 @@ RH_supFrontal,EffectSemTask>WMTask:ExperimentE2>E3,-0.1,0.33,0.755,
 RH_Precentral_A_precG,(Intercept),2.39,0.24,<.001,***
 RH_Precentral_A_precG,EffectS-N,-0.14,0.18,0.542,
 RH_Precentral_A_precG,EffectH-E,1.22,0.18,<.001,***
-RH_Precentral_A_precG,EffectTaskSem>Perc,-0.32,0.32,0.384,
+RH_Precentral_A_precG,EffectTaskSem>Perc,-0.16,0.16,0.384,
 RH_Precentral_A_precG,EffectStimTypeSent>Pic,-0.67,0.32,0.18,
 RH_Precentral_A_precG,EffectTask:StimType,-0.48,0.32,0.47,
 RH_Precentral_A_precG,EffectSent_Sem>S,1.17,0.21,<.001,***
@@ -234,7 +234,7 @@ RH_Precentral_A_precG,EffectSemTask>WMTask,-0.73,0.29,0.022,*
 RH_Precentral_A_precG,ExperimentE2>E3,0.09,0.12,0.528,
 RH_Precentral_A_precG,EffectS-N:ExperimentE2>E3,0,0.18,1,
 RH_Precentral_A_precG,EffectH-E:ExperimentE2>E3,0,0.18,1,
-RH_Precentral_A_precG,EffectTaskSem>Perc:ExperimentE2>E3,-0.27,0.32,0.431,
+RH_Precentral_A_precG,EffectTaskSem>Perc:ExperimentE2>E3,-0.14,0.16,0.431,
 RH_Precentral_A_precG,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.16,0.32,0.644,
 RH_Precentral_A_precG,EffectTask:StimType:ExperimentE2>E3,-0.08,0.32,0.977,
 RH_Precentral_A_precG,EffectSent_Sem>S:ExperimentE2>E3,0.03,0.21,0.946,
@@ -242,7 +242,7 @@ RH_Precentral_A_precG,EffectSemTask>WMTask:ExperimentE2>E3,0.17,0.3,0.63,
 RH_Precentral_B_IFGop,(Intercept),2.54,0.28,<.001,***
 RH_Precentral_B_IFGop,EffectS-N,-0.22,0.2,0.397,
 RH_Precentral_B_IFGop,EffectH-E,1.52,0.2,<.001,***
-RH_Precentral_B_IFGop,EffectTaskSem>Perc,-0.35,0.36,0.384,
+RH_Precentral_B_IFGop,EffectTaskSem>Perc,-0.17,0.18,0.384,
 RH_Precentral_B_IFGop,EffectStimTypeSent>Pic,-1.13,0.36,0.013,*
 RH_Precentral_B_IFGop,EffectTask:StimType,-0.71,0.36,0.47,
 RH_Precentral_B_IFGop,EffectSent_Sem>S,1.39,0.23,<.001,***
@@ -250,7 +250,7 @@ RH_Precentral_B_IFGop,EffectSemTask>WMTask,-1.11,0.33,0.002,**
 RH_Precentral_B_IFGop,ExperimentE2>E3,-0.06,0.13,0.671,
 RH_Precentral_B_IFGop,EffectS-N:ExperimentE2>E3,0,0.2,1,
 RH_Precentral_B_IFGop,EffectH-E:ExperimentE2>E3,0,0.2,1,
-RH_Precentral_B_IFGop,EffectTaskSem>Perc:ExperimentE2>E3,-0.6,0.36,0.209,
+RH_Precentral_B_IFGop,EffectTaskSem>Perc:ExperimentE2>E3,-0.3,0.18,0.209,
 RH_Precentral_B_IFGop,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.24,0.36,0.569,
 RH_Precentral_B_IFGop,EffectTask:StimType:ExperimentE2>E3,0.14,0.36,0.977,
 RH_Precentral_B_IFGop,EffectSent_Sem>S:ExperimentE2>E3,-0.09,0.23,0.878,
@@ -258,7 +258,7 @@ RH_Precentral_B_IFGop,EffectSemTask>WMTask:ExperimentE2>E3,-0.13,0.33,0.743,
 RH_midFrontal,(Intercept),1.82,0.2,<.001,***
 RH_midFrontal,EffectS-N,-0.23,0.19,0.387,
 RH_midFrontal,EffectH-E,1.69,0.2,<.001,***
-RH_midFrontal,EffectTaskSem>Perc,0.1,0.35,0.774,
+RH_midFrontal,EffectTaskSem>Perc,0.05,0.17,0.774,
 RH_midFrontal,EffectStimTypeSent>Pic,-0.37,0.35,0.722,
 RH_midFrontal,EffectTask:StimType,-0.11,0.35,0.941,
 RH_midFrontal,EffectSent_Sem>S,1.33,0.22,<.001,***
@@ -266,7 +266,7 @@ RH_midFrontal,EffectSemTask>WMTask,-0.99,0.32,0.004,**
 RH_midFrontal,ExperimentE2>E3,0.18,0.13,0.254,
 RH_midFrontal,EffectS-N:ExperimentE2>E3,0,0.19,1,
 RH_midFrontal,EffectH-E:ExperimentE2>E3,0,0.2,1,
-RH_midFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.09,0.35,0.801,
+RH_midFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.04,0.17,0.801,
 RH_midFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.26,0.35,0.565,
 RH_midFrontal,EffectTask:StimType:ExperimentE2>E3,0.18,0.35,0.977,
 RH_midFrontal,EffectSent_Sem>S:ExperimentE2>E3,0.16,0.22,0.716,
@@ -274,7 +274,7 @@ RH_midFrontal,EffectSemTask>WMTask:ExperimentE2>E3,0.36,0.33,0.397,
 RH_midFrontalOrb,(Intercept),1.74,0.21,<.001,***
 RH_midFrontalOrb,EffectS-N,-0.35,0.21,0.227,
 RH_midFrontalOrb,EffectH-E,1.73,0.21,<.001,***
-RH_midFrontalOrb,EffectTaskSem>Perc,0.21,0.37,0.636,
+RH_midFrontalOrb,EffectTaskSem>Perc,0.11,0.19,0.636,
 RH_midFrontalOrb,EffectStimTypeSent>Pic,0.19,0.37,0.827,
 RH_midFrontalOrb,EffectTask:StimType,-0.07,0.37,0.956,
 RH_midFrontalOrb,EffectSent_Sem>S,1.89,0.24,<.001,***
@@ -282,7 +282,7 @@ RH_midFrontalOrb,EffectSemTask>WMTask,-0.2,0.34,0.614,
 RH_midFrontalOrb,ExperimentE2>E3,0.19,0.14,0.259,
 RH_midFrontalOrb,EffectS-N:ExperimentE2>E3,0,0.21,1,
 RH_midFrontalOrb,EffectH-E:ExperimentE2>E3,0,0.21,1,
-RH_midFrontalOrb,EffectTaskSem>Perc:ExperimentE2>E3,0.39,0.37,0.351,
+RH_midFrontalOrb,EffectTaskSem>Perc:ExperimentE2>E3,0.2,0.19,0.351,
 RH_midFrontalOrb,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.68,0.37,0.36,
 RH_midFrontalOrb,EffectTask:StimType:ExperimentE2>E3,-0.08,0.37,0.977,
 RH_midFrontalOrb,EffectSent_Sem>S:ExperimentE2>E3,0,0.24,0.992,
@@ -290,7 +290,7 @@ RH_midFrontalOrb,EffectSemTask>WMTask:ExperimentE2>E3,0.37,0.35,0.397,
 RH_insula,(Intercept),1.65,0.13,<.001,***
 RH_insula,EffectS-N,-0.02,0.11,0.916,
 RH_insula,EffectH-E,1.03,0.11,<.001,***
-RH_insula,EffectTaskSem>Perc,0.69,0.2,0.002,**
+RH_insula,EffectTaskSem>Perc,0.34,0.1,0.002,**
 RH_insula,EffectStimTypeSent>Pic,-0.15,0.2,0.789,
 RH_insula,EffectTask:StimType,0.2,0.2,0.714,
 RH_insula,EffectSent_Sem>S,1.43,0.13,<.001,***
@@ -298,7 +298,7 @@ RH_insula,EffectSemTask>WMTask,0.53,0.18,0.007,**
 RH_insula,ExperimentE2>E3,0.25,0.08,0.002,**
 RH_insula,EffectS-N:ExperimentE2>E3,0,0.11,1,
 RH_insula,EffectH-E:ExperimentE2>E3,0,0.11,1,
-RH_insula,EffectTaskSem>Perc:ExperimentE2>E3,0.21,0.2,0.351,
+RH_insula,EffectTaskSem>Perc:ExperimentE2>E3,0.1,0.1,0.351,
 RH_insula,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.17,0.2,0.548,
 RH_insula,EffectTask:StimType:ExperimentE2>E3,-0.03,0.2,0.977,
 RH_insula,EffectSent_Sem>S:ExperimentE2>E3,0.2,0.13,0.305,
@@ -306,7 +306,7 @@ RH_insula,EffectSemTask>WMTask:ExperimentE2>E3,0.5,0.19,0.018,*
 RH_medialFrontal,(Intercept),1.78,0.15,<.001,***
 RH_medialFrontal,EffectS-N,-0.23,0.14,0.234,
 RH_medialFrontal,EffectH-E,1.38,0.15,<.001,***
-RH_medialFrontal,EffectTaskSem>Perc,0.72,0.26,0.013,*
+RH_medialFrontal,EffectTaskSem>Perc,0.36,0.13,0.013,*
 RH_medialFrontal,EffectStimTypeSent>Pic,-0.16,0.26,0.789,
 RH_medialFrontal,EffectTask:StimType,-0.01,0.26,0.981,
 RH_medialFrontal,EffectSent_Sem>S,1.46,0.17,<.001,***
@@ -314,7 +314,7 @@ RH_medialFrontal,EffectSemTask>WMTask,-0.01,0.24,0.965,
 RH_medialFrontal,ExperimentE2>E3,0.3,0.1,0.004,**
 RH_medialFrontal,EffectS-N:ExperimentE2>E3,0,0.14,1,
 RH_medialFrontal,EffectH-E:ExperimentE2>E3,0,0.15,1,
-RH_medialFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.22,0.26,0.431,
+RH_medialFrontal,EffectTaskSem>Perc:ExperimentE2>E3,0.11,0.13,0.431,
 RH_medialFrontal,EffectStimTypeSent>Pic:ExperimentE2>E3,-0.3,0.26,0.468,
 RH_medialFrontal,EffectTask:StimType:ExperimentE2>E3,-0.02,0.26,0.977,
 RH_medialFrontal,EffectSent_Sem>S:ExperimentE2>E3,0.22,0.17,0.4,
