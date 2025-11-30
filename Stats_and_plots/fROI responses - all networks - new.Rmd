@@ -454,12 +454,24 @@ ggsave(paste(plot_dir, plot_name,'.png',sep=''),
        width=ROI_plot_width+3, height=plot_height_1row+3, units='cm')
 ```
 
+
+### APPENDIX Occipital
+
+### By ROI group
+```{r}
+plot_name = 'EventsAll occipital'
+plot_fROI_responses(dat.occipital, split_by_ROIgroup = TRUE, ylim=c(-4.6,10), col_width=0.75)+theme(legend.position = "right")
+
+ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
+       width=ROI_plot_width-8, height=plot_height_1row+3, units='cm')
+```
+
 ### APPENDIX By Experiment all fROIs
 
 ```{r}
 plot_name = 'Events Parcels by expt all fROIs'
 
-plt.by_expt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_expt=TRUE, ylim=c(-1,4.5))
+plt.by_expt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_expt=TRUE)+theme(legend.position = "bottom")
 
 plt.by_expt.ROI
 ggsave(paste(plot_dir, plot_name, '.png',sep=''), 
@@ -707,7 +719,7 @@ ggsave(paste('plots/',plot_name,'_avg_and_ROI.png',sep=''),
        width=ROI_plot_width, height=plot_height_1row+4, units='cm')
 ```
 
-### RH - appendix
+### RH - not included
 
 ```{r}
 plot_name = 'Language Network - RH'
@@ -1127,13 +1139,12 @@ write.table(stats_df, file = "Tables/RH semantic ROI stats.csv", sep = ",", quot
 ### By ROI
 ```{r}
 plot_title = 'Contralateral fROIs'
-p.RHsem = plot_fROI_responses(dat, split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
-```
+p.RHsem = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
 
-# COMBINE PLOTS ATL + RH
-```{r}
-(p.vatl | p.RHsem) + plot_layout(widths = c(1, 3.5)) + plot_annotation(tag_levels = 'A') & 
-  theme(plot.tag = element_text(face = "bold"))
-ggsave(paste('Plots/', 'other suspects.png', sep=''), 
+p.RHsem
+
+ggsave(paste('Plots/', plot_title, '.png', sep=''), 
        width=ROI_plot_width+4, height=plot_height_1row+3, units='cm')
 ```
+
+
