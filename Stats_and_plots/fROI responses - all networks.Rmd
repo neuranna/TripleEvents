@@ -57,12 +57,11 @@ condition_labels = c(
 
 ```{r read data, echo=FALSE}
 read_data <- function(prefix, loctasks, add_objectsem=FALSE) {
-  base_dir = paste('../data/results_mROI/', prefix, sep='')
+  base_dir = paste('../data/results_fROI_responses/', prefix, sep='')
   lang1 = 'SWNlocIPS168_3runs'
   lang2 = 'langlocSN'
   lang3 = lang2
   MD = 'spatialFIN'
-  objectsem = 'Categorization_semperc'
   
   expt1 = 'EventsOrig_instrsep_2runs'
   loctask1 = loctasks[1]
@@ -84,12 +83,6 @@ read_data <- function(prefix, loctasks, add_objectsem=FALSE) {
     read.csv(paste(paste(base_dir, loctask2, lang2, sep='_'), '.csv', sep='')),
     read.csv(paste(paste(base_dir, loctask2, MD, sep='_'), '.csv', sep=''))
   )
-  if (add_objectsem) {
-  dat2 = rbind(
-    dat2,
-    read.csv(paste(paste(base_dir, loctask2, objectsem, sep='_'), '.csv', sep=''))
-  )
-  }
   dat2 = dat2 %>%
     mutate(Effect = recode(dat2$Effect, 
       'Sem-sent'='Sent_Sem', 'Sem-photo'='Pic_Sem', 'Perc-sent'='Sent_Perc', 'Perc-photo'='Pic_Perc'))
@@ -102,12 +95,6 @@ read_data <- function(prefix, loctasks, add_objectsem=FALSE) {
     read.csv(paste(paste(base_dir, loctask3, lang3, sep='_'), '.csv', sep='')),
     read.csv(paste(paste(base_dir, loctask3, MD, sep='_'), '.csv', sep=''))
   )
-  if (add_objectsem) {
-  dat3 = rbind(
-    dat3,
-    read.csv(paste(paste(base_dir, loctask3, objectsem, sep='_'), '.csv', sep=''))
-  )
-  }
   dat3$Experiment = 'Experiment 3'
   
   # combine
@@ -120,7 +107,7 @@ read_data <- function(prefix, loctasks, add_objectsem=FALSE) {
   # ignore the word condition (from EventsOrig langloc)
   dat = dat %>% filter(Effect!='W')
   dat$Effect = factor(dat$Effect, levels = c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc',
-                                             'S', 'N', 'H', 'E', 'SEM', 'PERC'))
+                                             'S', 'N', 'H', 'E'))
   dat$ROI = factor(dat$ROI)
   dat$Experiment = factor(dat$Experiment)
   return(dat)
@@ -144,7 +131,7 @@ set_contrasts <- function(dat.stats) {
   }
   
   # custom coding for effect
-  h = hypr(S~N, H~E, 0~0.5*(Sent_Sem+Pic_Sem), (Sent_Sem+Pic_Sem)~(Sent_Perc+Pic_Perc), (Sent_Sem+Sent_Perc)~(Pic_Sem+Pic_Perc), Sent_Sem-Sent_Perc~Pic_Sem-Pic_Perc,    # main
+  h = hypr(S~N, H~E, 0~0.5*(Sent_Sem+Pic_Sem), 0.5*(Sent_Sem+Pic_Sem)~0.5*(Sent_Perc+Pic_Perc), (Sent_Sem+Sent_Perc)~(Pic_Sem+Pic_Perc), Sent_Sem-Sent_Perc~Pic_Sem-Pic_Perc,    # main
            Sent_Sem~S, (Sent_Sem+Pic_Sem)~(H+E), 
            levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
   
@@ -185,13 +172,14 @@ correct_FDR <- function(stats_df) {
 ### Plot
 
 ```{r}
-plot_fROI_responses <- function (df, split_by_expt=FALSE, split_by_ROIgroup=FALSE, include_objectsem=FALSE,
-                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7, plot_title=NULL){
+default_colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             'gray80', 'gray20', '#0000B2', '#B2B2FF')
 
-if (!include_objectsem) {
-  df = df %>% filter(!(Effect %in% c('SEM', 'PERC')))
-}
-  
+plot_fROI_responses <- function (df, split_by_expt=FALSE, split_by_ROIgroup=FALSE, 
+                                 show_legend=TRUE, show_facet_labels=TRUE, ylim=NULL, col_width=0.7,
+                                 colors=default_colors,
+                                 plot_title=NULL,plot_subjectdata=TRUE, ylabel='Effect size'){
+
 f = ggplot(data=df)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, fill=Effect),
                geom='col', fun='mean', color='black', 
@@ -200,12 +188,11 @@ f = ggplot(data=df)+
   stat_summary(mapping=aes(x=ROI, y=EffectSize, group=Effect),
                geom='errorbar', fun.data='mean_se', color='black', 
                position=position_dodge(col_width, preserve="single"), size=0.5, width=0)+
-  scale_fill_manual(values=c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
-                             'gray80', 'gray20', '#0000B2', '#B2B2FF', '#D5C33B', '#F4EF3B'),
+  scale_fill_manual(values=colors,
                     labels=condition_labels)+
   theme_classic()+
   geom_hline(yintercept=0, size=0.5)+
-  labs(x=NULL, y='Effect size', title=plot_title)+
+  labs(x=NULL, y=ylabel, title=plot_title)+
   theme(axis.text.x = element_text(size=axis_text_size, color='black'), 
         axis.title.y = element_text(size=axis_title_size), 
         axis.text.y = element_text(size=axis_text_size), 
@@ -213,7 +200,7 @@ f = ggplot(data=df)+
         plot.title = element_text(size=title_size, face='bold', hjust = 0.5))
 
 if (split_by_expt) {
-  f = f + facet_grid(Experiment ~ .)
+  f = f + facet_grid(~ Experiment)
 }
 if (split_by_ROIgroup) {
   f = f + ggforce::facet_row(vars(ROIgroup), scales = 'free', space = 'free') 
@@ -228,6 +215,13 @@ if (!show_facet_labels) {
 if (!is.null(ylim)) {
   f = f + coord_cartesian(ylim=ylim)
 }
+if (plot_subjectdata) {
+  f = f + 
+      geom_point(aes(x=ROI, y=EffectSize, fill=Effect), 
+                 size=0.75, stroke=0.1, 
+                 position=position_jitterdodge(dodge.width=col_width, jitter.width=0.1),
+                 shape=21, show.legend=FALSE)
+}
 
 return(f)
 }
@@ -240,25 +234,19 @@ return(f)
 
 ```{r}
 event_expts = c('EventsOrig_instrsep_2runs', 'events2move_instrsep', 'EventsRev_instrsep')
-dat = read_data('events', event_expts)
+dat.all = read_data('events', event_expts)
 
-dat = dat %>%
+dat.all = dat.all %>%
   mutate(ROI=recode(ROI, 
                     '1'='F2', '2'='F1', '3'='TP3', '4'='TP2', '5'='Cer1', '6'='TP4',
                     '7'='F3', '8'='TP1', '9'='O1', '10'='Cer2', '11'='O2'))
-dat$ROI = factor(dat$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+dat.all$ROI = factor(dat.all$ROI, levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
 
-dat = dat %>% 
+dat.all = dat.all %>% 
   mutate(ROIgroup = ifelse(ROI %in% c('Cer1','Cer2'), 'Cerebellum',
                            ifelse(ROI %in% c('F1','F2','F3'), 'Frontal cortex',
                                   ifelse(ROI %in% c('TP1','TP2','TP3','TP4'), 'Temporo-Parietal cortex', 'Occipital cortex'))))
-dat$ROIgroup = factor(dat$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
-```
-
-## Remove occipital ROIs
-```{r}
-dat = dat %>%
-  filter(ROIgroup!='Occipital cortex')
+dat.all$ROIgroup = factor(dat.all$ROIgroup, levels=c('Frontal cortex', 'Temporo-Parietal cortex', 'Cerebellum', 'Occipital cortex'))
 ```
 
 ## Left-out participants
@@ -266,16 +254,25 @@ dat = dat %>%
 Some participants were intentionally left out during parcel definition.
 ```{r}
 left_out_subjects = c('089', '076', '291', '769', '770', '682', '773', '774', '775', '778', '863')
-dat = dat %>%
+dat.all = dat.all %>%
   separate(Subject, c("UID"), extra="drop", sep="_", remove=FALSE) %>%
   mutate(LeftOutSubject = ifelse(UID %in% left_out_subjects, TRUE, FALSE))
 ```
 
+## Separate occipital ROIs
+```{r}
+dat = dat.all %>%
+  filter(ROIgroup!='Occipital cortex')
+dat.occipital = dat.all %>%
+  filter(ROIgroup=='Occipital cortex')
+```
+
+
 ## Stats
 
 ```{r}
-# ignore categorization here
-dat.stats = dat %>% filter(!(Effect %in% c('SEM', 'PERC')))
+dat.stats <- dat
+
 dat.stats$Effect = factor(dat.stats$Effect, 
                           levels=c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N', 'H', 'E'))
 dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject, 
@@ -287,13 +284,14 @@ dat.stats$LeftOutSubject = factor(dat.stats$LeftOutSubject,
 ```{r}
 dat.stats = set_contrasts(dat.stats)
 
-model = lmer(EffectSize ~ Effect*Experiment + (1|Subject), data=dat.stats, REML=FALSE)
+model = lmer(EffectSize ~ Effect*Experiment + (1|ROI) + (1|Subject), data=dat.stats, REML=FALSE)
 #coef_names = row.names(coefficients(summary(model)))
 coef_names = c('Intercept', 'S-N', 'H-E', 'Task Sem>Perc', 'StimType Sent>Pic', 'Task:StimType',
                'Sent_Sem>S', 'SemTask>WMTask', 'E2>E3', 'E1>E3', 'S>N:E2>E3', 'H-E:E2>E3',
                'Sem>Perc:E2>E3', 'Sent>Pic:E2>E3', 'Task:StimType:E2>E3', 'Sent_Sem>S:E2>E3',
                'SemTask>WMTask:E2>E3', 'S-N:E1>E3', 'Sem>Perc:E1>E3', 'Sent>Pic:E1>E3', 
                'Task:StimType:E1>E3', 'Sent_Sem>S:E1>E3')
+summary(model)
 ```
 
 ```{r}
@@ -323,11 +321,48 @@ dat.stats.byexpt =dat %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   separate(Effect, c('StimType', 'Task'), sep="_") 
 dat.stats.byexpt$StimType = factor(dat.stats.byexpt$StimType, levels=c('Pic', 'Sent'))
-dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Perc', 'Sem'))
+contrasts(dat.stats.byexpt$StimType) <- contr.sum(levels(dat.stats.byexpt$StimType))
+dat.stats.byexpt$Task = factor(dat.stats.byexpt$Task, levels=c('Sem', 'Perc'))
 
+# get coef names
 model = lmer(EffectSize ~ Task*StimType + (1|Subject), data=dat.stats.byexpt, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
 ```
+
+```{r}
+# Contrast effects in each experiment, FDR-corrected across expts
+
+model.dfs <- list()
+index = 1
+
+for (expt in unique(dat.stats.byexpt$Experiment)) {
+    dat.expt = dat.stats.byexpt %>% filter(Experiment==expt) 
+    model = lmer(EffectSize ~ Task*StimType + (1|ROI) + (1+Task+StimType|Subject), data=dat.expt, REML=FALSE,
+                 control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+    model.df = data.frame(coef_names,
+                          summary(model)$coefficients[,'Estimate'],
+                          summary(model)$coefficients[,'Std. Error'],
+                          summary(model)$coefficients[,'Pr(>|t|)']) %>% 
+      mutate(Experiment=expt)
+    names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Experiment')
+    model.df = model.df[,c(5,1,2,3,4)] %>%
+      mutate(Beta = round(Beta, 2), 
+             SE = round(SE, 2),
+             p.value = ifelse(p.value>0.001, round(p.value, 3),
+                              formatC(p.value, format = "e", digits = 2)))
+    
+    model.dfs[[index]] <- model.df
+    index = index+1
+  
+}
+  
+stats_df = do.call("rbind", model.dfs)
+# FDR correction
+stats_df = stats_df %>% correct_FDR() 
+
+write.table(stats_df, file = "Tables/semantic stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
+```
+
 
 ```{r}
 # Contrast effects in each ROI, FDR-corrected
@@ -361,7 +396,7 @@ stats_df = do.call("rbind", model.dfs)
 # FDR correction
 stats_df = stats_df %>% correct_FDR() 
 stats_df$ROI = factor(stats_df$ROI,
-                      levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2','O1','O2'))
+                      levels=c('F1','F2','F3','TP1','TP2','TP3','TP4','Cer1','Cer2'))
 stats_df = stats_df %>% arrange(ROI)
 
 write.table(stats_df, file = "Tables/semantic ROI stats by experiment.csv", sep = ",", quote = FALSE, row.names = F)
@@ -412,85 +447,132 @@ write.table(stats_df, file = "Tables/Events stats left out participants.csv", se
 
 ### By ROI group
 ```{r}
-plot_name = 'EventsAll parcels'
-plot_fROI_responses(dat, split_by_ROIgroup = TRUE, ylim=c(-1,3.5), col_width=0.7)
+plot_name = 'EventsAll all fROIs by group'
+plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_ROIgroup = TRUE, ylim=c(-4.6,10), col_width=0.75)
 
-ggsave(paste(plot_dir, plot_name,' by ROI group.png',sep=''), 
+ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
        width=ROI_plot_width+3, height=plot_height_1row+3, units='cm')
 ```
 
-### By Experiment
+
+### APPENDIX Occipital
+
+### By ROI group
+```{r}
+plot_name = 'EventsAll occipital'
+plot_fROI_responses(dat.occipital, split_by_ROIgroup = TRUE, ylim=c(-4.6,10), col_width=0.75)+theme(legend.position = "right")
+
+ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
+       width=ROI_plot_width-8, height=plot_height_1row+3, units='cm')
+```
+
+### APPENDIX By Experiment all fROIs
 
 ```{r}
+plot_name = 'Events Parcels by expt all fROIs'
+
+plt.by_expt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_expt=TRUE)+theme(legend.position = "bottom")
+
+plt.by_expt.ROI
+ggsave(paste(plot_dir, plot_name, '.png',sep=''), 
+       width=ROI_plot_width+4, height=plot_height_3rows, units='cm')
+```
+### By experiment 
+
+#### Sample fROI (F2)
+```{r}
+plot_name = 'Events Parcels F2 by expt'
+
 dat.mean = dat %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
   group_by(Experiment, Subject, Effect) %>%
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI = "Average")
 
-plot_name = 'Events Parcels'
-
-plt.by_expt.mean = plot_fROI_responses(dat.mean, split_by_expt=TRUE, show_legend=FALSE, show_facet_labels=FALSE, ylim=c(-1,4.5))
-plt.by_expt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_expt=TRUE, ylim=c(-1,4.5))
-
-plt.by_expt.mean + plt.by_expt.ROI + plot_layout(widths=c(1,6))
-ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''), 
-       width=ROI_plot_width+4, height=plot_height_3rows, units='cm')
-```
-### By experiment PRES
-
-#### Sample fROI
-```{r}
-plot_name = 'Events Parcels F1'
-
-plt.by_expt.mean = plot_fROI_responses(dat %>% filter(ROI=='F1') %>%
+plt.by_expt.mean = plot_fROI_responses(dat %>% filter(ROI=='F2') %>%
   filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), 
   split_by_expt=TRUE, show_legend=FALSE, show_facet_labels=FALSE)
 
-ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''), 
-       width=hemi_plot_width-10, height=plot_height_3rows, units='cm')
+plt.by_expt.mean
+ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
-#### Avg
+#### Avg by expt
 
 ```{r}
 plot_name = 'Events Parcels Avg'
+
+dat.mean = dat %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
 
 plt.by_expt.mean = plot_fROI_responses(dat.mean, 
   split_by_expt=TRUE, show_legend=FALSE, show_facet_labels=FALSE)
 
 ggsave(paste(plot_dir, plot_name,' by expt.png',sep=''), 
-       width=hemi_plot_width-10, height=plot_height_3rows, units='cm')
+       width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
-### fROI poster
-
+## Avg across expt
+### SN 
 ```{r}
-plot_name = 'Events Parcels Avg across expts'
-plt.ROI = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), show_legend=FALSE)
+plot_name = 'Events Parcels Avg'
 
-ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
-       width=ROI_plot_width, height=plot_height_1row-2, units='cm')
+dat.mean = dat %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
+
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE)
+
+ggsave(paste(plot_dir, plot_name,' across all expt SN.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
 ```
 
-### Plot avg poster
-
+### SN - TP3 only
 ```{r}
-dat2plot <- dat %>% 
-  filter(ROIgroup!='Occipital cortex') %>%
-  group_by(Subject, Effect) %>%
-  summarize(EffectSize=mean(EffectSize)) %>%
-  mutate(ROI='')
+plot_name = 'TP3'
 
-plot_name = 'Events Parcels all conds'
-p.ev = plot_fROI_responses(dat2plot, show_legend = FALSE)
-p.ev
+dat.mean = dat %>%
+  filter(ROI=='TP3') %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'S', 'N')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
 
-ggsave(paste('plots/',plot_name,' avg except Occ.png',sep=''), 
-       width=hemi_plot_width/2, height=plot_height_1row, units='cm')
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE)
+
+ggsave(paste(plot_dir, plot_name,' across all expt SN.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
 ```
 
-### Generalization to left-out participants
+### HE 
+```{r}
+plot_name = 'Events Parcels Avg'
+colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             '#0000B2', '#B2B2FF')
+
+dat.mean = dat %>%
+  filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc', 'H', 'E')) %>%
+  group_by(Experiment, Subject, Effect) %>%
+  summarize(EffectSize = mean(EffectSize)) %>%
+  mutate(ROI = "Average")
+
+plt.by_expt.mean = plot_fROI_responses(dat.mean, 
+  split_by_expt=FALSE, show_legend=FALSE, show_facet_labels=FALSE, colors=colors)
+
+ggsave(paste(plot_dir, plot_name,' across all expt HE.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row+5, units='cm')
+```
+
+
+## Generalization to left-out participants
 
 ```{r}
 dat.mean = dat %>%
@@ -504,15 +586,7 @@ plot_fROI_responses(dat.mean)
 ggsave(paste(plot_dir,plot_name,'.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
-### PRES 8cond
-```{r}
-plot_name = 'Events Parcels Avg 8cond'
 
-plt.by_expt.mean = plot_fROI_responses(dat.mean, show_legend=FALSE, show_facet_labels=FALSE)
-
-ggsave(paste(plot_dir, plot_name,'.png',sep=''), 
-       width=hemi_plot_width-8, height=plot_height_1row, units='cm')
-```
 
 # LANG 
 
@@ -561,34 +635,21 @@ dat.stats = set_contrasts(dat.stats)
 model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.stats, REML=FALSE)
 coef_names = row.names(coefficients(summary(model)))
 
-model.dfs <- list()
-index = 1
+model.df = data.frame(coef_names,
+                      summary(model)$coefficients[,'Estimate'],
+                      summary(model)$coefficients[,'Std. Error'],
+                      summary(model)$coefficients[,'Pr(>|t|)']) 
+names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value')
+model.df = model.df %>%
+  mutate(Beta = round(Beta, 2), 
+         SE = round(SE, 2),
+         p.value = ifelse(p.value>0.001, round(p.value, 3),
+                          formatC(p.value, format = "e", digits = 2)))
 
-for (hemi in unique(dat.stats$Hemisphere)) {
-  dat.hemi = dat.stats %>% filter(Hemisphere==hemi)
-  model = lmer(EffectSize ~ Effect*Experiment + (1|Subject) + (1|ROI), data=dat.hemi, REML=FALSE,
-               control = lmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-  model.df = data.frame(coef_names,
-                        summary(model)$coefficients[,'Estimate'],
-                        summary(model)$coefficients[,'Std. Error'],
-                        summary(model)$coefficients[,'Pr(>|t|)']) %>% 
-    mutate(Hemisphere=hemi)
-  names(model.df) = c('Regression Term', 'Beta', 'SE', 'p.value', 'Hemisphere')
-  model.df = model.df[,c(5,1,2,3,4)] %>%
-    mutate(Beta = round(Beta, 2), 
-           SE = round(SE, 2),
-           p.value = ifelse(p.value>0.001, round(p.value, 3),
-                            formatC(p.value, format = "e", digits = 2)))
-  
-  model.dfs[[index]] <- model.df
-  index = index+1
-}
-
-stats_df = do.call("rbind", model.dfs)
 # FDR correction
-stats_df = correct_FDR(stats_df)
+stats_df = correct_FDR(model.df)
 
-write.table(stats_df, file = "Tables/Lang stats by hemi.csv", sep = ",", quote = FALSE, row.names = F)
+write.table(stats_df, file = "Tables/Lang stats.csv", sep = ",", quote = FALSE, row.names = F)
 ```
 
 
@@ -615,33 +676,28 @@ write.table(stats_df, file = "Tables/Lang stats by fROI.csv", sep = ",", quote =
 
 ## Plot 
 
-### Mean hemisphere
+Do not plot MD responses
+
+```{r}
+dat = dat %>% filter(!(Effect %in% c('E', 'H')))
+```
+
+### Mean core
 ```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
-  mutate(ROI=Hemisphere)
+  mutate(ROI="Average")
 
-plot_title = 'Language Network'
-p.lang = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
-p.lang
+plot_name = 'Language Network - core'
+#plot_title = 'Language Network'
+p.lang_avg = plot_fROI_responses(dat.mean, show_legend = FALSE)
+p.lang_avg
+
+ggsave(paste(plot_dir, plot_name,' avg.png',sep=''), 
+       width=hemi_plot_width-10, height=plot_height_1row, units='cm')
 ```
 
-
-
-TEMP FOR THE REVIEW:
-```{r}
-# dat.mean.5ROIs <- dat.lh %>% 
-#   filter(ROI!="LAngG") %>%
-#   filter(Effect=="Pic_Sem") %>%
-#   group_by(Subject, Experiment) %>% 
-#   summarize(EffectSize = mean(EffectSize))
-# 
-# d1 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 1")
-# d2 = dat.mean.5ROIs %>% filter(Experiment=="Experiment 2")
-# write.csv(d1, "EventsOrig_5fROIs_Sem_Pic.csv")
-# write.csv(d2, "Events2move_5fROIs_Sem_Pic.csv")
-```
 
 
 
@@ -649,10 +705,21 @@ TEMP FOR THE REVIEW:
 
 ```{r}
 plot_name = 'Language Network - core'
-plot_fROI_responses(dat)
+p.lang_roi = plot_fROI_responses(dat, ylabel="")
+p.lang_roi
 ggsave(paste('plots/',plot_name,'_ROI.png',sep=''), 
-       width=ROI_plot_width, height=plot_height_1row, units='cm')
+       width=ROI_plot_width, height=plot_height_1row+4, units='cm')
 ```
+
+### Combine
+
+```{r}
+p.lang_avg + p.lang_roi + plot_layout(widths = c(1,3))
+ggsave(paste('plots/',plot_name,'_avg_and_ROI.png',sep=''), 
+       width=ROI_plot_width, height=plot_height_1row+4, units='cm')
+```
+
+### RH - not included
 
 ```{r}
 plot_name = 'Language Network - RH'
@@ -764,16 +831,20 @@ write.table(stats_df, file = "Tables/MD stats by fROI.csv", sep = ",", quote = F
 
 ### Mean hemisphere
 ```{r}
+colors = c('#B20000', '#FF9999', '#0A730A', '#98CD92', 
+                             '#0000B2', '#B2B2FF')
+
 dat.mean <- dat %>% 
+  filter(!(Effect %in% c("S", "N"))) %>%
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
 plot_title = 'Multiple Demand Network'
-p.MD = plot_fROI_responses(dat.mean, plot_title = plot_title)
+p.MD = plot_fROI_responses(dat.mean, plot_title = plot_title, show_legend = FALSE, colors=colors)
 p.MD 
 
-ggsave(paste('plots/',plot_name,'_hemi.png',sep=''),
+ggsave(paste('plots/',plot_title,'_hemi.png',sep=''),
        width=hemi_plot_width, height=plot_height_1row, units='cm')
 ```
 
@@ -886,12 +957,13 @@ write.table(stats_df, file = "Tables/DMN stats by fROI.csv", sep = ",", quote = 
 ### Mean hemisphere
 ```{r}
 dat.mean <- dat %>% 
+  filter(!(Effect %in% c("S", "N"))) %>%
   group_by(Effect, Subject, Experiment, Hemisphere) %>% 
   summarize(EffectSize = mean(EffectSize)) %>%
   mutate(ROI=Hemisphere)
 
 plot_title = 'Default Mode Network\n'
-p.DMN = plot_fROI_responses(dat.mean, show_legend = FALSE, plot_title = plot_title)
+p.DMN = plot_fROI_responses(dat.mean, colors=colors, plot_title = plot_title)
 p.DMN
 ```
 
@@ -911,11 +983,11 @@ ggsave(paste('plots/',plot_name,'_ROI.png',sep=''),
        width=ROI_plot_width, height=plot_height_1row, units='cm')
 ```
 
-# COMBINE PLOTS 3 NETWORKS
+# COMBINE PLOTS 2 NETWORKS
 ```{r}
-p.lang / p.MD / p.DMN
-ggsave(paste('Plots/', 'three networks by hemi.png', sep=''), 
-       width=ROI_plot_width, height=plot_height_3rows+3, units='cm')
+p.MD + p.DMN
+ggsave(paste('Plots/', 'twonetworks by hemi.png', sep=''), 
+       width=ROI_plot_width, height=plot_height_1row+10, units='cm')
 ```
 
 # ATL follow up
@@ -980,11 +1052,15 @@ write.table(stats_df, file = "Tables/vATL stats by hemi.csv", sep = ",", quote =
 ```{r}
 dat.mean <- dat %>% 
   group_by(Effect, Subject, Experiment, ROI) %>% 
-  summarize(EffectSize = mean(EffectSize)) 
+  summarize(EffectSize = mean(EffectSize)) %>%
+  filter(!(Effect %in% c('H', 'E')))
 
 plot_title = 'vATL'
-p.vatl = plot_fROI_responses(dat.mean, show_legend = FALSE, ylim=c(-1, 1), plot_title=plot_title)
+p.vatl = plot_fROI_responses(dat.mean, show_legend = FALSE, ylim=c(-1, 1))
 p.vatl
+
+ggsave(paste(plot_dir, plot_title,' SN.png',sep=''), 
+       width=hemi_plot_width-5, height=plot_height_1row+5, units='cm')
 ```
 
 # RH semantic demand homotops
@@ -1063,13 +1139,12 @@ write.table(stats_df, file = "Tables/RH semantic ROI stats.csv", sep = ",", quot
 ### By ROI
 ```{r}
 plot_title = 'Contralateral fROIs'
-p.RHsem = plot_fROI_responses(dat, split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
-```
+p.RHsem = plot_fROI_responses(dat %>% filter(Effect %in% c('Sent_Sem', 'Sent_Perc', 'Pic_Sem', 'Pic_Perc')), split_by_ROIgroup = FALSE, ylim=c(-1,3.5), col_width=0.82, plot_title = plot_title) + theme(legend.position="bottom")
 
-# COMBINE PLOTS ATL + RH
-```{r}
-(p.vatl | p.RHsem) + plot_layout(widths = c(1, 3.5)) + plot_annotation(tag_levels = 'A') & 
-  theme(plot.tag = element_text(face = "bold"))
-ggsave(paste('Plots/', 'other suspects.png', sep=''), 
+p.RHsem
+
+ggsave(paste('Plots/', plot_title, '.png', sep=''), 
        width=ROI_plot_width+4, height=plot_height_1row+3, units='cm')
 ```
+
+
