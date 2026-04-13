@@ -145,10 +145,10 @@ if length(contrast_names)==1
 elseif length(contrast_names)==2
     contrast_nums_con1 = retrieve_con_indices(data_dir, sub, task, contrast_names{1});
     contrast_nums_con2 = retrieve_con_indices(data_dir, sub, task, contrast_names{2});
-    fROIname_odd = ['locT_' sprintf('%04d', contrast_nums_con1(1)) ...
+    fROIname_odd = ['locT_conjunction_' sprintf('%04d', contrast_nums_con1(1)) ...
         '_percentile-ROI-level0.1_max_' sprintf('%04d', contrast_nums_con2(1)) ...
         '_percentile-ROI-level0.1_' parcel_hashname];
-    fROIname_even = ['locT_' sprintf('%04d', contrast_nums_con1(2)) ...
+    fROIname_even = ['locT_conjunction_' sprintf('%04d', contrast_nums_con1(2)) ...
         '_percentile-ROI-level0.1_max_' sprintf('%04d', contrast_nums_con2(2)) ...
         '_percentile-ROI-level0.1_' parcel_hashname];
 else
@@ -162,10 +162,11 @@ end
 % return indices of con files corresponding to contrast estimates for odd
 % and even runs
 function [con_indices] = retrieve_con_indices(sub_dir, sub, task, contrast_name)
+    %load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
 try
-    load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
-catch
     load(fullfile(sub_dir, sub, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, 'SPM.mat'));
+catch
+    load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
 end
 
 % get con indices corresponding to each problem 
