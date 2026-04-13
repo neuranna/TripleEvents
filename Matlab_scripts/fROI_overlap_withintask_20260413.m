@@ -92,8 +92,7 @@ function [fROIpath1, fROIpath2] = make_fROI_path(data_dir, task, uid, session, c
 
 session = strcat(uid, '_', session{:}, '_PL2017');
 fROInames = get_fROI_name(data_dir, session, task, contrast_names, parcel_hashname);
-if (strcmp(task, 'events2move_instrsep') && ismember(string(uid), ["408","776","775"])) || (strcmp(task, 'EventsRev_instrsep') && ismember(string(uid), ["770", "773", "774", "775"])) || 
-  (strcmp(task, 'spatialFIN') && ismember(string(uid), ["419"])
+if (strcmp(task, 'events2move_instrsep') && ismember(string(uid), ["408","776","775"])) || (strcmp(task, 'EventsRev_instrsep') && ismember(string(uid), ["770", "773", "774", "775"])) || (strcmp(task, 'spatialFIN') && ismember(string(uid), ["419"]))
     fROIpath1 = cellstr(fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, fROInames{1}));
     fROIpath2 = cellstr(fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, fROInames{2}));
 else
