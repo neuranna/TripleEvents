@@ -25,7 +25,6 @@ end
 
 %% get files for all relevant participants
 data_dir = '/orcd/archive/evelina9/001/u/Shared/SUBJECTS';
-
 session_file = '../Participant_info/TripleEvents_sessions_clean.csv';
 session_info = readtable(session_file);
 
@@ -93,14 +92,34 @@ function [fROIpath1, fROIpath2] = make_fROI_path(data_dir, task, uid, session, c
 session = strcat(uid, '_', session{:}, '_PL2017');
 fROInames = get_fROI_name(data_dir, session, task, contrast_names, parcel_hashname);
 if (strcmp(task, 'events2move_instrsep') && ismember(string(uid), ["408","776","775"])) || (strcmp(task, 'EventsRev_instrsep') && ismember(string(uid), ["770", "773", "774", "775"])) || (strcmp(task, 'spatialFIN') && ismember(string(uid), ["419"]))
-    fROIpath1 = cellstr(fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, fROInames{1}));
-    fROIpath2 = cellstr(fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, fROInames{2}));
+    fROI_folder1 = fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task);
+    fROI_folder2 = fullfile(data_dir, session, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task);
 else
-    fROIpath1 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{1}));
-    fROIpath2 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{2}));
+    fROI_folder1 = fullfile(data_dir, session, ['firstlevel_' task]);
+    fROI_folder2 = fullfile(data_dir, session, ['firstlevel_' task]);
 end
-%fROIpath1 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{1}));
-%fROIpath2 = cellstr(fullfile(data_dir, session, ['firstlevel_' task], fROInames{2}));
+
+fROIpath1_1 = fullfile(fROI_folder1, [fROInames{1} '.ROIs.nii']);
+fROIpath1_2 = fullfile(fROI_folder1, [fROInames{1}(1:28) char(mlreportgen.utils.hash([fROInames{1} '.img'])) '_' parcel_hashname '.ROIs.nii']);
+fROIpath2_1 = fullfile(fROI_folder2, [fROInames{2} '.ROIs.nii']);
+fROIpath2_2 = fullfile(fROI_folder2, [fROInames{2}(1:28) char(mlreportgen.utils.hash([fROInames{2} '.img'])) '_' parcel_hashname '.ROIs.nii']);
+
+if isfile(fROIpath1_1)
+    fROIpath1 = fROIpath1_1;
+elseif isfile(fROIpath1_2)
+    fROIpath1 = fROIpath1_2;
+else    error('fROI file not found for subject %s, task %s: looked for %s and %s', uid, task, fROIpath1_1, fROIpath1_2)
+end
+
+if isfile(fROIpath2_1)
+    fROIpath2 = fROIpath2_1;
+elseif isfile(fROIpath2_2)
+    fROIpath2 = fROIpath2_2;
+else    error('fROI file not found for subject %s, task %s: looked for %s and %s', uid, task, fROIpath2_1, fROIpath2_2)
+end
+
+fROIpath1 = cellstr(fROIpath1);
+fROIpath2 = cellstr(fROIpath2);
 end
 
 
@@ -120,18 +139,18 @@ function [fROInames] = get_fROI_name(data_dir, sub, task, contrast_names, parcel
 if length(contrast_names)==1
     contrast_nums = retrieve_con_indices(data_dir, sub, task, contrast_names{1});
     fROIname_odd = ['locT_' sprintf('%04d', contrast_nums(1)) ...
-        '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
+        '_percentile-ROI-level0.1_' parcel_hashname];
     fROIname_even = ['locT_' sprintf('%04d', contrast_nums(2)) ...
-        '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
+        '_percentile-ROI-level0.1_' parcel_hashname];
 elseif length(contrast_names)==2
     contrast_nums_con1 = retrieve_con_indices(data_dir, sub, task, contrast_names{1});
     contrast_nums_con2 = retrieve_con_indices(data_dir, sub, task, contrast_names{2});
     fROIname_odd = ['locT_' sprintf('%04d', contrast_nums_con1(1)) ...
         '_percentile-ROI-level0.1_max_' sprintf('%04d', contrast_nums_con2(1)) ...
-        '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
+        '_percentile-ROI-level0.1_' parcel_hashname];
     fROIname_even = ['locT_' sprintf('%04d', contrast_nums_con1(2)) ...
         '_percentile-ROI-level0.1_max_' sprintf('%04d', contrast_nums_con2(2)) ...
-        '_percentile-ROI-level0.1_' parcel_hashname '.ROIs.nii'];
+        '_percentile-ROI-level0.1_' parcel_hashname];
 else
     error('unexpected number of contrasts: should be 1 or 2');
 end
@@ -143,8 +162,11 @@ end
 % return indices of con files corresponding to contrast estimates for odd
 % and even runs
 function [con_indices] = retrieve_con_indices(sub_dir, sub, task, contrast_name)
-
-load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
+try
+    load(fullfile(sub_dir, sub, ['firstlevel_' task], 'SPM.mat'));
+catch
+    load(fullfile(sub_dir, sub, 'DefaultMNI_PlusStructural', 'results', 'firstlevel', task, 'SPM.mat'));
+end
 
 % get con indices corresponding to each problem 
 con_indices = [];
